@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Configure and Maintain Ghost via command line - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ghost, System Tools, SSH</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-configure-and-maintain-ghost-from-the-command-line, https://www.digitalocean.com/community/tutorials/how-to-configure-and-maintain-ghost-from-the-command-line</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">5</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18379</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up and maintaining Ghost via command line on all distros, Ghost, System Tools, SSH</p>
+<h1>Configure and Maintain Ghost via command line - ALL DISTROS</h1>
+
+<p><strong>Difficulty:</strong> <em>1</em></p>
+<p><strong>Time:</strong> <em>30 mins</em></p>
+
+<p>Ghost provides a blogging platform that one can easily get started as beginner. This article will assist you in configuring and maintaining Ghost using the command line in various flavors. Ghost is built on Node.js and requires the most stable version</p>
+
+<h2>Install Ghost in Ubuntu or Debian</h2>
+<ol>
+<li>Update Ubuntu using following command
+<div class="hacker">sudo apt-get update</div>
+<div class="hacker">sudo apt-get upgrade -y</div>
+<div class="hacker">sudo aptitude install -y zip vim wget</div>
+</li>
+<li>Install node.js with following command
+
+<div class="hacker">sudo curl -sL https://deb.nodesource.com/setup | sudo bash -</div>
+<div class="hacker">sudo apt-get install -y nodejs</div>
+</li>	
+<li>Download and install ghost with following commands
+
+<div class="hacker"><pre>sudo mkdir -p /var/www/
+cd /var/www/
+sudo wget https://ghost.org/zip/ghost-latest.zip
+sudo unzip -d ghost ghost-latest.zip
+cd ghost/
+sudo npm install --production</pre></div>
+</li>
+</ol>
+
+<h2>Install Ghost in CentOS</h2>
+<ol>
+<li>Update Ubuntu using following command
+<div class="hacker">Sudo yum update</div>
+<div class="hacker">Sudo yum upgrade -y</div>
+<div class="hacker">sudo yum install -y zip vim wget</div>
+</li>
+<li>Install node.js with following command
+
+<div class="hacker">curl -sL https://deb.nodesource.com/setup | sudo bash -</div>
+<div class="hacker">sudo yum install -y nodejs</div>
+</li>
+<li>Download and install ghost with following commands
+
+<div class="hacker"><pre>sudo mkdir -p /var/www/
+cd /var/www/
+sudo wget https://ghost.org/zip/ghost-latest.zip
+sudo unzip -d ghost ghost-latest.zip
+cd ghost/
+sudo npm install --production</pre></div>
+
+<p class="note">Note: If you get an error saying "npm command not found", use the following command</p>
+	
+<div class="hacker">sudo yum -y install  nodejs npm</div>
+</li>
+</ol>
+
+<h2>Install Ghost in Arch Linux</h2>
+<ol>
+<li>Update Ubuntu using following command
+<div class="hacker">Sudo pacman -Sy</div>
+<div class="hacker">sudo pacman -S zip </div>
+<div class="hacker">sudo pacman -S wget</div>
+<div class="hacker">sudo pacman -S vim </div>
+</li>
+<li>Install node.js with following command
+
+<div class="hacker">sudo pacman -S nodejs</div>
+</li>	
+<li>Download and install ghost with following commands
+
+<div class="hacker"><pre>sudo mkdir -p /var/www/
+cd /var/www/
+sudo wget https://ghost.org/zip/ghost-latest.zip
+sudo unzip -d ghost ghost-latest.zip
+cd ghost/
+sudo npm install --production</pre></div>
+
+<p class="note">Note: If you get an error saying "unzip command not found ", use following command</p>
+	<div class="hacker">sudo pacman -S unzip</div>
+</li>    
+</ol>   
+ 
+<h2>Install Ghost in Fedora</h2>
+<ol>
+<li>Use following command to install npm,ngix and supervisor
+	<div class="hacker">yum install npm nginx supervisor</div>
+</li>
+<li>Download and install ghost
+<div class="hacker"><pre>mkdir -p /var/www/
+cd /var/www/  
+curl -L -O https://ghost.org/zip/ghost-latest.zip  
+unzip -d ghost ghost-latest.zip  
+cd ghost
+sudo npm install --production</pre></div>
+</li>
+</ol>
+
+<h2>Configure Ghost</h2>
+
+<p>First time when you run ghost, you'll notice that both "config.js" and "index.js" are located in the home directory of ghost. Configurations related to environment settings like database, URL and mail configuration settings are done in this file. If you haven't run ghost for first time, you won't find this file. You can create a new one by copying the config.example.js file and name it config.js. You will need to setup the URL and mail settings as part of installing Ghost.</p>
+<p>Ghost provides numerous ways to configure settings that can be changed to the way Ghost works. To configure your Ghost settings, open config.js in any editor and start making changes.</p>
+<strong>URL</strong>
+<p>First of all, you need to set URL for your blog in "config.js". Even if you don't set this URL, your blog will run, however, external links such as emails and RSS feeds will be incorrect. This should be set to full URL of your blog including "http://" or "https://" </p>
+<strong>Mail</strong>
+<p>This mail address is used to reset your password.</p>
+<strong>SSL</strong>
+<p>First time when your blog is configured for SSL, leave the "URL" beginning with "http:// ". Ghost will accept requests made through HTTPS in a secure way and skip the plain HTTP requests. So you can access your blog using both secure and insecure methods without any redirection.</p>
+<p>If you configure SSL and change URL to "https://" ghost will accept all request securely. All request sent through plain HTTP will be redirected to HTTPS.</p>
+<p>To save only admin panel (i.e. /ghost/) via SSL, you can leave you URL as "https://" and set the following option true:</p>
+           <div class="hacker">forceAdminSSL: true</div>
+<p>This will redirect any HTTP request at admin site to HTTPS. You can reject insecure requests rather than redirect using </p>
+		<div class="hacker">forceAdminSSL: {redirect:false}</div>
+<p>If you want to serve SSL verstion of your blog from different URL to one configured in "URL" you can configure alternative.</p>
+<div class="hacker"><pre>url: http://myblog.com,
+urlSSL: https://secure.myblog.com</pre></div>
+
+<strong>Database </strong>
+<p>SQLite is default configuration in Ghost, which require no configuration.MySQL can be configured as shown </p>
+
+<div class="hacker"><pre>database: {
+  client: 'mysql',
+  connection: {
+    host     : '127.0.0.1',
+    user     : 'your_database_user',
+    password : 'your_database_password',
+    database : 'ghost_db',
+    charset  : 'utf8'
+  }
+}</pre></div>
+
+<p>By pool settings you can limit simultaneous connections</p>
+<div class="hacker"><pre>database: {
+  client: ...,
+  connection: { ... },
+  pool: {
+    min: 2,
+    max: 20
+  }
+}</pre></div>
+
+ <p>Ghost also runs with PostgreSQL but its support is not official yet.</p>
+<strong>Server</strong>
+<p>Ghost will listen only the server host IP address and port number for requests. In general, requests are routed from port 80 to Ghost by either Nginx (recommended) or apache.</p>
+<div class="hacker"><pre>server: {
+    host: '127.0.0.1',
+    port: '2368'
+}</pre></div>
+
+
+<strong>Unix Socket</strong>
+<p>By making changes to the server configuration, Ghost can also be setup to listen on a unix socket </p>
+<div class="hacker"><pre>server: {
+    socket: 'path/to/socket.sock'
+}</pre></div>
+
+<p>Although 0660 is the default permitted value, but this can also be setup as follows:</p>
+
+<div class="hacker"><pre>server: {
+    socket: {
+        path: 'path/to/socket.sock',
+        permissions: '0666'
+   }
+}</pre></div>
+
+<strong>Gzip Compression</strong>
+<div class="hacker">By default, gzip compression is enabled that helps in improving the page load speed. You may turn off this feature using:</div>
+<div class="hacker">compress: false</div>
+<strong>Privacy</strong>
+<p>The configuration options are turned on by default in the PRIVACY.md file, however, users may disable them to protect their privacy.</p>
+<p>To turn off all of these features add the following to your config.js (please note this will override all other settings):</p>
+<div class="hacker"><pre>privacy: {
+    useTinfoil: true,
+}</pre></div>
+<p>To configure all the features individually: </p>
+<div class="hacker"><pre>privacy: {
+    useUpdateCheck: false,
+    useGoogleFonts: false,
+    useGravatar: false,
+    useRpcPing: false,
+    useStructuredData: false
+}</pre></div>
+
+<strong>Update Check</strong>
+<p>Ghost 0.4 checks for updates auto automatically to disable this use following</p>
+<div class="hacker"><pre>privacy: {
+  	  useUpdateCheck: false
+}</pre></div>
+
+<strong>Google Fonts</strong>
+<p>To disable google fonts use following</p>
+<div class="hacker"><pre>privacy: {
+    useGoogleFonts: false
+}</pre></div>
+
+<strong>Gravatar</strong>
+<p>To disable use:</p>
+<div class="hacker"><pre>privacy: {
+    useGravatar: false
+}</pre></div>
+
+<strong>RPC Ping</strong>
+<p>To disable RPC ping use:</p>
+<div class="hacker"><pre>privacy: {
+    useRpcPing: false
+}</pre></div>
+
+<strong>Structured Data</strong>
+<p>To disable use:</p>
+<div class="hacker"><pre>privacy: {
+    useStructuredData: false
+}</pre></div>
+
+<strong>File Storage</strong>
+<p>Few platforms don't have persistent file system like "Heroku". So any image that is uploaded might get missed out at some point. To disable Ghost's file storage:</p>
+<div class="hacker">fileStorage: false</div>
+
+<p>In case when you disable the file storage, Ghost's image will upload tools will ask you to enter a URL by default. This will help in preventing you from uploading files that might go missing.</p>
+
+<strong>Paths</strong>
+<p>To use a content directory not in Ghost folder you can specify a paths object with new content path</p>
+
+<div class="hacker"><pre>paths: {
+    contentPath: path.join(__dirname, '/path/to/content/dir/')
+},</pre></div>
+
+<strong>Using Environments</strong>
+
+<p>If you want the Ghost to run under a different environment, you need to use an environment variable. For example if you normally start Ghost with node index.js you would use:</p>
+<div class="hacker">NODE_ENV=production node index.js</div>
+<p>Or, you can use forever:</p>
+<div class="hacker">NODE_ENV=production forever start index.js</div>
+<p>Or, in case, you're using npm start, then use the following command:</p>
+<div class="hacker">npm start --production</div>
+<h2>Next Steps</h2>
+<p>In this article, we reviewed the steps involved in configuring and maintaining Ghost via the command line on all DISTROS.</p>
+
+</body>
+</html>
