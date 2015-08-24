@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Use RVM to manage Ruby installations and Environments - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-use-rvm-to-manage-ruby-installations-and-environments-on-a-vps, https://www.digitalocean.com/community/tutorials/how-to-use-rvm-to-manage-ruby-installations-and-environments-on-a-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">3</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Install Ruby on Rails using RVM.' Applicable to all distros as long as they follow their distro's steps in the previous article, but split if necessary in testing.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17912</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Managing Ruby installations and environments using RVM, Ruby, Rails</p>
+<h1>How to manage Ruby installations and Environments using RVM </h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>3 hours</em></p>
+
+<p>Ruby is a very popular object-oriented, general-purpose programming language that has Ruby on Rails or simply Rails, which is written in Ruby. Rails are an open source Ruby framework for developing database-backed web applications.</p>
+
+<p>Generally there is need for different versions of Ruby installed in same server for different projects. We can achieve this with the help of RVM (Ruby Version Manager)</p>
+
+<p>In this article, we will be discussing on managing Ruby installations using RVM. We will continue assuming that you have already installed RVM on server.</p>
+
+<p>As a prerequisite, you may refer the following links </p>
+<ul>
+<li><a href="#">Install Ruby on Rails using RVM – Ubuntu</a></li>
+<li><a href="#">Install Ruby on Rails using RVM - Fedora</a></li>
+<li><a href="#">Install Ruby on Rails using RVM - CentOS</a></li>
+<li><a href="#">Install Ruby on Rails using RVM - Arch Linux</a></li>
+<li><a href="#">Install Ruby on Rails using RVM - Debian</a></li>
+</ul>
+
+<h2>Step 1: RVM Command</h2>
+
+<p>Once RVM is installed in server, you will have 'rvm' command to manage the same.</p>
+<strong>Syntax:</strong>
+	<div class="hacker">rvm command_options command ruby_to_act_on</div>
+	<div class="hacker">Eg: rvm install ruby</div>
+    
+<h2>Step 2: Commands and its purpose</h2>
+<ol>
+<li>To list different command option available:
+	<div class="hacker">rvm help</div>
+</li>
+<li>To get details about a particular command:
+	<div class="hacker">rvm help command</div>
+</li>
+<li>To find the installed packages in RVM:
+	<div class="hacker">rvm info</div>
+</li>
+<li>To update RVM:
+	<div class="hacker">rvm get stable</div>
+</li>
+<li>If you want to enable Tab Completion, you need to need below line in .bashrc file
+	<div class="hacker">[[ -r $rvm_path/scripts/completion ]] && . $rvm_path/scripts/completion</div>
+</li>
+</ol>
+
+<h2>Step 3: Install and Uninstall Rubies using RVM</h2>
+<ol>
+<li>To list available Rubies to install:
+	<div class="hacker">rvm list known</div>
+</li>
+<li>To install a selected Ruby version:
+	<div class="hacker">rvm install ruby_version</div>
+</li>
+<li>To list installed Rubies
+	<div class="hacker">rvm list</div>
+</li>
+<li>If you have multiple versions of Ruby installed, then you can switch between then by using below command:
+	<div class="hacker">rvm use other_ruby_version</div>
+</li>
+<li>To set a particular Ruby version as default:
+	<div class="hacker">rvm command ruby_version --default</div>
+</li>
+<li>To switch to a default Ruby:
+	<div class="hacker">rvm default</div>
+</li>
+<li>To uninstall a particular Ruby version:
+	<div class="hacker">rvm uninstall ruby_version</div>
+</li>
+</ol>
+
+<h2>Step 4: Managing Gemsets with RVM</h2>
+<p>Gems are packages which contains package information along with files to install. 'gem' command is used to build and install Gem packages. Gemset is a set of gems collected together.</p>
+
+<p>When we install Ruby using RVM, it comes with two gemsets,</p>
+<ol>
+<li>Default : Used when no other gemset is specified</li>
+<li>Global : This gemset is inherited by every other gemset that is used</li>
+</ol>
+
+<h2>Step 5: Commands for Managing Gemsets</h2>
+<ol>
+<li>To see the available gemsets for the current Ruby:
+	<div class="hacker">rvm gemset list</div>
+</li>
+<li>To see gemsets for more than one Ruby installations:
+	<div class="hacker">rvm gemset list_all</div>
+</li>
+<li>To create a gemsets:
+	<div class="hacker">rvm gemset create gem_test</div>
+</li>
+<li>To copy a current gemset to a new gemset :
+	<div class="hacker">rvm gemset copy default gem_test</div>
+</li>
+<li>To use a particular gemset:
+	<div class="hacker">rvm gemset use gem_test</div>
+</li>
+<li>If you have more than one gemset installed and want to make one default for your Ruby:
+	<div class="hacker">rvm --default use ruby_version@gem_test</div>
+</li>
+<li>To delete a gemset:
+	<div class="hacker">rvm gemset delete gem_test</div>
+</li>
+<li>You have the provision to create project specific configurations to specify which Ruby version and gemset to use. You can specify this by giving following statement in a .rvmrc file.
+	<div class="hacker">rvm ruby_version@gemset</div>
+</li>
+</ol>
+
+<h2>Step 6: Configurations</h2>
+<p>RVM has its default configuration file in,</p>
+<div class="hacker">$ ~/.rvm/config/db</div>
+<p>If RVM is upgraded, then the customizations made to this file will be lost forever. Therefore the custom configurations can be made in '~/.rvm/user/db' so that the settings will retain.</p>
+
+<h2>Next Steps</h2>
+<p>In this article, we reviewed the steps involved in managing Ruby using Ruby Version Manager. The above mentioned commands can be used on any Linux distributions. </p>
+
+</body>
+</html>
