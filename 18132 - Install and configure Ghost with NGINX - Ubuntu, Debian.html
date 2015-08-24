@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and configure Ghost with NGINX - Ubuntu, Debian</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">CMS, Ghost, NGINX</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-host-ghost-with-nginx-on-digitalocean, https://www.digitalocean.com/community/tutorials/how-to-host-ghost-with-nginx-on-digitalocean</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#Debian;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">4</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18132</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Install and configure Ghost with NGINX - Ubuntu, CMS, Ghost, NGINX</p>
+    <h1>Install and configure Ghost with NGINX - Ubuntu</h1>
+    
+    <p><strong>Difficulty</strong>: <em>2</em><br/>
+        <strong>Time</strong>: <em>1.0 hrs</em></p>
+
+    <p>Ghost is simple blogging platform, fast to setup and easy to setup. Besides, it provides good customization options to the users. This article will assist you with the steps to set up a Ghost blogging platform with nginx on your Ubuntu platform. </p>
+<p class="note">Note: It is assumed that you are logged in as a root user.</p> 
+
+    <h2>Step 1: Prepare the machine</h2>
+    Login into the Ubuntu machine and perform these steps using the commands described here. It is assumed that you have the root or sudo user privileges when performing the following tasks:
+    <ol>
+	<li>Update your Ubuntu server (for the interactive installations, you might need to respond regarding the confirmation for installation)
+	<div class='hacker'>apt-get update</div>
+	<div class='hacker'>apt-get upgrade</div>
+    </li>
+	
+	<li>Install dependencies, including python and nodejs
+	<div class='hacker'>apt-get install unzip</div>
+	<div class='hacker'>apt-get install python-software-properties python g++ make</div>
+	<div class='hacker'>add-apt-repository ppa:chris-lea/node.js</div>
+	<div class='hacker'>apt-get update</div>
+	<div class='hacker'>apt-get install nodejs</div>
+    </li>
+	</ol>
+	
+	<h2>Step 2: Install and Configure Ghost</h2>
+    <ol>
+	<li>Download the latest version of Ghost from the site Ghost.org
+	<div class='hacker'>curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip</div>
+	</li>
+	<li>Unzip the Ghost to some suitable folder location (Recommended location is  /var/www/ghost)
+	<div class='hacker'>mkdir –p /var/www</div>
+	<div class='hacker'>unzip -uo ghost.zip -d /var/www/ghost</div>
+    </li>
+	
+	<li>Install the Ghost in the new ghost directory
+	<div class='hacker'>cd /var/www/ghost &amp;&amp; npm install --production</div>
+    </li>
+	<li>Start the Ghost (production environment) using the following command
+	<div class='hacker'>npm start --production</div>
+	The default port used by Ghost is 127.0.0.1:2368.
+	<p>When it starts, it should give a message “your blog is now available on <code> http://&lt;provided URL&gt;.</code> This value of URL can be updated in the config file <code>config.js.</code></p>
+   
+	<img src="images/18132-Ubuntu-GhostServerStart.png" alt="18132-Ubuntu-GhostServerStart.png"/> </li>
+	</ol>
+	
+<h2>Step 3: Install and Configure nginx</h2>
+Nginx, an open-source, high performance HTTP Server, is used to enable connections from the outside on port 80 to connect through to the port that Ghost is running on, so that people can see your blog.
+    <ol>
+	<li>Install nginx using the following command
+	<div class='hacker'>apt-get install nginx</div>
+	</li>
+	<li>To configure nginx, you need to remove all the default files and create new configuration files
+	<div class='hacker'>cd /etc/nginx/</div>
+	<div class='hacker'>rm sites-enabled/default</div>
+    </li>
+	
+	<li>To create a new Ghost configuration file, use the following commands
+	<div class='hacker'>cd sites-available</div>
+	<div class='hacker'>vi ghost</div>
+    </li>
+	<li>Put the following code into the file, , modifying it to adapt to your own configuration (the only thing you should need to change is the domain name):
+	<div class='hacker'><pre>
+server {
+    listen 0.0.0.0:80;
+    server_name http://192.169.171.249;
+    access_log /var/log/nginx/192.169.171.249.log;
+
+    location / {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header HOST $http_host;
+        proxy_set_header X-NginX-Proxy true;
+
+        proxy_pass http://127.0.0.1:2368;
+        proxy_redirect off;
+    }
+}
+		</pre></div>
+	</li>
+	
+	<li>Also, you need to create a symlink from the file in sites-available to sites-enabled
+	<div class='hacker'>cd ..</div>
+	<div class='hacker'>ln -s sites-available/ghost sites-enabled/ghost</div>
+    </li>
+	
+	<li>Open the ghost config file /var/www/ghost/config.js for editing
+	<div class='hacker'>vi /var/www/ghost/config.js</div>
+    </li>
+	
+	<li>Put the following code into the Ghost file (content highlighted in red needs to be updated). The URL could be your domain name (http://your-domainname.com) or the public IP address of your droplet
+	<div class='hacker'><pre>
+	production: {
+        url: 'http://192.169.171.249',
+        mail: {},
+        database: {
+            client: 'sqlite3',
+            connection: {
+                filename: path.join(__dirname, '/content/data/ghost.db')
+            },
+            debug: false
+        },
+
+        server: {
+            // Host to be passed to node's `net.Server#listen()`
+            host: '192.169.171.249',
+            // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
+            port: '2368'
+        }
+    }
+</pre></div>
+    </li>
+	
+	<li>Start the Ghost (production environment) using the following command
+	<div class='hacker'>cd /var/www/ghost </div>
+	<div class='hacker'>npm start --production</div>
+    </li>
+	
+	<li>Now the Ghost blog should be available on the web browser via the specified url. 
+In your browser, open the page (red highlighted text needs to be updated)<br/>
+<p><code>http://192.169.171.249:2368/ </code></p>
+<img src="images/18132-Ubuntu-GhostOnBrowser.png" alt="18132-Ubuntu-GhostOnBrowser"/>
+	</li>
+	</ol>
+	<h2>Step 4: Configure Upstart</h2>
+	Once the ghost blog is up and running, you can create an Upstart task to handle the Ghost. This ensures that in case the server get turned off at any time, Ghost will get kicked back on. 
+    <ol>
+	<li>Create a new Upstart configuration file using the following command
+	<div class='hacker'>cd /etc/init</div>
+	<div class='hacker'>vi ghost.conf</div>
+	</li>
+	<li>Put the following code in the configuration file
+	<div class='hacker'>
+	<pre>
+# ghost
+
+# description "An Upstart task to make sure that my Ghost server is always running"
+# author "Your Name Here"
+
+start on startup
+
+script
+cd /var/www/ghost 
+npm start --production
+end script
+</pre></div>
+    </li>
+	
+	<li>Save and exit by pressing ‘Esc’ and ‘:wq’
+    </li>
+	
+	</ol>
+<p>This should ensure that Ghost gets started whenever your server does, and allow you to easily control Ghost using service <code>ghost start, service ghost stop, and service ghost restart.</code></p>	
+	      
+    <h2>Conclusion</h2>
+<p> The Ghost blogging platform, with its ease of deployment and use, can help individuals and organizations setup and extend their content management infrastructure. When used with nginx, and with availability of options for setting up and supporting multiple environments like production, development or testing, it can be easily adapted for any environment. 
+</p>
+</body>
+</html>
