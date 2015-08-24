@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Scale Ruby on Rails Applications Across Multiple Servers - Arch Linux</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby on Rails, Scaling</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-scale-ruby-on-rails-applications-across-multiple-droplets-part-1, https://www.digitalocean.com/community/tutorials/how-to-scale-ruby-on-rails-applications-across-multiple-droplets-part-1</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">3</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Part of series, may need to include all together</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17954</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p>Scale Ruby on Rails Applications across Multiple Servers - Arch Linux, Ruby on Rails, Scaling</p>
+<h1>Scale Ruby on Rails Applications across Multiple Servers - Arch Linux</h1>
+
+<p><strong>Difficulty:</strong> <em>4</em></p>
+<p><strong>Time:</strong> <em>2 hr</em></p>
+
+<p>In this article, you will see ways to scale the Rails application which is configured with database servers like PostgreSQL and MySQL and then enable the app to distribute the load across multiple Arch Linux servers using Unicorn to handle multiple incoming requests. It is assumed that you have the <code>sudo</code> privileges to perform the steps given in this article</p>
+
+
+<h2>Scalable Application Server Overview</h2>
+<p>When it comes to building a scalable application server, two key elements are required:</p>
+<ul>
+<li>Application servers - Unicorn or Rails</li>
+<li>Webserver - Nginx</li>
+</ul>
+
+<p>Unicorn is often the preferred choice because of the ease-of-debugging, process management and load balancing capabilities. Nginx is popular because of its light weight web server which will be used as a load-balancer with Unicorn based application for the following example. </p>
+
+
+<h2>Prepare the Sever Build</h2>
+
+<ol> 
+<li>Update your Arch Linux server
+<div class='hacker'>pacman -Sy</div>
+</li>
+<li>Install curl 
+<div class='hacker'>pacman -S curl</div>
+</li>
+</ol>
+
+<h2>Setup the Application Servers</h2>
+<ol><li><p>To install Ruby on Rails using RVM, see: <a href="#"> Install Ruby on Rails using RVM - Arch Linux</a></p></li>
+
+<li>Install the Unicorn web application
+<div class='hacker'>gem install unicorn</div>
+</li>
+<li>Install node.js
+<div class='hacker'>pacman -S nodejs npm</div>
+</li>
+</ol>
+
+<h2>Create a Sample Rails Application</h2>
+
+<ol><li><p>Create a sample application in Rails using the below mentioned commands:</p>
+
+<p class="note">Note: Here we take the current directory of user as the web root.</p>
+
+<div class='hacker'>mkdir /tmp/rails_application</div>
+
+<div class='hacker'>cd /tmp/rails_application</div>
+
+<div class='hacker'>rails new HelloRails</div>
+
+<div class='hacker'>cd HelloRails</div>
+
+<div class='hacker'><pre># Create a sample resource
+rails generate scaffold Task title:string note:text</pre></div>
+
+<div class='hacker'><pre># Create a sample database
+RAILS_ENV=development rake db:migrate
+RAILS_ENV=production  rake db:migrate</pre></div>
+
+<div class='hacker'><pre># Create a directory to hold the PID files
+mkdir pids</pre></div>    
+
+<li><p>To access it from any public IP, you need to bind it to that public IP</p>
+<div class='hacker'>rails server --binding=192.169.171.148 </div>
+
+<p>This will boot up the default server on your machine. For this sample environment, WEBrick is the default server, which gets started as shown below:</p>
+<p><img src="images/17954-1.png" alt="17954" /> </p>
+</li>
+<li>It should now be accessible via the web browser. 
+<p>Now you should be able to access it via web browser:</p>
+<div class='hacker'>http://192.169.171.148:3000/tasks</div>
+</li>
+
+<li><p>To stop the server, press CTRL+C. Once the server is stopped, it will not be accessible via the web browser.</p></li>
+</ol>
+
+<h2>Install web-application (Unicorn) and Nginx </h2>
+
+<p>To start using Unicorn, it must be configured with your environment. There are multiple ways to configure the Unicorn servers. Below are some easy steps to configure the Unicorn server using the vim editor:</p>
+<ol>
+<li>Create a new configuration file unicorn.rb for storing all configuration settings
+<div class='hacker'>vim config/unicorn.rb</div>
+
+<p>Place below code in file (simply copy from here, and paste into the file).</p>
+
+<div class='hacker'><pre># Set the working application directory
+# working_directory "/tmp/rails_application/HelloRails"
+working_directory "/tmp/rails_application/HelloRails"
+
+# Unicorn PID file location
+# pid "/tmp/pids/unicorn.pid"
+pid "/tmp/rails_application/HelloRails/pids/unicorn.pid"
+
+# Path to logs
+# stderr_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+# stdout_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+stderr_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+stdout_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+
+# Number of processes
+# Rule of thumb: 2x per CPU core available
+# worker_processes 4
+worker_processes 5
+
+# Time-out
+timeout 20</pre></div>
+
+<p>Save and Exit the Vim editor by pressing Esc and pressing ":wq".</p>
+</li>
+<li>Run the following to start Unicorn in daemon mode using the configuration file
+
+<div class='hacker'>unicorn_rails -c /tmp/rails_application/HelloRails/config/unicorn.rb -D</div>
+</li>
+</ol>
+
+<h2>Setup Nginx as Reverse-Proxy and Load-Balancer</h2>
+<ol>
+<li>Install Nginx
+<div class='hacker'>pacman -S nginx</div>
+</li>
+<li>Take a note of the public IP address using ipconfig command 
+<p>Before configuring Nginx server, you need to keep a note of the public IP address of your droplet. For this, ifconfig command can be used.</p>
+
+<div class='hacker'>ifconfig</div>
+
+ <img src="images/17954-2.png" alt="17954" />
+
+<p>The value provided under the head inet addr is the public IP address of your droplet.</p>
+</li>
+<li>Open the Nginx configuration file 
+<div class='hacker'>vim /etc/nginx/nginx.conf</div>
+
+<p>Inside the block http {...}, insert the following code:</p>
+
+<div class='hacker'><pre># Set your server 
+# server_name www.example.com;
+
+upstream unicorn_servers {
+
+    # Add a list of your application servers
+    # Each server defined on its own line
+    # Example:
+    # server IP.ADDR:PORT fail_timeout=0;
+    server 10.192.28.70:8080 fail_timeout=0;
+
+}
+
+server {
+
+    # Port to listen on
+    listen 80;
+
+    location / {
+        # Set proxy headers        
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_pass http://unicorn_servers;
+    }
+
+}</pre></div>
+
+<p>Save and Exit the Vim editor by pressing Esc and pressing ":wq".</p>
+</li>
+<li>To get started, run the Nginx daemon by typing the below command:
+<div class='hacker'>systemctl start nginx</div>
+<p>To check the Nginx server, you can type in the public IP address directly into the web browser:</p>
+<div class='hacker'>http://192.169.171.148/ </div>
+<p>The welcome message by Nginx should be visible:</p>
+<img src="images/17954-3.png" alt="17954" />
+</li> 
+</ol>
+
+
+<h2>Conclusion</h2>
+<p>Using the above procedure, you can build a scalable application server using Unicorn or Rails applications server and Nginx webserver. This would enable any critical app (like PostgreSQL and MySQL) to distribute the load across multiple servers to handle multiple incoming requests.</p>
+
+</body>
+</html>
