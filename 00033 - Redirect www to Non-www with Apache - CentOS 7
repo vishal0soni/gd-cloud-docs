@@ -70,7 +70,7 @@ p.note {
 </head>
 
 <body>
-  <h1>Redirect www to Non-www with Apache - CentOS 7</h1>
+ <h1>Redirect www to Non-www with Apache - CentOS 7</h1>
 
     <p>
         <strong>Difficulty</strong>: <em><u>2</u></em><br />
