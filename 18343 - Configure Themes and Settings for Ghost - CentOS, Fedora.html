@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Configure Themes and Settings for Ghost - CentOS, Fedora</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ghost</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-change-themes-and-adjust-settings-in-ghost, https://www.digitalocean.com/community/tutorials/how-to-change-themes-and-adjust-settings-in-ghost</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">5</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18343</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Configuring themes and settings for Ghost on CentOS and Fedora, Ghost</p>
+<h1>Configure Themes and Settings for Ghost - CentOS, Fedora</h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>30 minutes</em></p>
+
+<p>Ghost is an open-source project for blogging and blogger. It provides a simple blogging platform, fast to setup and easy to setup. Besides, it provides good customization options to the users. This article will assist you with the steps to set up a Ghost blogging platform using NGINX on your Ubuntu platform. The themes used in this tutorial are available on internet as freeware from GhostMarketplace.</p>
+
+<h2>Change the Ghost Themes</h2>
+<ol>
+<li>Login to your instance and change directory to ghost theme using below command
+	<div class="hacker">cd /var/www/ghost/content/themes/</div>
+</li>
+<li>Install git and gitcore if not already installed
+	<div class="hacker">sudo yum -y install git wget unzip man</div>
+	<div class="hacker">sudo yum install npm</div>
+</li>
+<li>Clone theme from GitHub project
+	<div class="hacker">sudo git clone https://github.com/polygonix/N-Coded.git</div>
+</li>
+<li>Change the ownership of the ghost user
+	<div class="hacker">sudo chown -R apache:apache N-Coded</div>
+
+<p>In case you get an invalid user error, then please create ghost user then retry.</p>
+</li>
+<li>Restart <code>npm</code> production services
+	<div class="hacker">sudo npm start --production</div>
+</li>    
+</ol>
+
+<h2>Change the Ghost Settings</h2>
+<ol>
+<li><p>Open your browser and type <em>http://your_IP_address/ghost/settings/general</em> in the address bar</p>
+</li>
+<li>It will redirect you to the time setting page. Fill the required information about your blog and credentials here. You will see the first setup form as:
+ <br/><img src="images/18343-1.png" alt="18343" />
+</li>
+<li>In the general setting page, scroll down to see theme label. Select the theme from the drop down and click Save
+ <br/><img src="images/18343-2.png" alt="18343" />
+</li>
+<li>Refresh your ghost public home page to see the blog with updated theme  
+<br/><img src="images/18343-3.png" alt="18343" />
+</li>
+</ol>
+<h2>Next Steps</h2>
+<p>In this article, we reviwed the steps involved in configuring the themes and settings on Ghost on CentOS and Fedora.</p>
+</body>
+</html>
