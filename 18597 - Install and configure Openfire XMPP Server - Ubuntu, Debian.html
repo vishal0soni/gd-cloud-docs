@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and configure Openfire XMPP Server - Ubuntu, Debian</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Miscellaneous, Java,</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-openfire-xmpp-server-on-a-debian-or-ubuntu-vps, https://www.digitalocean.com/community/tutorials/how-to-install-openfire-xmpp-server-on-a-debian-or-ubuntu-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#Debian;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">7</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18597</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up Openfire XMPP server on Ubuntu and Debian, Miscellaneous, Java,</p>
+<h1>Install and configure Openfire XMPP Server - Ubuntu, Debian</h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>20 minutes</em></p>
+
+<p>In this article, we will assist you to understand the installation and configuration of Openfire XMPP Server on Ubuntu and Debian.</p>
+
+<h2>Understanding XMPP</h2>
+<p>Extensible Messaging and Presence Protocol (XMPP) is a XML-based communication protocol for middleware. It enables the near-real-time exchange of structured yet extensible data between any two or more network entities.</p>
+
+<h2>Understanding Openfire</h2>
+<p>Openfire enables collaboration in real time and provides a tightly secured and high performing server. You can use Open Source Apache License for Openfire. You can easily set it up and configure using Java. </p>
+
+<p class="note">Note: Openfire doesn't allow any chat options. </p>
+
+<h2>Step 1: Installing Openfire</h2>
+<ol>
+<li>Update the operating system
+		<div class="hacker">sudo apt-get update</div>
+</li>        
+<li>If java is installed in your system then check the version of java using the following command
+		<div class="hacker">Java  -version</div>
+</li>        
+<li>If java is not installed in your system then run the following command.
+      	<div class="hacker">sudo apt-get install default-jre</div>
+</li>
+<li>Download the Openfire 
+
+	<div class="hacker">sudo 	wget -O openfire.deb http://www.igniterealtime.org/downloadServlet?filename=openfire/openfire_3.8.2_all.deb</div>
+</li>
+<li>This will initiate the download of the Openfire Debian package to openfire.deb. Next, install the package:
+
+	<div class="hacker">sudo dpkg --install openfire.deb</div>
+	<p>Openfire has been successfully installed in your system.</p>
+</li>
+<li><p>Now visit http:// your_IP/9090 on any browser, then Openfire wizard</p>
+</li>
+<li>The first page will allow you to choose your language while the second page is server setting page where you can define your domain name or IP. See the below image:
+<br /><img src="images/18597-1.png" alt="18597" />
+</li>            
+
+<li>Once you are done with the setup, login as an Admin on Openfire login page
+<br /><img src="images/18597-2.png" alt="18597" />
+</li>           
+
+<li>To see server information, click on the 'server manager' tab
+<br /> <img src="images/18597-3.png" alt="18597" /><br /><br />
+</li>           
+
+<li>If you want a secure connection to the server then go to Server Settings -> Registration first and then login and disable the required options. 
+<br /><img src="images/18597-4.png" alt="18597" />
+</li>
+</ol>
+        
+<h2>Step 2: Execute and Stop Openfire</h2>
+<ol>
+<li>If you need to stop Openfire, then type the following command:
+	<div class="hacker">sudo /etc/init.d/openfire stop</div>
+</li>    
+<li>To start Openfire, type:
+	<div class="hacker">sudo /etc/init.d/openfire start</div>
+</li>    
+</ol>
+
+<h2>Next Step</h2>
+<p>By using all the above steps you'll be able to install and configure Openfire XMPP server on Ubuntu and Debian.</p>
+
+</body>
+</html>
