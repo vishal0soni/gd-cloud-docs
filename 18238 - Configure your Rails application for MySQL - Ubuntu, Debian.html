@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Configure your Rails application for MySQL - Ubuntu, Debian</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+.style1 {color: #FF0000}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">MySQL, Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-use-mysql-with-your-ruby-on-rails-application-on-ubuntu-14-04, https://www.digitalocean.com/community/tutorials/how-to-use-mysql-with-your-ruby-on-rails-application-on-ubuntu-14-04</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#Debian;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">4</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18238</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up Rails application for MySQL server on Ubuntu and Debain, MySQL, Ruby, Rails</p>
+    <h1>Configure your Rails application for MySQL – Ubuntu, Debain</h1>
+    
+    <p><strong>Difficulty</strong>: <em>1</em><br/>
+        <strong>Time</strong>: <em>30 minutes</em></p>
+
+    <p>This article will assist you to install MySQL, install MySQL adaptor, create a Rails Application, configure database connection and finally create an application database on Ubuntu or Debain distribution.</p> 
+	<p class="note">Note: We assume that you are logged in as a sudo user and <a href="#">installed Ruby on Rails using RVM in Ubuntu</a></p> 
+    <h2>Step 1: MySQL Installation</h2>
+             <ol>
+			 <li>Firstly update apt-get 
+			 <div class='hacker'>sudo apt-get update</div>
+			 </li>
+			 <li>To Install MySQL  and all its dependencies, type
+			 <div class='hacker'>sudo apt-get install mysql-server mysql-client libmysqlclient-dev</div>
+			 During the installation, your server will ask you to select and confirm a password for the MySQL "root" user.
+			 <p>When the installation is complete, we need to run some additional commands to get our MySQL environment set up securely. First, we need to tell MySQL to create its database directory structure where it will store its information. You can do this by typing</p>
+			 <div class='hacker'>sudo mysql_install_db</div>
+			 </li>
+			 <li>Run the MySQL installation process, by typing
+			 <div class='hacker'>sudo mysql_secure_installation</div>
+			 </li>
+			 <li>After you have finished the above command, a welcome screen displays the following
+			 <div class='hacker'> 
+			 <pre>
+	NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
+	SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+
+	In order to log into MySQL to secure it, we'll need the current
+	password for the root user.  If you've just installed MySQL, and
+	you haven't set the root password yet, the password will be blank,
+	so you should just press enter here.
+	
+	Enter current password for root (enter for none): 
+			 </pre>
+			 </div>
+			 <p>If you have created a password by using the following command, then hit Enter</p>
+			 <div class='hacker'>/usr/bin/mysqladmin -u root password 'new-password'</div>
+			 <div class='hacker'>/usr/bin/mysqladmin -u root -h myt password 'new-password'</div>
+			 <p>Next, answer the following questions</p>
+			 <div class='hacker'>
+	  <pre>
+	  Set root password?                     --> Y
+	  Remove anonymous users?                --> Y
+	  Disallow root login remotely?          --> Y
+	  Remove test database and access to it? --> Y
+	  Reload privilege tables now?           --> Y
+</pre>
+</div>
+			 </li></ol>
+			 
+			 
+			
+			 
+	<h2>Step 2: Install MySQL Adapter</h2>
+             <ol>
+			 <li>Before connecting Rails application to MySQL Server, we need a MySQL Adapter.<code> mysql12 </code>gem provides this  functionality. To install it, type the following command
+			 <div class='hacker'>sudo gem install mysql2</div>
+			 </li>
+			 <li>To update gem version, type
+			 <div class='hacker'>sudo gem update –system</div>
+			 </li>
+			 </ol>
+			 
+			 
+			 <h2>Step 3: Setup your Rails Application</h2>
+             <ol>
+			 <li>Install Rails package with following command
+			 <div class='hacker'>gem install rails</div>
+			 </li>
+			 <li>Then create a Rails application and Use the -d mysql option to set MySQL as the database
+			 <div class='hacker'>rails new HelloWorld -d mysql</div>
+				</li>
+				 <li>Next, move to the application directory
+			 <div class='hacker'>cd HelloWorld</div>
+				</li>
+			 </ol>
+			 
+			 <h2>Step 4: Setup Database Connection</h2>
+		If you have MySQL's root user password, then the MySQL root login will be used to create your application's test and development databases.
+             <ol>
+			 <li>Open your application database configuration file 
+			  <div class='hacker'>vi config/database.yml</div>
+			 </li>
+			  <li>In this file type following in the password section
+			    <div class='hacker'>password: <span class="style1">mysql_root_password</span></div>
+			 </li>
+			  <li>Save and exit
+			 </li>
+			 <li>Connect to the database using the MySQL client
+			 <div class='hacker'>mysql -u root –p</div>
+			 Enter the password for <span class="style1">mysql_root_password</span> </li>
+			 </ol>	 
+			 
+			  <h2>Step 5:Create a new MySQL database</h2>
+             <ol>
+			 <li>Type the following command to create a new database 
+			  <div class='hacker'>create database MyDatabase;</div>
+			 </li>
+			  <li>Revoke the privileges
+			  <div class='hacker'>FLUSH PRIVILEGES;</div>
+			 </li>
+			 <li>Exit from Database
+			 <div class='hacker'> exit</div>
+			 </li>
+			  </ol>	
+            
+    <h2>Next Steps</h2>
+   By using all the above steps you’ll be able to configure MySQL Server on Ubuntu or Debian for your Rails application.
+   
+</body>
+</html>
