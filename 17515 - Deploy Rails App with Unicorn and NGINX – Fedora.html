@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <title>17515</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <style type="text/css">
+    div.hacker {
+        background-color: #666;
+        border: 1px solid #ccc;
+        color: #fff;
+        font-family: "Lucida Console", "Courier New", Courier, fixed;
+        font-size: 95%;
+        line-height: 160%;
+        margin-bottom: 1.5em;
+        padding: 10px;
+    }
+    
+    p.note {
+        background-color: #ffffe6;
+        border: 1px solid #eee;
+        color: #666;
+        padding: .8em 1.6em;
+        margin: 15px 0;
+    }
+    
+    .warning {
+        border: 1px #d25100 solid;
+        padding: .5em 1em .5em 4em;
+        margin: 10px 20px 15px 20px;
+        background-image: url('@{help-img-path}/img_warning.gif');
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-color: #ededed;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        /* -moz-border-bottom-radius: 0;9 */
+        -webkit-border-bottom-radius: 0;
+        padding-top: 14px;
+        padding-bottom: 15px;
+    }
+	
+    </style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails, NGINX</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5, https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - &#39;Initial Server Setup,&#39; FQDN pointing to server. Merge distros to forks if steps are identical across the fork. Skip all content until step 4 (Install Ruby), since those are covered in the prereqs, and its assumed that they can look at other instructions to actually buy a server. Link to Apache version &#39;Deploy Rails Apps with Passenger and Apache.&#39; Use notes on Cent/Fedora article, but keep formatting and content of Ubuntu article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17715</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ReviewComments msdt:dt="string">8/12 cj: Please fix the link, add the prereq listed in Request Notes, and also fix the conclusion, which has extra words and does not make sense. Thanks.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:PercentResearch msdt:dt="string">0.250000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.750000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">3.00000000000000</mso:HoursDraftingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+
+</head>
+
+<body>
+    <p>Setting up Rails application with Unicorn and NGINX in Fedora, Ruby, Rails, NGINX</p>
+    <h1>Deploy Rails App with Unicorn and NGINX – Fedora</h1>
+    <p><strong>Difficulty</strong>: <em>2</em></p>
+    <p><strong>Time</strong>: <em>30 minutes</em></p>
+    <p>In this article, we will be configuring a multi-layer deployment installation to host Rails based Ruby web applications. To do this, we will use the powerful, flexible, and extremely successful Unicorn application server running behind Nginx. </p>
+	 <p class='note'>Note: Assuming that we are logged in as a sudo user.</p>
+   <h2>Prerequisites</h2>
+   <p>Before we proceed, we need to install rbenv and PostgreSQL on our Ruby on Rails application. So please visit <a href="#">17520 - Install Ruby on Rails with rbenv – Fedora</a> and <a href="#">17525 - Use PostgreSQL with your Ruby on Rails Application - Fedora</a> links.
+   <h2>Prepare the deployment Server</h2>
+     <ol>
+        <li>Install the bundle of development tool by using the following command
+			<div class='hacker'>sudo yum groupinstall -y 'development tools'</div>
+		</li>
+		<li>Install EPEL repository and update the operating system
+			<div class='hacker'>sudo wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-	release-7-5.noarch.rpm</div>
+			<div class='hacker'>sudo rpm -ivh epel-release-7-5.noarch.rpm</div>
+			<div class='hacker'>sudo yum –y update</div>
+		</li>
+		<li>Now, we need to install <code>curl-devel</code> and some other dependencies  by using  following command
+			<div class='hacker'>sudo yum install -y curl-devel nano sqlite-devel libyaml-devel</div>
+		</li>
+		<li>Install Nginx
+			<div class='hacker'>sudo service nginx start</div>
+		</li>
+		<li>Start the Nginx service
+			<div class='hacker'>gem install unicorn</div>
+		</li>
+		<li>Tell the server to start Nginx upon reboot
+			<div class='hacker'>sudo systemctl enable nginx</div>
+		</li>
+		<li>Install Unicorn
+			<div class='hacker'>gem install unicorn</div>
+		</li>
+	</ol>
+   <h2>Prepare a Rails Application for Deployment</h2>
+    <ol>
+        <li>Create a new directory 
+            <div class='hacker'>sudo mkdir –p /var/www</div>
+		</li>
+        <li>Provide all permissions for this directory and go to that directory
+            <div class='hacker'>cd /var/</div>
+			<div class='hacker'>sudo chmod 777  www/</div>
+      </li>
+        <li>Create a Rails Application in this directory
+          <div class='hacker'>rails new HelloWorld
+		 </div>
+      </li>
+        <li>Now move to the application directory
+            <div class='hacker'>cd HelloWorld/</div>
+        </li>
+		<li>Create a sample resource
+            <div class='hacker'>rails generate scaffold Task title:string note:text</div>
+        </li>
+		<li>Create a sample database
+            <div class='hacker'>  RAILS_ENV=development rake db:migrate
+		<br/> RAILS_ENV=production  rake db:migrate
+		</div>
+        </li>
+		<li>Create a directory to hold the PID files
+            <div class='hacker'>mkdir pids</div>
+        </li>
+		<li>Enter the application directory and run the following command to run the application
+            <div class='hacker'>rails s</div>
+			<p>To terminate the user, hit CTRL+C.</p>
+        </li>
+		<li>For binding to web browser, run the following command
+            <div class='hacker'>rails server --binding=[your droplet's IP]</div>
+        </li>
+		<li>We can now access it on any browser by visiting at <em>http://[your_droplet's_IP]:3000/tasks</em>
+      </li>
+		<li>Upload source code from 
+            <a href="#">Use SFTP to Securely Transfer Files with a Remote Server - ALL DISTROS</a> link
+        </li>
+		
+</ol>
+		
+		<h2>Configure the Server</h2>
+       <ol> <li>To configure Unicorn, move to the rail Application directory
+            <div class='hacker'>Cd /var/www/HelloWorld</div>
+        </li>
+        <li>Create a blank <code>unicorn.rb</code> document
+            <div class='hacker'>sudo vim config/unicorn.rb</div>
+        </li>
+		<li>Add the following code in this file
+            <div class='hacker'># Set the working application directory
+<br/>	# working_directory "/path/to/your/app"
+<br/>	working_directory "/var/www/HelloWorld"
+<br/>
+<br/>	# Unicorn PID file location
+<br/>	# pid "/path/to/pids/unicorn.pid"
+<br/>	pid "/var/www/HelloWorld"/pids/unicorn.pid"
+<br/>
+<br/>	# Path to logs
+<br/>	# stderr_path "/path/to/log/unicorn.log"
+<br/>	# stdout_path "/path/to/log/unicorn.log"
+<br/>	stderr_path "/var/www/HelloWorld/log/unicorn.log"
+<br/>	stdout_path "/var/www/HelloWorld/log/unicorn.log"
+<br/>
+<br/>	# Unicorn socket
+<br/>	listen "/tmp/unicorn.[app name].sock"
+<br/>	
+listen "/tmp/unicorn.HelloWorld.sock"
+<br/>
+<br/>	# Number of processes
+<br/>	# worker_processes 4
+<br/>	worker_processes 2
+<br/>
+<br/>	# Time-out
+<br/>	timeout 30
+	</div>
+	<p>Save and exit.</p>
+ 	<p class='note'>Note: Run the unicorn_rails inside the app directory to check the application.</p>
+        </li>
+		<li>Configure Nginx and enable it to communicate with Unicorn. To do this, we need to edit the default configuration file: default.conf and leave nginx.conf 
+            <div class='hacker'>sudo vim /etc/nginx/nginx.conf.default</div>
+        </li>
+		<li>Swap the file’s content with the following lines
+            <div class='hacker'>upstream app {
+<br/>   	 # Path to Unicorn SOCK file, as defined previously
+<br/>   	 server unix:/tmp/unicorn.HelloWorld.sock fail_timeout=0;
+<br/>	}
+<br/>
+<br/>	server {
+<br/>
+<br/>   	 listen 80;
+<br/>   	 server_name localhost;
+<br/>
+<br/>   	 # Application root, as defined previously
+<br/>  	  root /root/HelloWorld/public;
+<br/>
+<br/>   	 try_files $uri/index.html $uri @app;
+<br/>
+<br/>   	 location @app {
+<br/>          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+<br/>          proxy_set_header Host $http_host;
+<br/>          proxy_redirect off;
+<br/>          proxy_pass http://app;
+<br/>   	 }
+<br/>
+<br/>    	error_page 500 502 503 504 /500.html;
+<br/>     	client_max_body_size 4G;
+<br/>    	keepalive_timeout 10;
+<br/>	}  
+	</div>
+	<p>Save and exit.</p>
+        </li>
+</ol>
+		
+		<h2>Manage the servers</h2>
+       <ol> <li>Once we finish configuring both the servers, initiate the Unicorn and run it as a daemon by using the configuration file. Ensure  we are inside the application directory and run the following command
+            <div class='hacker'>unicorn_rails -c config/unicorn.rb –D</div>
+        </li>
+        <li>Restart the Nginx service
+            <div class='hacker'>sudo service nginx restart
+	      </div>
+		 </li>
+        <li>Test the droplet's IP address (or the domain name associated to it) at <em>http://[Your_droplet's_IP address]/tasks</em>
+          </li></ol>
+		<h2>Next Step</h2>
+		By using all the above steps we will be able to deploy our Rails application with Unicorn and Nginx on Fedora.    
+</body>
+
+</html>
