@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and Configure RethinkDB - CentOS, Fedora</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">NoSQL</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-rethinkdb-on-an-ubuntu-12-04-vps, https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-rethinkdb-on-an-ubuntu-12-04-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">6</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18526</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up RethinkDB in CentOS and Fedora, NoSQL</p>
+<h1>Install and Configure RethinkDB - CentOS, Fedora</h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>20 minutes</em></p>
+
+<p>This article will guide you through the installation of RethinkDB in CentOS and Fedora. RethinkDB belongs to the NoSQL family that can be easily configured with JSON storage database. It has two components - the database itself and the client driver to access the database from our selected database. You will need <code>sudo</code> access to complete these steps.</p>
+
+<h2>Install the server</h2>
+<ol>
+<li>We will add the repositories for RethinkDB yum to the existing list of repositories and then install it using the following command:
+
+<div class="hacker">sudo wget http://download.rethinkdb.com/centos/6/`uname -m`/rethinkdb.repo \</div>
+    <div class="hacker">-O /etc/yum.repos.d/rethinkdb.repo</div>
+
+	<div class="hacker">sudo yum install rethinkdb</div>
+    </li>
+<li>We are done with the RethinkDB installation but we need client drivers as well.
+</li>
+</ol>
+
+<h2>Install the client drivers</h2>
+<ol>
+<li>At present official drivers are available for three languages - Javascript, Ruby, and Python. To install Ruby driver, first install rubygems with the following command:
+	<div class="hacker">sudo yum install rubygems</div>
+</li>
+<li>Now install gem 
+		<div class="hacker">sudo gem install rethinkdb</div>
+</li>
+<li><p>Now you can start the RethinkDB server with "$ rethinkdb" command.</p> </li>
+<li>To install Javascript driver use the following command:
+		<div class="hacker">sudo yum install npm</div>
+		<div class="hacker">npm install rethinkdb</div>
+</li>
+<li>To install Python driver, use the following command:
+<div class="hacker">sudo easy_install pip</div>
+<div class="hacker">sudo pip install rethinkdb</div>
+</li>
+</ol>
+
+<h2>Next Steps </h2>
+<p>In this article, we have used the binary files to install RethinkDB and its client drivers. However, you can also install them using the source file.</p>
+
+</body>
+</html>
