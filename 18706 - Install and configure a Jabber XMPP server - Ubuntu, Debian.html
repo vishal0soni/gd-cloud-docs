@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and configure a Jabber XMPP server - Ubuntu, Debian</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">XMPP</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-ejabberd-xmpp-server-on-ubuntu, https://www.digitalocean.com/community/tutorials/how-to-install-ejabberd-xmpp-server-on-ubuntu</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#Debian;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">8</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18706</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Configuring Jabber XMPP server in Ubuntu and Debian, XMPP</p>
+<h1>Install and configure a Jabber XMPP server - Ubuntu, Debian</h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>20 Minutes</em></p>
+
+<p>Ejabberd is written in Erlang and known as a high performing Jabber/XMPP server. It has its own web-based management interface. This article explains the installation of Jabber XAMPP server in Ubuntu and Debian. You’ll need access to root privileges to complete these steps.</p>
+
+<h2>Installation </h2>
+<ol>
+<li>Use following command to install the server along with its component.
+	<div class="hacker">sudo apt-get install ejabberd</div>
+</li>
+<li>We have installed the server but we need to change a few configuration settings.</li>
+</ol>
+
+<h2>Configuration Settings</h2>
+<ol>
+<li>We need to edit the configuration file. It resides at /etc/ejabberd/ejabberd.cfg. Use any editor and open this file.
+</li>
+<li>We need to add the host name we want server to use , so swap
+		    <div class="hacker"> {hosts, ["localhost"]} </div>
+<p>with </p>
+      <div class="hacker">{hosts, ["localhost","myserver.com"]}</div>
+</li>      
+<li>Now we need to create an admin user so swap
+	<div class="hacker">{acl, admin, {user, "", "localhost"}}</div>
+	<p>with </p>
+     <div class="hacker"> {acl, admin, {user, "my_admin", "myserver.com"}}</div>
+</li>      
+<li>Now restart the service with following command
+	<div class="hacker">sudo service ejabberd restart</div>
+</li>
+<li>To set password for admin user use following command
+	<div class="hacker">sudo ejabberdctl register my_admin myserver.com password</div>
+</li>    
+</ol>
+
+<h2>Next Steps</h2>
+<p>In this article, we reviewed the steps involved with the installation and configuration of jabberd server. To change any other configurations you’ll need to log in to the web-based management panel. In your browser you can go to http:// myserver.com:5280/admin and enter admin credentials.</p>
+
+</body>
+</html>
