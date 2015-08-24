@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Use this template for articles that include steps for accomplishing a task or tasks (for example, installing). For articles that explain or describe something (such as an operating system), use the Informational template instead.  -->
+
+<title>Install a UFW firewall - Arch Linux</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleID msdt:dt="string">19194</mso:ArticleID>
+<mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Reference msdt:dt="string"></mso:Reference>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+<mso:HoursEditingEstimated msdt:dt="string">0.500000000000000</mso:HoursEditingEstimated>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Christine Tzeng</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:Tester msdt:dt="string">20</mso:Tester>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:PrereqOrdering msdt:dt="string">0</mso:PrereqOrdering>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester msdt:dt="string">Prabhu Mouli</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester>
+<mso:ArticlePriority msdt:dt="string"></mso:ArticlePriority>
+<mso:AssignedTo1 msdt:dt="string">27</mso:AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Brief description of what this article accomplishes. Include any keywords indicated in the spreadsheet. This blurb will not appear with the content.</p>
+    <h1>Article Title from Spreadsheet</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>Value from spreadsheet</u></em><br/>
+        <strong>Time</strong>: <em><u>Time value</u></em></p>
+
+    <p>Opening paragraph. Summarize the process and tasks that this article includes. Use no more than four sentences. If there are any prerequisite tasks, mention them here and include links if appropriate.</p>
+
+    <h2>Section 1 title ("To do such and such")</h2>
+    <p>Present the procedure's steps in a numbered list preceded by an optional explanatory blurb. Typically, use one step per list item, but you can also combine short related steps into one list item. If the procedure has a single step, use a bullet instead of a numbered step.</p>
+    
+    <ol>
+    <li>List item</li>
+    <li>List item</li>
+    <li>List item</li>
+    <li>List item</li>
+    </ol>
+    
+    <p>Format <code>code snippets like this</code>, <em><u>variables like this</u></em>, and <strong>interface items like this</strong>.</p>
+    
+    <p>Include any of the following elements as needed:</p>
+ 
+    <div class="hacker">command (Put each command on a separate line.)</div>
+
+    <p class="note">note</p>   
+    <p class="warning">warning</p> 
+    
+	<table>
+		<tr>
+			<th>Table head</th>
+			<th>Table head</th>
+			<th>Table head</th>
+		</tr>
+		<tr>
+			<td>Content</td>
+			<td>Content</td>
+			<td>Content</td>
+		</tr>
+		<tr>
+			<td>Content</td>
+			<td>Content</td>
+			<td>Content</td>
+        </tr>
+        <tr>
+			<td>Content</td>
+			<td>Content</td>
+			<td>Content</td>
+        </tr>
+        <tr>
+			<td>Content</td>
+			<td>Content</td>
+			<td>Content</td>
+        </tr>
+    </table>
+              
+	<p>Bulleted list:</p>
+    <ul>
+        <li>List item</li>
+        <li>List item</li>
+        <li>List item</li>
+        <li>List item</li>
+    </ul>       
+           
+    <p>Image (PNG only). See editorial guidelines for more information. </p> 
+   
+    <h2>Section 2 title ("To do such and such")</h2>
+    <p>Section 2 content.</p>
+             
+   <h2>Section 3 title ("To do such and such")</h2>
+   <p>Section 3 content.</p>
+             
+    <h2>Next steps</h2>
+    <p>A brief summary of what the user just accomplished. Direct the user to explore a related subject or to complete a related task. Add links to procedural articles if appropriate. For example, if the user just installed NGINX, you might include links to NGINX tuning articles.</p>
+   
+</body>
+</html>
