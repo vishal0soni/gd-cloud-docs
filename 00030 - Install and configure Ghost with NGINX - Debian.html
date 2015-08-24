@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Use this template for articles that include steps for accomplishing a task or tasks (for example, installing). For articles that explain or describe something (such as an operating system), use the Informational template instead.  -->
+
+<title>00030 - Install and configure Ghost with NGINX – Debian</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleID msdt:dt="string">00030</mso:ArticleID>
+<mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Reference msdt:dt="string">https://ghost.org/forum/installation/147-setup-ghost-with-nginx-on-debian/, https://ghost.org/forum/installation/147-setup-ghost-with-nginx-on-debian/</mso:Reference>
+<mso:Week msdt:dt="string">7.00000000000000</mso:Week>
+<mso:LinuxDistributions msdt:dt="string">;#Debian;#</mso:LinuxDistributions>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:PrereqOrdering msdt:dt="string">0</mso:PrereqOrdering>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:ArticlePriority msdt:dt="string"></mso:ArticlePriority>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:Difficulty msdt:dt="string"></mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Install and configure Ghost with NGINX - Debian, CMS, Ghost, NGINX</p>
+    <h1>Install and configure Ghost with NGINX - Debian</h1>
+    
+   <p>Ghost is simple blogging platform, fast to setup and easy to setup. Besides, it provides good customization options to the users. This article describes the steps to set up a Ghost blogging platform with nginx on a Debian platform.</p> 
+	<p class="note">Note: It is assumed that the user has sudo privileges user.</p> 
+    <h2>Prepare the machine</h2>
+             <ol>
+			 <li>Update the Debian machine
+			 <div class='hacker'>sudo apt-get update</div>
+			 </li>
+			 <li>Install the additional dependencies 
+			 <div class='hacker'>sudo apt-get install unzip</div>
+			 <div class='hacker'>sudo apt-get install git-core curl build-essential openssl libssl-dev</div>
+			 </li>
+			 <li>Download the <code>node.js</code> source
+			 <div class='hacker'>cd /tmp</div>
+			 <div class='hacker'>git clone https://github.com/joyent/node.git</div>
+			 </li>
+			 <li>Select the appropriate version from the list of provided version numbers (in this article, version v0.12.7 is installed)
+			  <div class='hacker'>cd node</div>
+			  <div class='hacker'>git tag</div>
+			  <div class='hacker'>git checkout v0.12.7</div>
+			  </li>
+			  <li>Compile <code>node.js</code> 
+			 <div class='hacker'>./configure &amp;&amp; make &amp;&amp;make install</div>
+			 </li>
+			 <li>Check the version numbers of the installations done
+			 <div class='hacker'>node -v</div>
+			 <div class='hacker'>npm –v</div>
+			 </li>
+			 </ol>
+			
+			
+			 <h2>Install Ghost</h2>
+             <ol>  
+			 <li>Download the Ghost 
+			 <div class='hacker'>cd</div>
+			  <div class='hacker'>wget https://ghost.org/zip/ghost-latest.zip</div>
+			   <div class='hacker'>unzip ghost-latest.zip</div>
+			 </li>
+			   <li>Install <code>npm</code> 
+			 <div class='hacker'>npm install –production</div>
+			 </li>
+			  <li>Update the settings in the <code>config.js</code> file 
+			 <div class='hacker'>vim config.js</div>
+			 </li>
+			  <li>Locate the following code, and update the URL and host values with appropriate IP address (the url and the host ip address needs to be modified as per your settings)
+			 <div class='hacker'> 
+			 <pre>
+	    production: {
+        url: 'http://192.169.169.114',
+        mail: {},
+        database: {
+            client: 'sqlite3',
+            connection: {
+                filename: path.join(__dirname, '/content/data/ghost.db')
+            },
+            debug: false
+        },
+
+        server: {
+            // Host to be passed to node's `net.Server#listen()`
+            host: '192.169.169.114',
+            // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
+            port: '2368'
+        }
+    	}
+</pre>
+			 </div>
+			 </li>
+			 <li>Configure the tool <code>forever</code> as the node daemon tool 
+			 <div class='hacker'>npm install -g forever</div>
+			 </li>
+			 <li>Start the Ghost server 
+			 <div class='hacker'>NODE_ENV=production forever start index.js</div>
+			 </li>
+			 <li>Upon successful start, the ghost blog should be available on the browser as <em>http://192.169.169.114:2368/</em> (replace the given ip address with the public IP address)
+			 <img src='images/00030- GhostOnBroowser.png' alt='00030- GhostOnBroowser.png'/>
+			 </li>
+			 <li>Stop the server
+			 <div class='hacker'>forever list</div>
+			  <div class='hacker'>forever stop 0 # if of Ghost process</div>
+			  <p>Or</p>
+			   <div class='hacker'>forever stopall</div>
+			 </li>
+			 </ol>
+			 
+			<h2>NGINX setup</h2>
+             <ol>
+			 <li>Install Nginx
+			 <div class='hacker'>apt-get install nginx</div>
+			 </li>
+			 <li>Configure the <code>nginx.conf</code> file by replacing the following content 
+			 <div class='hacker'>
+			 <pre>
+user www-data;
+worker_processes 4;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 768;
+    # multi_accept on;
+}
+http {
+
+    ##
+    # Basic Settings
+    ##
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    # server_tokens off;
+    # server_names_hash_bucket_size 64;
+    # server_name_in_redirect off;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    ##
+    # Logging Settings
+    ##
+
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    ##
+    # Gzip Settings
+    ##
+
+    gzip on;
+    gzip_disable "msie6";
+
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/x-javascript text/xml application/      xml application/xml+rss text/javascript;
+
+    ##
+    # Virtual Host Configs
+    ##
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/*;
+}
+</pre>
+			 </div>
+			 </li>
+			 
+			 <li>Prepare the Ghost configuration file
+			 <div class='hacker'>
+			 <pre>
+server {
+    listen         80;
+    server_name 192.169.169.114
+    root ~;
+    index index.php;
+
+    if ($http_host != “192.169.169.114") {
+         rewrite ^ http://192.169.169.114request_uri permanent;
+    }
+
+    location / {
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+        proxy_pass http://127.0.0.1:2368;
+    }
+
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|ttf|woff)$ {
+        access_log off;
+        expires 30d;
+        add_header Pragma public;
+        add_header Cache-Control "public, mustrevalidate, proxy-revalidate";
+        proxy_pass http://127.0.0.1:2368;
+    }
+
+    location = /robots.txt { access_log off; log_not_found off; }
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location ~ /\.ht {
+            deny all;
+    }
+}
+</pre>
+			 </div>
+			 </li>
+			 <li>Restart the Nginx
+			 <div class='hacker'>sudo /etc/init.d/nginx start</div>
+			 </li>
+			  <li>Setup the Ghost by typing the following in the browser as <em>http://192.169.169.114:2368/ghost/setup/</em>
+			 </li>
+			 </ol>
+            
+    <h2>Conclusion</h2>
+   The Ghost blogging platform, with its ease of deployment and use, can help individuals and organizations setup and extend their content management infrastructure. When used with Nginx, and with availability of options for setting up and supporting multiple environments like production, development or testing, it can be easily adapted for any environment.
+   
+</body>
+</html>
