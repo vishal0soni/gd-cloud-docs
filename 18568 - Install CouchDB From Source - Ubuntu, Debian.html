@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install CouchDB From Source - Ubuntu, Debian</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">NoSQL,</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-couchdb-from-source-on-an-ubuntu-13-04-x64-vps, https://www.digitalocean.com/community/tutorials/how-to-install-couchdb-from-source-on-an-ubuntu-13-04-x64-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#Debian;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">6</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18568</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<h1>Install CouchDB From Source - Ubuntu, Debian</h1>
+
+<p><strong>Difficulty:</strong> <em>4</em></p>
+<p><strong>Time:</strong> <em>30 minutes</em></p>
+
+<p>CouchDB database is known to embrace the entire web and belongs to NoSQL family. This articles will assist you to install CouchDB from source in Ubuntu and Debian.</p>
+
+<h2>Step 1: Install dependencies</h2>
+<p>First of all we'll need to make our machine ready to install CouchDB. </p>
+<ol>
+<li>Update the packages for Ubuntu 
+	<div class="hacker">$ sudo apt-get udpate	</div>
+</li>
+<li>Setpup the Couch using following command
+	<div class="hacker">$ sudo apt-get install -y build-essential</div>
+</li>
+<li>To run erlang and other dependencies use following command
+	<div class="hacker">$ sudo apt-get install -y erlang-base erlang-dev erlang-nox erlang-eunit</div>
+</li>
+<li>Install other required libraries 
+	<div class="hacker">$ sudo apt-get install -y libmozjs185-dev libicu-dev libcurl4-gnutls-dev libtool</div>
+</li>    
+</ol>        
+
+<h2>Step 2: Fetch the source</h2>
+<ol>
+<li>Now we'll download the copy of source. Go to the directory where our code will reside
+	<div class="hacker">$ cd /usr/local/src</div>
+</li>
+<li>Fetch source using following command
+		<div class="hacker">$ sudo curl -O http://apache.mirrors.tds.net/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz</div>
+</li>
+<li>Extract the files
+	<div class="hacker">$ sudo tar xvzf apache-couchdb-1.6.1.tar.gz</div>
+</li>
+<li>Move to the new directory
+	<div class="hacker">$ cd apache-couchdb-1.6.1.tar.gz</div>
+</li>    
+</ol>    
+
+<h2>Step 3: Configure and install</h2>
+<p>To compile a newly spun CouchDB server, install the source code using following command </p>
+	<div class="hacker">$ ./configure</div>
+	<div class="hacker">$ sudo make && sudo make install</div>
+    
+<h2>Step 4: Finalize the steps</h2>
+<ol>
+<li>CouchDB runs as user process for couchdb, so create a new user with following command
+	<div class="hacker">$ sudo adduser --disabled-login --disabled-password --no-create-home couchdb</div>
+</li>
+<li>It will ask you for Real name, Room Number etc. you can skip these. Now give rights to the new user we created on the CouchDB's files
+	<div class="hacker">$ sudo chown -R couchdb:couchdb /usr/local/var/log/couchdb /usr/local/var/lib/couchdb /usr/local/var/run/couchdb</div>
+</li>
+<li>Install the CouchDB as service
+	<div class="hacker">$ sudo ln -s /usr/local/etc/init.d/couchdb  /etc/init.d</div>
+	<div class="hacker">$ sudo update-rc.d couchdb defaults</div>
+</li>    
+<li>Finally run CouchDB service
+	<div class="hacker">$ sudo service couchdb start</div>
+</li>    
+</ol>    
+
+<h2>Next Steps</h2>
+<p>In this article we reviewed the steps involved with the installation of CouchDB in Ubuntu and Debian. You can see in terminal the CouchDB running as a service.</p>
+
+</body>
+</html>
