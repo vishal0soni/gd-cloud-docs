@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+
+
+<title>Install and configure Openfire XMPP Server - Arch Linux</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+.red-text{
+                                color:#FF8080 ;
+                }
+		.command{
+                                font-family: 'Courier New',
+								 Courier, 'Lucida Sans Typewriter',
+								  'Lucida Typewriter', monospace;
+                }
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails, NGINX</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5, https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup,' FQDN pointing to server. Merge distros to forks if steps are identical across the fork. Skip all content until step 4 (Install Ruby), since those are covered in the prereqs, and its assumed that they can look at other instructions to actually buy a server. Link to Apache version 'Deploy Rails Apps with Passenger and Apache.' Use notes on Cent/Fedora article, but keep formatting and content of Ubuntu article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17715</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ReviewComments msdt:dt="string">8/12 cj: Please fix the link, add the prereq listed in Request Notes, and also fix the conclusion, which has extra words and does not make sense. Thanks.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+
+ <p>Setting up Openfire XMPP server on Arch Linux Miscellaneous, Java,</p>
+    <h1>Install and configure Openfire XMPP Server – Arch Linux </h1>
+    <p><strong>Difficulty</strong>: <em>2</em></p>
+    <p><strong>Time</strong>: <em>30 minutes</em></p>
+	 <p>In this article, we will assist you to understand the installation and configuration of Openfire XMPP Server on Arch Linux and you are logged in as a <code>sudo</code> user.</p>
+<h2>Understanding XMPP</h2>
+<p>Extensible Messaging and Presence Protocol (XMPP) is an XML-based communication protocol for middleware. It enables the near-real-time exchange of structured yet extensible data between any two or more network entities.</p>
+<h2>Understanding Openfire</h2>
+<p>Openfire enables collaboration in real time and provides a tightly secured and high performing server. You can use Open Source Apache License for Openfire. You can easily set it up and configure using Java. </p>
+<p class="note">Note: Openfire doesn’t allow any chat options. </p>
+<h2>Step 1: Install Openfire</h2>
+<ol><li>Update the operating system
+<div class="hacker">sudo pacman -Sy</div>
+</li>
+<li>If java is not installed in your system then run the following command:
+<div class="hacker">sudo pacman -S jre7-openjdk-headless</div>
+</li>
+<li>Install Openfire
+<div class = "hacker">sudo pacman -S openfire</div>
+<div class = "hacker">sudo pacman  -Sy</div>
+</li>
+<li>Check Openfire package and again update operating system
+  <div class = "hacker">	sudo  pacman  -Si openfire</div>
+<div class = "hacker">sudo pacman  -Sy</div>
+<p>  Openfire has been successfully installed in your system.</p>
+</li>
+</ol>
+<h2>Step 2: Execute and Stop Openfire</h2>
+<ol>
+	<li><p>To start Openfire, type the following command:</p>
+		<div class ="hacker">sudo systemctl start openfire.service</div>
+	</li>
+	<li><p>If you need to start Openfire, then type the following command:</p>
+		<div class = "hacker">sudo systemctl stop openfire.service</div>
+	</li>
+	<li><p>Now visit http:// your_IP/9090 on any browser and go to Openfire wizard</p>
+	</li>
+	<li><p>The first page will allow you to choose your language while the second page is server settings page where you can define your domain name or IP. See the below image:</p>
+	<img src ="18599-ServerSetting.png" alt="18599-ServerSetting"/>
+	</li>
+	
+	<li><p>Once you are done with the setup, login as an Admin on Openfire login page.</p>
+	<img src ="18599-Registration.png" alt ="18599-RegistrationPage"/>
+	</li>
+	
+	<li><p>To see server information, click on the "server manager" tab.</p>
+		<img src = "18599-ServerInformation.png" alt="18599-ServerInformation"/>
+	</li>
+	
+	<li><p>If you want a secure connection to the server, then go to Server Settings -> Register first and then login and disable the required options.</p>
+	<img src ="18599-ProflieSetting.png" alt="18599-ProfileSetting"/> 
+	</li>
+	
+</ol>
+<h2>Next Step</h2>
+<p>By using all of the above steps, you will be able to install and configure Openfire XMPP server on Arch Linux.</p>
+</body>
+</html>
