@@ -80,7 +80,7 @@ p.note {
 
     <h2>Prerequisite</h2>
     <p>
-        You must have <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17325 - Initial Server Setup - Debian.html">Initial Server Setup</a> done on your server and installed Apache. If you haven't installed it yet, do the following to install it.
+        You must have <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17325 - Initial Server Setup - Debian.html">Initial Server Setup</a> done on your server and installed Apache. If you haven't installed it yet, do the following to install it.  </p>
         <div class="hacker">sudo yum update</div>
         <div class="hacker">sudo yum install httpd</div>
 
@@ -120,7 +120,7 @@ p.note {
             Open the configuration file.
             <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div>
         </li>
-
+        
         <li>
             In the configuration block that corresponds to the DocumentRoot which in this case is <code>/var/www/html</code> replace <code>AllowOverride None</code> with <code>AllowOverride All</code>. The <code>Directory</code> section will look something like this:
             <div class="hacker">
@@ -206,7 +206,7 @@ RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
                 <pre>
  HTTP/1.1 301 Moved Permanently
 Date: Sun, 23 Aug 2015 00:11:10 GMT
-Server: Apache/2.4.6 (CentOS)
+Server: Apache/2.4.6 (CentOS) 
 Location: http://www.coolexample.com/
 Content-Type: text/html; charset=iso-8859-1
 
@@ -221,6 +221,6 @@ Content-Type: text/html; charset=iso-8859-1
     <h2>Next steps</h2>
 
 
-
+ 
 </body>
 </html>
