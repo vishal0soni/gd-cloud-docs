@@ -4,10 +4,6 @@
 
 <head>
 
-<!--Article Number is 17527-->
-
-<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
-
 
 <title>Use PostgreSQL with your Ruby on Rails Application - Arch Linux</title>
 <style type ="text/css">
@@ -79,140 +75,138 @@ p.note {
 </head>
 
 <body>
-<p>Setting up Rails Application with PostgreSQL in Arch Linux, PostgreSQL, Ruby, Rails</p>
-    <h1>Use PostgreSQL with your Ruby on Rails Application - Arch Linux</h1>
+<p>Setting Up Rails Application with PostgreSQL in Arch Linux, PostgreSQL, Ruby, Rails</p>
+    <h1>Use PostgreSQL with Your Ruby on Rails Application - Arch Linux</h1>
     
     <p><strong>Difficulty</strong>: <em><u>2</u></em><br/>
         <strong>Time</strong>: <em><u>30 mins</u></em></p>
+<!--Please do not use span tags, including red text. For variables, use <em><u> tags. See editorial guidelines. cj -->
 
-    <p>In this article, we are going to create a PostgreSQL server that will be used as a database layer for scaling Ruby on Rails (RoR) application. Here, we will describe how we can use PostgreSQL for Rails application. To perform this task, we are assuming that the user has <code>sudo</code> privileges.</p>
-
-    <h2>Prerequisites: </h2>
-    <p>If you have not installed Ruby on Rails, then please visit: <a href ="#">17522 - Install Ruby on Rails with rbenv-Arch Linux</a> </p>
-    <h2>Install PostgreSQL </h2>
+<!--There is no need to use the <pre> tag in divs unless there is unique indentation that needs to be preserved. If there are multiple lines and no unique indentation, the <br /> tag can be used at the end of each line. cj -->
+   
+    <p>In this article, we are going to create a PostgreSQL server to use as a database layer for scaling a Ruby on Rails (RoR) application. We'll describe how to use PostgreSQL for a Rails application. </p>
+    <p>To perform these tasks, we  assume that you have <code>sudo</code> privileges and that <a href ="17522">Ruby on Rails is installed</a>.</p>
+<h2>Install PostgreSQL </h2>
      <ol>
-		<li>To install PostgreSQL, open the terminal and type: 
+		<li>Install PostgreSQL.
 			<div class="hacker">sudo pacman -S postgresql 
 			</div>
 		</li>
-		<li>Install <code>pgadmin3</code> for the administrator. This is an easy to access GUI for PostgresSQL, and is an optional installation.  
-			<div class="hacker">sudo pacman -S pgadmin3
+		<li>Install pgAdmin3 for the administrator. pgAdmin3 is an easy-to-access GUI for PostgresSQL.
+          <div class="hacker">sudo pacman -S pgadmin3
 			</div>
-		</li>
-		<li>Check if postgresql is installed   
+	   </li>
+		<li>Check if postgresql is installed.
 			<div class="hacker">sudo paceman -Si postgresql
 			</div>
 		</li>
-		<li>To initialize a database cluster, use the command <code>initdb</code>, which is installed with PostgreSQL. This must be done as the postgres user:  
+		<li>Initialize a database cluster by using the command <code>initdb</code>, which is installed with PostgreSQL. This must be done as the postgres user:<!--Please clarify what "This" refers to. cj -->  
 			<div class="hacker">sudo -i -u postgres
 			</div>
 			<div class="hacker">initdb -D '/var/lib/postgres/data'
 			</div>
 		</li>
-		<li>Now you can logout from the postgres user and fire up PostgreSQL:   
-			<div class="hacker">logout
-			</div>
+		<li>Log out from the postgres user, and start PostgreSQL.
+          <div class="hacker">logout
+		  </div>
 			<div class="hacker">sudo systemctl start postgresql
 			</div>
 		</li>
-		<li>If you want PostgreSQL to start automatically every time your VPS boots up, use the following command  
+		<li>Optionally, set PostgreSQL to start automatically every time your VPS boots up.
 			<div class="hacker">sudo systemctl enable postgresql
 			</div>
 		</li>
 	</ol>
-	<h2>Create Database user</h2>
+	<h2>Create a database user</h2>
 	<ol>
-		<li>Login with the <code>postgres</code> system user and then create a new user
+		<li>Log in with the <code>postgres</code> system user, and then create a new user.
 			<div class="hacker">sudo -u postgres createuser -s <span class="red-text">username</span>
 			</div>
 		</li>
-		<li>Set a password for the database user
+		<li>Set a password for the database user.
 			<div class="hacker">sudo -u postgres psql
 			</div>
 			<div class="hacker">postgres=# \password <span class="red-text">username</span>
 			</div>
 		</li>
-		<li>To drop a template, first you need to modify it. 
+		<li>Modify a template. (To drop a template, first you need to modify it.)
 			<div class="hacker">UPDATE pg_database SET datistemplate = FALSE WHERE datname = 'template1';
 			</div>
 		</li>
-		<li>Now you can drop it, using:
+		<li>Drop the template.
 			<div class="hacker">DROP DATABASE template1;
 			</div>
 		</li>
-		<li>Create a database from <code>template0</code>, with a new default encoding:
+		<li>Create a database from <code>template0</code>, with a new default encoding.
 			<div class="hacker">CREATE DATABASE template1 WITH TEMPLATE = template0 ENCODING = 'UNICODE';
 			</div>
 		</li>
-		<li>Now modify <code>template1</code> 
+		<li>Modify <code>template1</code>. 
 			<div class="hacker">UPDATE pg_database SET datistemplate = TRUE WHERE datname ='template1';
 			</div>
 		</li>
-		<li>Switch to <code>template1,</code> and <code>VACUUM FREEZE</code> the template:
+		<li>Switch to <code>template1,</code> and <code>VACUUM FREEZE</code><!--VACUUM FREEZE is a command, not a verb. Please use a verb here. cj --> the template:
 			<div class="hacker">\c template1
 			</div>
 			<div class="hacker">VACUUM FREEZE;
 			</div>
 		</li>
-		<li>Close the session by typing:
+		<li>Close the session.
 			<div class="hacker">postgres=# \q
 			</div>
 		</li>
-		<li>Start the PostgresSQL service
+		<li>Start the PostgresSQL service.
 			<div class="hacker">sudo systemctl start postgresql
 			</div>
 		</li>
 	</ol>	
-	<h2>Setup a Rails application</h2>
+	<h2>Set up a Rails application</h2>
 	<ol>
-		<li>Move to your home directory to create a new Rails app. To set PostgreSQL as the database, use the <code>-d postgresql</code> option
+		<li>Move to your home directory to create a new Rails application. To set PostgreSQL as the database, use the <code>-d postgresql</code> option.
 			<div class = "hacker">cd ~
 			</div>
 			<div class = "hacker">rails new <span class="red-text">helloworld</span> -d postgresql
 			</div>
 		</li>
-		<li>Move into the application directory
+		<li>Move into the application directory.
 			<div class = "hacker">cd <span class="red-text">helloworld</span>
 			</div>
 		</li>
-		<li>Open the following file
-			<div class = "hacker">sudo vim config/database.yml
-			</div>
+		<li>Open the <span class="hacker"><code>database.yml</code></span> file for editing.
+          <div class = "hacker">sudo vim config/database.yml
+		  </div>
 		</li>
-		<li>Look for "<code>pool: 5</code>" in the file and add the following lines beneath it. Enter the username and password for the postgres  user when prompted.
-			<div class = "hacker">
+		<li>Look for <code>pool: 5</code> in the file, and add the following lines beneath it. Enter the username and password for the postgres  user when prompted.<!--Wording looks off. Does the open file truly prompt the user to enter a name and password? cj-->
+		  <div class = "hacker">
 				<pre>
 host: localhost
 username: <span class="red-text">username</span>
 password: <span class="red-text">username_password</span>
 				</pre>
-			</div>
+		  </div>
 		</li>
-		<li>Save and exit
-		</li>
+		<li>Save and close the file.</li>
 	</ol>
-	<h2>Create a database for your application</h2>
-	<ol>
-		<li>Use the rake command to create your application's databases in the application directory
-			<div class="hacker">rake db:create
+<h2>Create a database for your application</h2>
+	<ul>
+	  <li>Use the <code>rake</code> command to create your application's databases in the application directory.
+        <div class="hacker">rake db:create
+	    </div>
+		This command creates two databases in your PostgreSQL server. For example, if your application's name is "<span  class="red-text">helloworld</span>", the command creates the two databases as "<code><span class ="red-text">helloworld _development</span></code>" and "<code><span class="red-text">helloworld _test</span></code>".
+	  </li>
+	</ul>
+	<h2>Test the configuration</h2>
+  <ul>
+		<li>Test your Rails application.
+		  <div class="hacker">Rails server
 			</div>
-		</li>
-		<li>This will create two databases in your PostgreSQL server. For example, if your application's name is "<span  class="red-text">helloworld</span>", then it will create the two databases as "<code><span class ="red-text">helloworld _development</span></code>" and "<code><span class="red-text">helloworld _test</span></code>".
-		</li>
-	</ol>
-	<h2>Test Configuration</h2>
-	<ol>
-		<li>Test your Rails application
-			<div class="hacker">Rails server
-			</div>
-		</li>
-		<li>Now you can run your Rails application on your <code>localhost</code> on port 3000.  You can also access your application from a web browser, if it is located on a remote server by assigning a public IP address
+		Now you can run your Rails application on your <code>localhost</code> on port 3000.  You can also access your application from a web browser, if it is located on a remote server by assigning a public IP address
 			<div class="hacker">rails server --binding=<span class ="red-text">server_public_IP</span>
-			</div>
+		  </div>
 		</li>
-	</ol>
+	</ul>
     <h2>Next steps</h2>
-    <p>In this article, we reviewed the steps involved in setting up a PostgreSQL with your Rails application on Arch Linux. For further exploration, you may also refer <a href= "#">17517 - Deploy a Rails App with Unicorn and NGINX - Arch Linux</a></p>
+    <p>In this article, we reviewed the steps involved in setting up a PostgreSQL with your Rails application on Arch Linux. For further exploration, refer to <a href= "17517"> Deploy a Rails App with Unicorn and NGINX - Arch Linux</a>.</p>
    
 </body>
 </html>
