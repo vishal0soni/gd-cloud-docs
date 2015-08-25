@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 18287 (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Configure WebDAV Access for your NGINX server - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">http://centminmod.com/nginx_webdav.html, http://centminmod.com/nginx_webdav.html</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">4</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">No DO equivalent for NGINX, but make similar in format/function to 'Configure WebDAV Access for your Apache server' - will require installation of HttpDavModule, and likely recompile of NGINX to include module, but do from yum/apt/pacman first if at all possible. Note that support for WebDAV is much greater with Apache than NGINX or other web server alternatives, and that Apache is still most trusted for webdav.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18287</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Ready for code validation</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">6.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.500000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:AssignmentAction msdt:dt="string"></mso:AssignmentAction>
+<mso:Week msdt:dt="string">9.00000000000000</mso:Week>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:PercentResearch msdt:dt="string">0.950000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.0500000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">8.00000000000000</mso:HoursDraftingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Brief description of what this article accomplishes. Include any keywords indicated in the spreadsheet. This blurb will not appear with the content.</p>
+    <h1>Article Title from Spreadsheet</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>Value from spreadsheet</u></em><br/>
+        <strong>Time</strong>: <em><u>Time value</u></em></p>
+
+    <p>Assumptions: you have a C compiler, Zlib Compression Library, PCRE, libexpat-dev, and OpenSSL installed</p>
+
+    <h2>Preparation</h2>
+    
+     <ol>
+               <li>Create a directory for the NGINX source files
+                   <div class="hacker">sudo mkdir -p /source/nginx</div>
+                </li>
+               <li>Navigate to <code>source/nginx</code>
+                <div class="hacker">cd /source/nginx</div>
+               </li>
+               
+                <li>Get NGINX source from NGINX.org
+                   <div class="hacker">sudo wget http://nginx.org/download/nginx-1.8.0.tar.gz</div>
+               </li>
+               <li>Extract  NGINX Source 
+                   <div class="hacker">sudo tar xfz nginx-1.8.0.tar.gz</div>
+               </li>
+               <li>Get webDAV extension module from github
+                   <div class="hacker">sudo wget -c https://github.com/arut/nginx-dav-ext-module/archive/v0.0.2.zip -O nginx-dav-ext-module-v0.0.2.zip</div>
+               </li>
+               <li>unzip it
+                   <div class="hacker">sudo unzip nginx-dav-ext-module-v0.0.2.zip</div>
+               </li>
+               <li>Extract webDAV extension module 
+                   <div class="hacker">tar xfz nginx-dav-ext-module-v0.0.2.zip</div>
+               </li>
+         </ol>
+ <h2>Compile NGINX </h2>
+    <ol>
+               <li>Navigate to your newly-created nginx directory 
+                   <div class="hacker">cd nginx-1.8.0</div>
+               </li>
+               <li>Create a <code>make.conf</code> file
+                   <div class="hacker">sudo ./configure --user=nginx --group=nginx --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --with-http_ssl_module --with-pcre --with-http_dav_module --add-module=/source/nginx/nginx-dav-ext-module-0.0.2</div>
+               </li>
+                <li>Create a makefile  
+                   <div class="hacker">sudo make</div>
+               </li> 
+               <li>Install it   
+                   <div class="hacker">sudo make install</div>
+               </li>
+        </ol>
+<h2>Configure NGINX </h2>
+               <p>NGINX supports <code>dav_access</code>,<code>dav_methods</code>, and <code>dav_ext_methods</code> in the http, server and location contexts.  The folloing excerpts illustrate some of the possibilities:</p>
+    <ol>      
+    <li>Global WebDAV access to all with all methods enabled 
+         <div class="hacker"><pre># http context
+http {
+...
+dav_access group:rw all:r; 
+dav_methods on;
+dav_ext_methods PROPFIND OPTIONS;
+...
+server {
+        listen 80 default_server;
+...
+
+location / {
+             }
+    }
+server {
+        listen 443 ssl;
+...
+
+location / {
+             }
+    }
+}
+                             </pre></div>
+    </li>
+<li>WebDAV access limited to a server block with selected methods (PUT DELETE MKCOL COPY) enabled (MOVE is excluded). 
+         <div class="hacker"><pre># server context
+server {
+        listen 80;
+...
+dav_access group:rw all:r; 
+dav_methods PUT DELETE MKCOL COPY;
+dav_ext_methods PROPFIND OPTIONS;
+...
+location / {
+             }
+    }
+                             </pre></div>
+    </li>
+<li>WebDAV access limited to a server block with selected methods enabled (PROPFIND OPTIONS are excluded by the lack of a <code>dav_ext_methods</code> directive). 
+         <div class="hacker"><pre># location context
+
+location / {
+...
+dav_access group:rw all:r; 
+dav_methods on;
+...
+             }
+                             </pre></div>
+    </li>
+
+
+               <li>List item</li>
+               </ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <p>Section 1 content. Format <code>code snippets like this</code>, <em><u>variables like this</u></em>, and <strong>interface items like this</strong>.</p>
+    
+    <p>Include any of the following elements as needed:</p>
+ 
+    <p><div class="hacker">http://nginx.org/download/nginx-1.8.0.tar.gz</div></p>
+
+     <p class="note">note</p>   
+           <p class="warning">warning</p> 
+    <table>
+    <tr>
+    <th>Table head</th>
+     <th>Table head</th>
+      <th>Table head</th>
+    </tr>
+    <tr>
+    <td>Content</td>
+       <td>Content</td>
+          <td>Content</td>
+               </tr>
+               <tr>
+    <td>Content</td>
+       <td>Content</td>
+          <td>Content</td>
+             
+               </tr>
+               <tr>
+    <td>Content</td>
+       <td>Content</td>
+          <td>Content</td>
+               </tr>
+               <tr>
+    <td>Content</td>
+       <td>Content</td>
+          <td>Content</td>
+               </tr>
+               </table>
+              
+              <p>Bulleted list with intro:<p>
+               <ul>
+               <li>List item</li>
+               <li>List item</li>
+               <li>List item</li>
+               <li>List item</li>
+               </ul>
+              
+              <p>Numbered list with intro:</p>
+              <ol>
+               <li>Get NGINX source from MGINX.org
+                   <div class="hacker">http://nginx.org/download/nginx-1.8.0.tar.gz</div>
+               </li>
+               <li>List item</li>
+               <li>List item</li>
+               <li>List item</li>
+               </ol>
+           
+    <p>Image (PNG only). See editorial guidelines for more information. </p> 
+   
+    <h2>Section 2 title</h2>
+    <p>Section 2 content.</p>
+             
+   <h2>Section 3 title</h2>
+   <p>Section 3 content.</p>
+             
+    <h2>Next steps</h2>
+    <p>A brief summary of what the user just learned. Add links to procedural articles if appropriate. Direct the user to explore a related subject or to complete a related task. </p>
+   
+</body>
+</html>
