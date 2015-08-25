@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
 
 <head>
-    <title>17894</title>
+    <title>Install and Configure an EFK stack (Elasticsearch, Fluentd, Kibana) -- Ubuntu, Debian</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <style type="text/css">
@@ -42,108 +42,144 @@
         padding-bottom: 15px;
     }
     </style>
+    
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Logging</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/elasticsearch-fluentd-and-kibana-open-source-log-search-and-visualization, https://www.digitalocean.com/community/tutorials/elasticsearch-fluentd-and-kibana-open-source-log-search-and-visualization</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Debian;#Ubuntu;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">3</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - Initial Server Setup. Go by fork, split into distros if steps differ. Link to &#39;Install ELK stack (Elasticsearch, Logstash, Kibana)&#39; as alternative to Fluentd at end of article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17909</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Ready for editing</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
 </head>
 
 <body>
 
-<p>Install  and Configure an EFK stack (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian,  Logging</p>
-<h1>Install and Configure an EFK stack  (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian </h1>
+<p>Install  and configure an EFK stack (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian,  Logging</p>
+<h1>Install and Configure an EFK Stack  (Elasticsearch, Fluentd, Kibana) - Debian, Ubuntu</h1>
 
 <p><strong>Difficulty: </strong><em>2</em></p>
 <p><strong>Time: </strong> <em>2 hours</em></p>
+<!--This introduction needs to include the prerquisite mentioned in the Request Notes. cj -->
 
-<p>Use of Elasticsearch, Fluentd, and  Kibana (also known as the EFK stack) is very common when dealing with data  analysis. This combination allows users to collect, index, search, and  visualize log data. In this article, you’ll see steps to install the EFK Stack  (Elasticsearch,  Fluentd and Kibana) on the Ubuntu or Debian platform.</p>
-
-<h2>Overview - Elasticsearch, Fluentd, and Kibana (EFK)</h2>
-<h3>Elasticsearch</h3>
-<p>Elasticsearch is a popular  search engine used in enterprises. It is based on Apache Lucene, and enables  search and analysis of data in real-time. It is distributed, scalable, and  highly available, making it suitable for all enterprise requirements. It is API  driven platform, and provides support for RESTful API using JSON over HTPP, which  makes it a developer-friendly tool. Additional client libraries are available  for many programming languages. It is available under the Apache 2 licenses,  and thus it can be downloaded, updated and used as desired, without having to  purchase any license. </p>
-<h3>Fluentd</h3>
-<p>Fluentd is an open source tool,  which acts as a data collector for unified logging layer. It can collect  events from a variety of data sources and writes them to files, including RDBMS,  NoSQL, Cloud based environment (IaaS, SaaS), Hadoop and so on. It has a  pluggable architecture with more than 300+ plugins to connect to various data  sources and data outputs. It is provided with built-in reliability and unified logging  with JSON, making it a simple yet flexible data connectivity tool for most enterprises  use cases. </p>
-<h3>Kibana</h3>
-<p>Kibana, an open source data analytics and visualization  platform, is developed specifically to work with Elasticsearch. It can be used to  perform data operations such as search, view and other interactions with data stored  in Elasticsearch indices. It also provides advanced data analysis constructs  like charts, tables and maps to help visualize and analyze large volumes of data  in graphical manner.  It provides a browser-based  interface, enabling faster development and sharing of real-time reports. Its  setup requires no additional infrastructure, making it a popular analytics tool  with Elasticsearch.</p>
-<h2>Step 1: Install and Configure ElasticSearch</h2>
-<p>Login in into the Debian or Ubuntu machine and perform these  steps using the commands described here. It is assumed that you have the sudo  user privileges when performing the following tasks:</p>
+<p>Using Elasticsearch, Fluentd, and  Kibana (also known as an <em>EFK stack</em>) is a common way to deal with data  analysis. This combination lets you collect, index, search, and  visualize log data. In this article, you'll  learn how to install an EFK Stack   on  Debian or Ubuntu.</p>
+<p>These  tasks assume that you have  <code>sudo</code> user privileges.</p>
+<h2>Install and configure ElasticSearch</h2>
 <ol>
-	<li>Update your Ubuntu or Debian server
+	<li>Log into the Debian or Ubuntu machine.</li>
+	<li>Update the server.
 		<div class="hacker">
+        
+        <!--pre tags are not needed in most of these divs. Use pre tags only if there are indentation issues. If there is more than one line, and no indentation issues, you can use <br /> at the end of each line. cj -->
 		<pre>sudo apt-get update</pre>
 		</div>
 	</li>
-	<li>Install Java
+	<li>Install Java.
 		<div class="hacker">
 		<pre>sudo apt-get install  default-jre</pre>
 		</div>
 		
-		<p>To check Java  version, use the following command</p>
+		<p>To check the Java  version, use the following command</p>
+        <!--Do they have to check the Java version? What do they do with this information? cj-->
 		<div class="hacker">
 		<pre>java -version</pre>
 		</div> 
 	</li>
-	<li>Install the Elasticsearch's deb packages (These commands are specific for version 1.2.2. To install the latest version, select the path for lastest version from <a href="http://www.elasticsearch.org/download/" target="_top">elasticsearch.org/download</a>)
-		<div class="hacker">
-		<pre>sudo wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.2.deb</pre>
-		<pre>sudo dpkg -i elasticsearch-1.2.2.deb </pre>
-		</div>
-	</li>
-	<li>To make  Elasticseach accessible from public internet, its dynamic scripting needs to be  disabled, so that it can be accessed by the Kibana dashboards. For this, open  the file elasticsearch.yml using the  following command:
+  <li>Install the Elasticsearch deb packages. 
+  
+ <p class="note">These commands are  for version 1.2.2. To obtain the latest version, visit the <a href="http://www.elasticsearch.org/download/" target="_top"> Elasticsearch download page</a>.)</p>
+    <!--The following should be two divs. Per editorial guidelines, use only one command per div. cj -->
+	  <div class="hacker">
+	    <pre>sudo wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.2.deb</pre>
+	    <pre>sudo dpkg -i elasticsearch-1.2.2.deb </pre>
+    </div>
+  </li>
+	<li>Open  the  <code>elasticsearch.yml</code> file.<br />
+	  To make  Elasticseach accessible from the public Internet, its dynamic scripting needs to be  disabled so that it can be accessed by the Kibana dashboards.
 		<div class="hacker">
 		<pre>sudo vim /etc/elasticsearch/elasticsearch.yml</pre>
 		</div>
-		<p>Set the  variable script.disable_dynamic to true by appending the below mentioned code at  the end:</p>
-		<div class="hacker">
+  </li>
+  <li>Set the  variable <em><u><code>script.disable_dynamic</code></u></em> to <code>true</code> by appending the following code at  the end:
+	<div class="hacker">
 		<pre>script.disable_dynamic: true</pre>
-		</div>
-	</li>
-	<li>Use the following command to start Elasticsearch:
+	</div>
+  </li>
+	<li>Start Elasticsearch.
 	  <div class="hacker">
 	  <pre>sudo service elasticsearch start </pre>
 	  </div>
-	  <p>Upon successful start, it would show an OK message:<br />
-	  <img src="images/17909-Install and Configure an EFK stack (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian_clip_image002.png" alt="Starting Elasticsearch engine" width="624" height="58" /> </p>
+	  A successful startup shows an OK message.<br />
+	  <img src="17909-Install and Configure an EFK stack (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian_clip_image002.jpg" alt="Starting Elasticsearch engine" width="624" height="58" /> 
 	</li>
 </ol>
-<h2>Step 2: Install and Configure Kibana</h2>
+<h2>Install and configure Kibana</h2>
+<p>Next, install Kibana in the home directory.</p>
 <ol>
-  <li>To install Kibana in your home directory, move  to the home directory
-  		<div class="hacker">
-		<pre>cd ~</pre>
-		</div>
+  <li> Move  to the home directory.
+    <div class="hacker">
+	  <pre>cd ~</pre>
+	</div>
   </li>
-  <li>Use following command to install Kibana:
-  		<div class="hacker">
-		<pre>sudo curl -L https://download.elastic.co/kibana/kibana/kibana-4.1.1-linux-x64.tar.gz | tar xzf -</pre>
+  <li> Install Kibana. <!--The following should be two divs. One command per div. cj -->
+    <div class="hacker">
+    <pre>sudo curl -L https://download.elastic.co/kibana/kibana/kibana-4.1.1-linux-x64.tar.gz | tar xzf -</pre>
   		<pre>sudo cp -r kibana-4.1.1* /usr/share/kibana-4.1.1</pre>
-		</div>
+	</div>
   </li>
-  <li>By default, Kibana is set to use the port 80 to interact with  Elasticsearch. To update this, update the Kibana’s config.js configuration file.
+  <li>By default, Kibana is set to use  port 80 to interact with  Elasticsearch. To update this, update the Kibana’s config.js configuration file. <!--How does the user know if he needs to update this? Also, the command seems to reference a different file. Finally, the first sentence of a step needs to tell the user to do something, not be explanatory. cj -->
   		<div class="hacker">
 		<pre>sudo vim /usr/share/kibana-4.1.1/config/kibana.yml</pre>
-		</div>
+	</div>
   </li>  
-  <li>Locate the following code, which is related to the port related setting:
+  <li>Locate the following code, which is related to the port  setting:
 	  <div class="hacker"> 
 	  <pre>#default port value is 9200</pre>
 	  <pre>elasticsearch: &quot;http://&quot;+window.location.hostname+&quot;:9200&quot;,</pre>
-	  </div>
+    </div>
   </li>
-  <li>Update this to: 
+  <li>Update the code to the following:
 	  <div class="hacker"> 
 	  <pre>#Updated to port value 80</pre>
 	  <pre>elasticsearch: &quot;http://&quot;+window.location.hostname+&quot;:80&quot;,</pre>
 	  </div>
   </li>
-  <li>Nginx can be used as the proxy server. This will enable access to Kibana’s dashboards from Internet. To install Nginx, use the following command:
-  	  <div class="hacker"> 
+  <li>Install Nginx.<br />
+    Nginx can be used as the proxy server. This  enable access to the Kibana dashboards from the Internet.
+      <div class="hacker"> 
 	  <pre>sudo apt-get install nginx --yes</pre>
-	  </div>
+    </div>
   </li>
-  <li>Create nginx configuration file with the  following command
+  <li>Create the Nginx configuration file.<!--Use a separate div for each command. cj -->
 	  <div class="hacker"> 
 	  <pre>sudo rm /etc/nginx/sites-available/default</pre>
 	  <pre>sudo vim /etc/nginx/sites-available/default</pre> 
 	  </div>
   </li>
-  <li>Put the following code inside the nginx cofig file
+  <li>Put the following code into the Nginx configuration file:
   	  <div class="hacker"> 
 		  <pre>#</pre>
 		  <pre># Nginx config file, for setting up Nginx proxy for Elasticsearch + Kibana</pre>
@@ -219,35 +255,38 @@
 		  <pre>}</pre>
   	  </div>
   </li>
-  <li>Restart the nginx using the following command:
+  <li>Restart  Nginx.
 		<div class="hacker">
 		<pre>sudo service nginx restart</pre>
 		</div>
-  		<p>Upon successful  restart, it would show an OK message:<br />
-      <img src="images/17909-Install and Configure an EFK stack (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian_clip_image004.png" alt="Restarting Elasticsearch engine" width="624" height="53" /></p>
+  		<p>A successful  restart displays an OK message:<br />
+      <img src="17909-Install and Configure an EFK stack (Elasticsearch, Fluentd, Kibana) - Ubuntu, Debian_clip_image004.jpg" alt="Restarting Elasticsearch engine" width="624" height="53" /></p>
   </li>
 </ol>
-<h2>Step 3: Install and configure Fluentd</h2>
+<h2>Install and configure Fluentd</h2>
 <ol>
-  <li>Install  Fluentd using the following command
+  <li>Install  Fluentd.
 	  <div class="hacker">
 	  <pre>wget http://packages.treasuredata.com/2/ubuntu/trusty/pool/contrib/t/td-agent/td-agent_2.0.4-0_amd64.deb</pre>
 	  <pre>sudo dpkg -i td-agent_2.0.4-0_amd64.deb </pre>
-	  </div>
+    </div>
   </li>
-  <li>Install  additional plugins. Basically there are two important plugins:
-	  <ul>
-		<li>out_elasticsearch – To allow Fluentd to stream  data to Elasticsearch</li>
-		<li>outrecordreformer – To enable processing of data  into useful formats</li>
-	  </ul>
-	  <p>Use following commands to install these  plugins:</p>
+  <li>Install  additional plugins.
+	  
+      <!--Put each command in its own div. cj -->
 	  <div class="hacker">
 		  <pre>sudo apt-get install make libcurl4-gnutls-dev --yes</pre>
 		  <pre>sudo /opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch</pre>
 		  <pre>sudo /opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-record-reformer </pre>
-	  </div>
+	  </div> Basically there are two important plugins:
+	  <ul>
+		<li>out_elasticsearch - Allows Fluentd to stream  data to Elasticsearch</li>
+		<li>outrecordreformer - Enables processing of data  into useful formats</li>
+	  </ul>
   </li>
-  <li><p>To allow Fluentd to listen to the syslog  messages and then forward them to Elasticsearch, the configuration file td-agent.conf need to be updated. Open the file using following command:</p>
+  <li>
+   Open the the configuration file <code>td-agent.conf.<br />
+    </code>To allow Fluentd to listen to the syslog  messages and then forward them to Elasticsearch, this file needs to be updated. 
 	  <div class="hacker"> 
 	  <pre>sudo vim /etc/td-agent/td-agent.conf</pre>
 	  </div>
@@ -275,33 +314,36 @@
 		  <pre> flush_interval 5s #debug</pre>
 		  <pre> &lt;/store&gt;</pre>
 		  <pre>&lt;/match&gt; </pre>
-	  </div>
-	  <p>Save and close the file using ‘:wq’</p>
-  </li>
-  <li>Start the Fluentd using following command:
+	  </div></li>
+  <li>Save and close the file using ‘:wq’<!--Don't include quotation marks unless the user is supposed to type them. Same comment in step 8 below. cj --></li>
+ 
+  <li>Start  Fluentd.
    		<div class="hacker">
 		<pre>sudo service td-agent start</pre>
 		</div>
   </li>
-  <li>Redirect  traffic to Fluentd by updating the rsyslog.conf file
-	  <div class="hacker">
-	  	<pre>sudo vim /etc/rsyslog.conf</pre>
-	  </div>
-	  	<pre>Add the following line at the top of this file</pre>
-	  <div class="hacker">
+  <li>Redirect  traffic to Fluentd by updating the <code>rsyslog.conf</code> file.
+    <div class="hacker">
+  	  <pre>sudo vim /etc/rsyslog.conf</pre>
+  </div></li>
+  <li>
+	  	Add the following line at the top of this file:
+	      <div class="hacker">
 	  	<pre>*.* @127.0.0.1:5140 </pre>
 	  </div>
-	  	<pre>Save and exit the editor by pressing Esc key and typing ‘:wq’</pre>
-  </li> 
-  <li>Restart  the rsyslogd
+  </li>
+  <li>Save the file, and exit the editor by pressing the <strong>Esc</strong> key and typing ‘:wq’ </li> 
+  <li>Restart   rsyslogd.
 	   <div class="hacker">
 	   <pre>sudo service rsyslog restart </pre>
 	   </div>
-  </li>
-  <h1>Conclusion</h1>
-  <p>Using the above procedure,  you can install and prepar the environment for the EFK stack on your Ubuntu or  Debian platform. As an alternative to Fluentd, many users prefer to work with  the Logstash. To know more about the ELK (Elasticsearch, Logstach and Kibana)  stack, and respective steps for installation, see &lt;Link&gt; Install ELK stack (Elasticsearch, Logstash, Kibana) on your Ubuntu or Debian  platform. </p>
-</li>
-</ol>
+  </li></ol>
+  <h2>Next steps</h2>
+  <p>As an alternative to Fluentd, many users prefer to work with   Logstash. To learn more about the ELK (Elasticsearch, Logstash, and Kibana)  stack and its 
+    <!--Please add article number in link. cj -->
+  installation, see <a href="#">Install ELK stack (Elasticsearch, Logstash, Kibana)</a>. </p>
+
+
 
 </body>
 </html>
