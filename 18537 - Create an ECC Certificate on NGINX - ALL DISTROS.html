@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is ___18537_______ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Create an ECC Certificate on NGINX - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Security, NGINX</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-create-an-ecc-certificate-on-nginx-for-debian-7, https://www.digitalocean.com/community/tutorials/how-to-create-an-ecc-certificate-on-nginx-for-debian-7</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">6</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18537</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Ready for code validation</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.250000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:PercentResearch msdt:dt="string">0.500000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.500000000000000</mso:PercentWriting>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursDraftingActual msdt:dt="string">3.00000000000000</mso:HoursDraftingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Installing an ECC certificate on a server running NGINX.</p>
+    <h1>Install ECC Certificates on NGINX - ALL DISTROS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>2</u></em><br/>
+        <strong>Time</strong>: <em><u>3 hours</u></em></p>
+    
+
+<p>Installing an 
+    Elliptic Curve Cryptography (ECC) certificate on your server can improve the security of your website, use fewer resources, and allow mobile devices to connect faster.&nbsp; 
+    ECC algorithms offer higher levels of security with a smaller key size because they are based on a discrete logarithm of a random elliptic curve instead of using a large integer like RSA keys do.&nbsp; 
+    From the user&#39;s perspective, the principles remain the same.&nbsp; 
+    Using a combination of the certificate and a key pair, a third-party certificate authority (CA) validates the identity of both parties in a transaction 
+    and website protected by an ECC certificate is identified by a URL that starts with <strong>https</strong>.<p/>
+        
+<p>This article walks you through installing an ECC certificate on any server running NGINX.&nbsp; It assumes you have Nginx and openssl installed.</p>
+
+    <h2>Use a self-signed certificate</h2>
+<p>Most web sites are capable of generating self-signed certificates.These are not particularly useful from a security perspective, but generating and then using one illustrates some of the steps required to install a commercial certificate.</p>    
+    <ol>
+
+   <li>Navigate to the NGINX directory.
+        <div class="hacker">cd /etc/nginx</div>
+   </li>
+   <li>Generate your private key.    
+        <div class="hacker">sudo openssl ecparam -out server.key -name prime256v1 -genkey</div>
+    </li>
+    <li>Set appropriate permissions on the key file so that it is read-only.
+     <div class="hacker">sudo chmod 600 server.key</div></li>
+      <li>Enter the metadata for certificate.  
+     <div class="hacker">sudo openssl req -new -key server.key -out csr.pem</div>
+     Follow the instructions that will appear on the screen. 
+          Do not supply a challenge password.&nbsp; For the &quot;Common Name&quot; question, enter the Fully Qualified Domain Name (FQDN) of your server.&nbsp; After completing the form, you will be returned to a command prompt.</li>
+     <li>Sign the key and give it a shelf life of 365 days.
+     <div class="hacker">sudo openssl req -x509 -days 365 -key server.key -in csr.pem -out certificate.pem</div>
+         Your screen will display:
+     <pre>Signature ok
+         subject=[some of the information you just provided]
+         Getting Private key</pre>
+</li> 
+        </ol> 
+    
+    <h2>Use a commercial certificate</h2>
+    Using a commercial certificate is similar. The main difference is that you will follow the directions from your certificate provider to acquire your certificate and key, then move them into the <code>/etc/nginx</code> directory. 
+
+<h2>Set up NGINX</h2>
+
+   <ol> 
+    <li>Depending on your distribution, the ssl server context may be in the nginx configuration file or an include file.&nbsp; In any event, modify / create the ssl server context so it looks like this:&nbsp;&nbsp;
+    <div class="hacker"><pre>#HTTPS server
+#
+server {
+    listen 443;
+    server_name YourServerName or IP;
+    index index.html index.htm;
+
+    ssl on;
+    ssl_certificate /etc/nginx/certificate.pem;
+    ssl_certificate_key /etc/nginx/server.key;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers HIGH+kEECDH+AESGCM:HIGH+kEECDH:HIGH+kEDH:HIGH:!aNULL;
+    ssl_prefer_server_ciphers on;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}</pre></div></li>
+    <li>For a commercial certificate, edit the default.conf file as above, but with the name of your certificate instead of <code>server</code>.
+    <div class="hacker"><pre>server { ...
+        ssl_certificate /etc/nginx/yourcertname.pem; 
+        ssl_certificate_key /etc/nginx/yourcertname.key;
+         ...</pre></div>
+      </li>
+       </ol>  
+        
+    <h2>Set up multiples certificates on one IP</h2>
+    
+    <p>If you have multiple server blocks set up on a single IP, you can generate as many certificates as you need by following the steps above and edit each server block individually.</p>
+    <div class="hacker"><pre>server { listen 443 ssl;
+        server_name yourfirstserverblockname.com;
+      
+        ssl_certificate /etc/nginx/yourfirstserverblockcertname.crt;
+        ssl_certificate_key /etc/nginx/yourfirstserverblockcertname.key;
+        ...}
+
+server_name yoursecondserverblockname.com;
+      
+        ssl_certificate /etc/nginx/yoursecondserverblockcertname.crt;
+        ssl_certificate_key /etc/nginx/yoursecondserverblockcertname.key;
+        ...}</pre></div>
+
+    <h2>Next steps</h2>
+    <p>You have just set up your NGINX server for https. You might want to explore <a href="http://">other security considerations</a>.</p>
+   
+</body>
+</html>
