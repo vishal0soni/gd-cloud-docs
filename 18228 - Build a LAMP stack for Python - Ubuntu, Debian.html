@@ -94,44 +94,41 @@ td:nth-child(1) {font-weight:bold;}
         <p>The LAMP stack is a group of open source software used to get web servers up and running. The acronym stands for Linux, Apache, MySQL, and PHP. Debian, Ubuntu Linux <!-- To Conrad. So, is Debian Linux wrong above?  What about Ubuntu?--> uses the apt-get installer which can update the system and install all of the required packages for each part of the LAMP stack. The steps in this article require the user to have root privileges.</p>
         <a href="https://www.debian.org/releases/wheezy/i386/">How to install Debian</a>
         <a href="https://help.ubuntu.com/community/Installation">How to install Ubuntu</a>
-<!--To Conrad, we should include the links to install the OS.>
+<!--To Conrad, we should include the links to install the OS.
         17325 - Initial Server Setup - Debian
-        17321 - Initial Server Setup - Ubuntu        
-
+        17321 - Initial Server Setup - Ubuntu-->
+        <!--  -->
     <h2>Step One - Install Apache</h2>
 <!-- Susan, can you make this section into a list? -->
-        <p>Before installing any of the LAMP programs, we should update the package manager: </p>
+    <ol>
+        <li> Before installing any of the LAMP programs, we should update the package manager:
+                  <div class="hacker">sudo apt-get update</div></li>
 
-        <div class="hacker">
-sudo apt-get update
-</div>
-
-        <p>Once the update is complete, we can install Apache.</p>
-        <div class="hacker">
-sudo apt-get install apache2
-</div>         
-
-
-        <img src="/images/18228/080515/apache-successfully-installed.png" alt="apache-successfully-installed.png" />
+        <li>Once the update is complete, we can install Apache.
+            <div class="hacker">sudo apt-get install apache2</div>
+            <img src="/images/18228/080515/apache-successfully-installed.png" alt="apache-successfully-installed.png" /></li>
+    </ol>
 
 <h2>Install MySQL</h2>
-        <p>To install MySQL, in the same terminal type in these commands:</p>
-        <div class="hacker">sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql</div>
 
-        <p>During the installation, MySQL will ask you to set a root password.</p>
-        <p>Once you have installed MySQL, you need to activate it:</p>
-        <div class="hacker">sudo mysql_install_db</div>
+       <ol>
+        <li>To install MySQL, in the same terminal type in these commands:
+        <div class="hacker">sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql</div></li>
 
-        <p>Finish up by running the MySQL set up script:</p>
-        <div class="hacker">sudo /usr/bin/mysql_secure_installation</div>
+        <li>During the installation, MySQL will ask you to set a root password.
+        Once you have installed MySQL, you need to activate it:
+        <div class="hacker">sudo mysql_install_db</div>   </li>
 
-        <p>The prompt will ask you for your current root password.</p>
+        <li>Finish up by running the MySQL set up script:
+        <div class="hacker">sudo /usr/bin/mysql_secure_installation</div></li>
 
-        <div class="hacker">Enter current password for root (enter for none): <br/> <br/>  OK, successfully used password, moving on... </div>
+        <li>The prompt will ask you for your current root password.
 
-        <p>Then the prompt will ask you if you want to change the root password. Go ahead and choose "N" and just respond "YES" to the remaining options as seen below:
-           Once root password is set</p> 
-      
+        <div class="hacker">Enter current password for root (enter for none): <br/> <br/>  OK, successfully used password, moving on... </div>  </li>
+
+        <li>Then the prompt will ask you if you want to change the root password. Go ahead and choose "N" and just respond "YES" to the remaining options as seen below:
+           Once root password is set</li>
+     </ol>
 
           <table style="width:100%;">
             <tr style ='font-weight: bold;'>
@@ -196,18 +193,18 @@ sudo apt-get install apache2
         <div class="hacker">sudo vim /etc/apache2/mods-enabled/dir.conf</div>
         <p>Add <code>index.php</code> to the beginning of the <code>DirectoryIndex</code> file line. The page should now look like this:</p>
         
-        <div class="hacker">IfModule mod_dir.c>"<br>&nbsp;&nbsp;&nbsp;&nbsp;DirectoryIndex index.php index.html index.cgi index.pl index.php index.xhtml index.htm<br>/IfModule</div>
-        
+        <div class="hacker">IfModule mod_dir.c>"<br />&nbsp;&nbsp;&nbsp;&nbsp;DirectoryIndex index.php index.html index.cgi index.pl index.php index.xhtml index.htm<br />/IfModule</div>
+
         <h2>Next steps</h2>
         <p>Congratulations! You now have a LAMP stack on your Debian, Ubuntu Linux server, you can now set up phpMyAdmin, Install WordPress, go on to do more with MySQL (A Basic MySQL Tutorial), Create an SSL Certificate, or Install an FTP Server.</p>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/19191%20-%20Install%20WordPress%20on%20your%20LAMP%20server%20-%20Debian.html">Wordpress Install on LAMP on Debian, Unbuntu</a><br>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/18253%20-%20Install%20and%20enable%20MySQL%205-6%20-%20Ubuntu%2C%20Debian.html">Install and Enable MySQL on Debian, Unbuntu</a><br>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17642%20-%20Install%20and%20secure%20phpMyAdmin%20with%20Apache%20-%20Debian.html">Install phpMyadmin on Debian, Unbuntu</a><br>
+        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/19191%20-%20Install%20WordPress%20on%20your%20LAMP%20server%20-%20Debian.html">Wordpress Install on LAMP on Debian, Unbuntu</a><br />
+        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/18253%20-%20Install%20and%20enable%20MySQL%205-6%20-%20Ubuntu%2C%20Debian.html">Install and Enable MySQL on Debian, Unbuntu</a><br />
+        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17642%20-%20Install%20and%20secure%20phpMyAdmin%20with%20Apache%20-%20Debian.html">Install phpMyadmin on Debian, Unbuntu</a><br />
 
- <!--To Conrad, can you identify the articles to link to here.>
+ <!--To Conrad, can you identify the articles to link to here.
         17384 - Install WordPress on your LAMP server - Arch Linux
         18255 - Install and enable MySQL 5-6 - Arch Linux
-        17641 - Install and secure phpMyAdmin with Apache - Arch Linux
+        17641 - Install and secure phpMyAdmin with Apache - Arch Linux  >-->
 
 
 </body>

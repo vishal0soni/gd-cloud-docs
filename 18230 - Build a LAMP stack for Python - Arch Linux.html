@@ -103,24 +103,24 @@ Moved to github</mso:ReviewComments>
         <p>Once the update is complete, you can install Apache.</p>
         <div class="hacker">sudo pacman -S apache</div>
 
-        <p>After Apache is installed, we need to make a couple of changes in the configuration.
- <!--Conrad, make this a new procedure with an <h3> heading "Configure Apache"-->       
+        <p>After Apache is installed, we need to make a couple of changes in the configuration. </p>
+ <!--Conrad, make this a new procedure with an <h3> heading "Configure Apache"-->
      
      <h3>Configure Apache</h3>
-        <br> Open up the apache configuration file:</p>
+        <p>Open up the apache configuration file: </p>
         <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div>
 
-        <p>Comment out the<code> unique_id_module</code> (you can use CTRL-W to find it quickly), make sure there is a pound(#) at the beginning of the line:</p> 
-        <div class="hacker">#LoadModule unique_id_module<br> modules/mod_unique_id.so</div>
+        <p>Comment out the<code> unique_id_module</code> (you can use CTRL-W to find it quickly), make sure there is a pound(#) at the beginning of the line:</p>
+        <div class="hacker">#LoadModule unique_id_module<br /> modules/mod_unique_id.so</div>
 
         <p>Restart Apache:</p>
         <div class="hacker">sudo systemctl restart httpd</div>
-    
+
         <p>Next</p>
         <div class="hacker">sudo vim /etc/hosts</div>
 
         <p>Add your hostname to the end of the line beginning with <code>127.0.0.1</code>.</p>
-        <div class="hacker">127.0.0.1 localhost.localdomain localhost <hostname></div>
+        <div class="hacker">127.0.0.1 localhost.localdomain localhost &lt;hostname&gt;</div>
 
     <h2>Install MySQL</h2>
     <!--Conrad - make this into a table-->
@@ -146,7 +146,7 @@ Moved to github</mso:ReviewComments>
         <div class="hacker">sudo mysql_secure_installation</div>
 
         <p>During this process it will ask you for your current MySQL root password (not to be confused with your server password) and, since it has not yet been set, simply press enter.</p>
-        <p>When prompted, “Set root password?” type Y, and afterwards enter in your new MySQL root password.<br> Once root password is set just say YES to the remaining options as seen below:</p>     
+        <p>When prompted, “Set root password?” type Y, and afterwards enter in your new MySQL root password.<br /> Once root password is set just say YES to the remaining options as seen below:</p>
  <!--Conrad - this would be better as a table. Susan can help.-->
 <table style="width:100%;">
             <tr style ='font-weight: bold;'>
@@ -207,23 +207,23 @@ Moved to github</mso:ReviewComments>
         <p>PHP is an open source web scripting language that is widely used to build dynamic webpages.</p>
 <!--Conrad, make these into steps with the <ol> and <li> tags.-->
       <ol>
-        <li><b>To install PHP, in the same terminal type in these commands:</b></li>
-        <div class="hacker">sudo pacman -S php php-apache</div>
-        <li><b>PHP should also be added to the apache configuration file:</b></li>
-        <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div>
+        <li><b>To install PHP, in the same terminal type in these commands:</b>
+        <div class="hacker">sudo pacman -S php php-apache</div>  </li>
+        <li><b>PHP should also be added to the apache configuration file:</b>
+        <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div></li>
         <li><b>Paste in this text block within the config.</b></li>
        </ol>
 
-        <div class="hacker"># Use for PHP 5.x:<br>
+        <div class="hacker"># Use for PHP 5.x:<br />
 LoadModule php5_module       modules/libphp5.so
-<br>AddHandler php5-script php<br>
+<br />AddHandler php5-script php<br />
 Include conf/extra/php5_module.conf</div>
 
         <h2>Next steps</h2>
         <p>Congratulations! You now have a LAMP stack on your Arch Linux server, you can now set up phpMyAdmin, Install WordPress, go on to do more with MySQL (A Basic MySQL Tutorial), Create an SSL Certificate, or Install an FTP Server.</p>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17384%20-%20Install%20WordPress%20on%20your%20LAMP%20server%20-%20Arch%20Linux.html">Wordpress Install on LAMP on Arch</a><br>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/18255%20-%20Install%20and%20enable%20MySQL%205-6%20-%20Arch%20Linux.html">Install and Enable MySQL on Arch</a><br>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17641%20-%20Install%20and%20secure%20phpMyAdmin%20with%20Apache%20-%20Arch%20Linux.html">Install phpMyadmin on Arch</a><br>
+        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17384%20-%20Install%20WordPress%20on%20your%20LAMP%20server%20-%20Arch%20Linux.html">Wordpress Install on LAMP on Arch</a><br />
+        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/18255%20-%20Install%20and%20enable%20MySQL%205-6%20-%20Arch%20Linux.html">Install and Enable MySQL on Arch</a><br />
+        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17641%20-%20Install%20and%20secure%20phpMyAdmin%20with%20Apache%20-%20Arch%20Linux.html">Install phpMyadmin on Arch</a><br />
 
 
 
