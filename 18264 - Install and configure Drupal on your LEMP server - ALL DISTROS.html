@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __18264________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and configure Drupal on your LEMP server - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Drupal, NGINX, LEMP</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-drupal-with-nginx-on-an-ubuntu-13-04-vps, https://www.digitalocean.com/community/tutorials/how-to-install-drupal-with-nginx-on-an-ubuntu-13-04-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">4</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">3</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18264</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string">2 - A little complex</mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Ready for code validation</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">4.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.500000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursDraftingActual msdt:dt="string">2.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:PercentWriting msdt:dt="string">0.200000000000000</mso:PercentWriting>
+<mso:PercentResearch msdt:dt="string">0.800000000000000</mso:PercentResearch>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Install Drupal</p>
+    <h1>Install and configure Drupal on your LEMP server - ALL DISTROS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>3</u></em><br/>
+        <strong>Time</strong>: <em><u>15 minutes</u></em></p>
+
+    <p>Drupal is a content management framework.    In this article we will describe how to install Drupal on a Debian or Unbuntu LEMP stack</p>
+
+    <h2>Platform Preparation</h2>
+   <ol>
+               <li>Navigate to your home directory
+                   <div class="hacker">cd ~</div>
+               </li>
+                <li>Download Drupal
+                   <div class="hacker">wget http://ftp.drupal.org/files/projects/drupal-7.23.tar.gz</div>
+               </li>
+               <li>The Drupal download is a zip file, so we will have to unzip it
+                   <div class="hacker">tar xzvf drupal-7.23.tar.gz</div>
+               </li>
+               <li>Create a directory under the web root to store the Drupal files 
+                   <div class="hacker">sudo mkdir /usr/share/nginx/html/drupal</div>
+               </li>
+               <li>Move the Drupal files from their unzipped location in your home directory to your new drupal directory
+                   <div class="hacker">sudo mv drupal-7.23/* /usr/share/nginx/html/drupal/</div>
+               </li>
+       </ol>
+
+ <h2>Database Preparation</h2>
+    <ol>
+               <li>Open a MySQL session
+                   <div class="hacker">mysql -u root -p</div>
+               </li>
+               <li>Create a drupal database
+                   <div class="hacker">CREATE DATABASE drupal;</div>
+               </li>
+               <li>Create a new user
+                   <div class="hacker">CREATE USER drupaluser@localhost IDENTIFIED BY 'password';</div>
+               </li>
+               <li>Grant your new user ALL privileges
+                   <div class="hacker">GRANT ALL PRIVILEGES ON drupal.* TO drupaluser@localhost IDENTIFIED BY 'password';</div>
+               </li>
+               <li>Write your changes to disk
+                   <div class="hacker">FLUSH PRIVILEGES;</div>
+               </li>
+               <li>Exit MySQL session
+                   <div class="hacker">exit</div>
+               </li>
+       </ol>
+
+<h2>NGINX Configuration</h2>
+          <ol>      
+               <li>Open the nginx configuration file 
+                   <div class="hacker">sudo vim /etc/nginx/nginx.conf</div>
+               </li><li>Verify the <code>include</code> references in the http context contain the statement below.  If it does not exist, add it.  
+                   <div class="hacker">include /etc/nginx/conf.d/*.conf;
+                  </div>
+               </li>
+               <li>Save (if necessary) and close the file. 
+               </li>
+              <li>Create a new file, drupal.conf 
+                   <div class="hacker">sudo vim /etc/nginx/conf.d/drupal.conf</div>
+               </li>
+               <li>Edit the file with the following contents: 
+                   <div class="hacker"><pre>
+   server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /usr/share/nginx/html/drupal;
+        index index.php index.html index.htm;
+        server_name localhost;
+
+        location / {
+           try_files $uri $uri/ /index.php?q=$uri&$args;
+                    }
+        error_page 404 /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+                             }
+
+        # pass the PHP scripts to FastCGI server listening on php5-fpm.sock
+        location ~ \.php$ {
+                fastcgi_pass unix:/var/run/php5-fpm.sock;
+                fastcgi_index index.php;
+                include fastcgi_params;
+                           }
+              }
+</pre></div>
+             </li>
+ <li>Save and close. 
+               </li>
+ <li>Restart Nginx
+                   <div class="hacker">sudo service nginx restart</div>
+               </li>
+ <li>Using your browser, navigate to http://Your_IP Address/drupal and use the Drupal UI to configure Drupal to meet your needs.
+ </li>
+  </ol>
+                           
+    <h2>Conclusion</h2>
+    <p>You have just installed Drupal.</p>
+   
+</body>
+</html>
