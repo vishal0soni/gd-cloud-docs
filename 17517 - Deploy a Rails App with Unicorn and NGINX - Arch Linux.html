@@ -4,13 +4,11 @@
 
 <head>
 
-<!--Article Number is __________ (fill in blank)-->
-
-<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+<!--Article Number is 17517  -->
 
 
 <title>17517 - Deploy a Rails App with Unicorn and NGINX - Arch Linux</title>
-<style>
+<style type="text/css">
 div.hacker {
 background-color:#666;
 border:1px solid #ccc;
@@ -73,176 +71,179 @@ p.note {
 <p>Setting up Rails application with Unicorn and NGINX in Arch Linux, Ruby, Rails, NGINX</p>
     <h1>Deploy a Rails App with Unicorn and NGINX – Arch Linux</h1>
     
-    <p><strong>Difficulty</strong>: <em>2</em><br/>
+    <p><strong>Difficulty</strong>: <em>2</em><br />
         <strong>Time</strong>: <em>30 minutes</em></p>
 
-    <p>In this article, we will be configuring a multi-layer deployment installation to host Rails based Ruby web applications. To do this, we will use the powerful, flexible, and extremely successful Unicorn application server running behind Nginx.  </p> 
-<p class="note">Note: We assume that you are logged in as a sudo user.</p>
+    <p>In this article, we will be configuring a multi-layer deployment installation to host Rails-based Ruby web applications. To do this, we will use the powerful, flexible, and extremely successful Unicorn application server running behind NGINX.  </p> 
+<p class="note">We assume that you are logged in as a sudo user.</p>
     <h2>Prerequisites</h2>
   In this article, we assume that you have already installed Ruby on Rails with rbenv and your Rails application uses PostgreSQL. If not, please visit:
-    <ol>
-	<li><a href="#">17522-Install Ruby on Rails with rbenv – Arch Linux</a>
+    <ul>
+	<li><a href="17522 - Install Ruby on Rails with rbenv – Arch Linux">Install Ruby on Rails with rbenv – Arch Linux</a>
 	 </li>
-	<li><a href="#">17527-Use PostgreSQL with your Ruby on Rails application – Arch Linux</a>
+	<li><a href="17527 - Use PostgreSQL with your Ruby on Rails application – Arch Linux">Use PostgreSQL with your Ruby on Rails application – Arch Linux</a>
+  <!-- Missing the Install the Git procedure requested in the notes. -->
 	 </li>
-	 </ol>
+	 </ul>
 	 
-	 <h2>Prepare the deployment Server</h2>
+	 <h2>Prepare the deployment server</h2>
     <ol> 
-	<li>Install the bundle of development tools and update the operating system using the following command
+	<li>Install the bundle of development tools, and then update the operating system using the following commands:
 	<div class='hacker'>sudo pacman -Sy base-devel</div>
 	<div class='hacker'>sudo pacman -Syu</div>
     </li>
-	<li>Install Nginx
+	<li>Install NGINX.
 	<div class='hacker'>sudo pacman -S nginx</div>
 	</li>
-	<li>Start the Nginx service
+	<li>Start the NGINX service.
 	<div class='hacker'>sudo systemctl nginx start</div>
 	</li>
-	<li>Install Unicorn and bundle all gems
+	<li>Install Unicorn, and then bundle all gems:
 	<div class='hacker'>gem install unicorn</div>
 	<div class='hacker'>bundle install</div>
 	</li>
 	</ol>
 	
-	<h2>Setup a Rails Application </h2>
+	<h2>Set up a Rails application </h2>
     <ol>
-	<li>Create a new directory 
+	<li>Create a new directory: 
 	<div class='hacker'>sudo mkdir –p /var/www</div>
 	</li>
-	<li>Move to the directory and provide all the required permissions 
+	<li>Move to the directory and provide all the required permissions:
 	<div class='hacker'>cd /var</div>
 	<div class='hacker'>sudo chmod 777  www/</div>
 
     </li>
 	
-	<li>Create a Rails Application in this directory
+	<li>Create a Rails application in this directory.
 	<div class='hacker'>rails new HelloWorld -d postgresql</div>
     </li>
 	
-	<li>Move to the newly created application directory 
+	<li>Move to the newly created application directory. 
 	<div class='hacker'> cd HelloWorld/</div>
 	</li>
-	<li>Create a user for the production database 
+	<li>Create a user for the production database. 
 	<div class='hacker'>sudo -u postgres createuser -s username
 </div>
     </li>
-	<li>To set the database user password, run the following command  
+	<li>To set the database user password, run the following commands:  
 	<div class='hacker'>sudo -u username psql</div>
 	<div class='hacker'>\password username</div>
 	</li>
-		<li>To drop a template, first you need to modify it 
+		<li>To drop a template, first you need to modify it: 
 	<div class='hacker'>UPDATE pg_database SET datistemplate = FALSE WHERE datname = 'template1';
 </div>
     </li>
 	
-	<li>Now you can drop it, using 
+	<li>You can drop it, using this command:<!--Don't just repeat the command, what is drop actually doing?--> 
 	<div class='hacker'>DROP DATABASE template1;
 </div>
     </li>
-	<li>Create a database from <code>template0</code>, with a new default encoding 
+	<li>Create a database from <code>template0</code>, with a new default encoding. 
 	<div class='hacker'>CREATE DATABASE template1 WITH TEMPLATE = template0 ENCODING = 'UNICODE';
 </div>
     </li>
-	<li>Now modify <code>template1</code> so it’s actually a template
+	<li>Modify <code>template1</code>, so that it’s actually a template.
 	<div class='hacker'>UPDATE pg_database SET datistemplate = TRUE WHERE datname ='template1';
 </div>
     </li>
-	<li>Now switch to <code>template1</code> and <code>VACUUM FREEZE</code> the template
+	<li>Switch to <code>template1</code> and <code>VACUUM FREEZE</code> the template.  <!--What is vacumn freeze? Don't just repeat the command.-->
 	<div class='hacker'>\c template1
 </div>
 <div class='hacker'>VACUUM FREEZE;
 </div>
     </li>
-	<li>Start the PostgresSQL service
+	<li>Start the PostgresSQL service.
 	<div class='hacker'>sudo systemctl start postgresql
 </div>
     </li>
 	
-	<li>Enter the new password and logout using the following command
+	<li>Enter the new password and logout.
 	<div class='hacker'>\q
 </div>
     </li>
 	
-	<li>To setup a database connection, move to your application directory
+	<li>To setup a database connection, move to your application directory.
 	<div class='hacker'>Cd /var/www/HelloWorld
 </div>
 <div class='hacker'>sudo  vim config/database.yml
 </div>
     </li>
-	<li>Add the following line in the default section of this file
+	<li>Add the following line in the default section of this file.
 	<div class='hacker'>host: localhost
 </div>
     </li>
-	<li>Notice the production section at the bottom of the file
+	<li>Go to the <code>production</code> section at the bottom of the file:
+  <!--"Notice" is not as effective, it doesn't imply an action.-->
 	<div class='hacker'>username: username
 </div>
 <div class='hacker'>password: &lt;%= ENV[HelloWorld_DATABASE_PASSWORD'] %&gt;
 </div>
     </li>
-	<li>If your production username and the database user are not equal, then make the required changes to set them equal
+	<li>If your production username and the database user are not equal, then make the required changes to set them equal. <!--I don't understand this set. By "not equal" do you mean, "not the same?"-->
     </li>
 	<li>Save and exit.</li>
-	<li>Install the pluggin for rbenv-vars 
+	<li>Install the pluggin for <code>rbenv-vars</code>. 
 		<div class='hacker'>Cd .rbenv/plugins
 </div>
 <div class='hacker'>git clone https://github.com/sstephenson/rbenv-vars.git</div>
     </li>
-	<li>Set environments variable by generating a secret key
+	<li>Set environments variable by generating a secret key.
 	<div class='hacker'>cd /var/www/HelloWorld</div>
 	<div class='hacker'>rake secret</div>
 	</li>
-<li>Copy the generated key and open the following file
+<li>Copy the generated key and open the following file:
 	<div class='hacker'>sudo vim .rbenv-vars
 </div>
-<p>Add the following line  in this file</p>
+<p>Add the following line in this file:</p>
 <div class='hacker'>SECRET_KEY_BASE=your_generated_secret
 </div>
 <div class='hacker'>HelloWorld_DATABASE_PASSWORD=prod_db_pass
 </div>
 </li>
 <li>Save and exit.</li>
-<li>Now, export the secret key and the database password
+<!--New procedure?-->
+<li>Export the secret key and the database password.
 	<div class='hacker'>rbenv vars
 </div>
-<p>Export them manually if required</p>
+<p>Export them manually, if required.</p><!--How do I know to do it manually?-->
 </li>
-<li>Create the production database for the Rails application
+<li>Create the production database for the Rails application.
 	<div class='hacker'>RAILS_ENV=production rake db:create</div>
 	</li>
 
-	<li>Generate a scaffold controller to manage the production database
+	<li>Generate a scaffold controller to manage the production database.
 	<div class='hacker'>rails generate scaffold Task title:string note:text</div>
 	</li>
-	<li>Update  the  production database
+	<li>Update  the  production database.
 	<div class='hacker'>RAILS_ENV=production  rake db:migrate</div>
 	</li>
-	<li>Run your application from the application directory
+	<li>Run your application from the application directory.
 	<div class='hacker'>rails s</div>
-	<p>To terminate user press CTRL+C.</p>
+	<p>To terminate user, press <strong>CTRL+C</strong>.</p>
 	</li>
-	<li>For binding to web browser, run the following command
+	<li>For binding to web browser, run the following command:
 	<div class='hacker'>rails server --binding=[your droplet's IP]</div>
 	</li>
-	<li>You should now be able to access it on any browser by
-	<div class='hacker'>visiting: http://[your droplet's IP]:3000/tasks</div>
+	<li>You should now be able to access it <!--What is it?--> on any browser by visiting:
+	<strong>http://<em><u>your droplet's IP</u></em>:3000/tasks</strong>.
 	</li>
-	<li>Uploading source code here :
-	<a href="#">17414-Use SFTP to Securely Transfer Files with a Remote Server - ALL DISTROS</a>
+	<li>Upload source code here:
+	<a href="17414 - Use SFTP to Securely Transfer Files with a Remote Server - ALL DISTRO">Use SFTP to Securely Transfer Files with a Remote Server - ALL DISTROS</a>
 	</li>
 	</ol>
 	
 <h2>Configure Server </h2>
 
     <ol>
-	<li>To configure Unicorn, move to your Rails application directory
+	<li>To configure Unicorn, move to your Rails application directory.
 	<div class='hacker'>Cd /var/www/HelloWorld</div>
 	</li>
-	<li>Create a blank unicorn.rb document
+	<li>Create a blank <code>unicorn.rb</code> document.
 	<div class='hacker'>sudo vim config/unicorn.rb</div>
     </li>
 	
-	<li>Add the following code in this file
+	<li>Add the following code in this file:
 	<div class='hacker'>
 	<pre>
 	# set path to application
@@ -267,18 +268,19 @@ p.note {
 	pid "#{shared_dir}/pids/unicorn.pid"
 </pre>
 </div>
-Save and exit.
 	</li>
-		
-	<li>Now create the directories that were referred in the configuration file 
+  <li>Save and exit.</li>
+  
+<!-- This could be a new subprocedure-->
+	<li>Create the directories that were referred in the configuration file. 
 	<div class='hacker'>sudo mkdir -p shared/pids shared/sockets shared/log</div>
     </li>
 	
-	<li>Create a script for Unicorn
+	<li>Create a script for Unicorn.
 	<div class='hacker'>sudo vi /etc/pam.d/unicorn_HelloWorld</div>
 	</li>
 	
-	<li>Add the following script code in the file 
+	<li>Add the following script code in the file: 
 	<div class='hacker'>
 	<pre>
 #!/bin/sh
@@ -294,8 +296,8 @@ Save and exit.
 ### END INIT INFO
 
 set -e
-
-USAGE="Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+<!-- the opening bracket creates an error and the command line doesn't display.  Replace the open bracket with the correct ascii &lt; -->
+USAGE="Usage: $0 &lt;start|stop|restart|upgrade|rotate|force-stop>"
 
 # app settings
 USER="username"
@@ -358,26 +360,25 @@ esac
 	</div>
 	</li>
 	
-	<li>Save and exit. 
+	<li>Save and exit.</li>
+  <!-- A new subprocedure starts here?-->
+	
+	<li>This script will allow you to run <code>unicorn_HelloWorld</code> that will run and stop both your Unicorn and your Rails application.</li>
+	
+	<li>Update the script's permissions and enable Unicorn to start on boot.
+		<div class='hacker'>sudo chmod 755 /etc/pam.d/unicorn_HelloWorld</div>     
 	</li>
 	
-	<li>This script will allow you to run <code>unicorn_HelloWorld</code> that will run and stop both your unicorn and your Rails application.
-	</li>
-	
-	<li>Update the script's permissions and enable Unicorn to start on boot
-		<div class='hacker'>sudo chmod 755 /etc/pam.d/unicorn_HelloWorld</div>
-	</li>
-	
-	<li>Start the Unicorn service
+	<li>Start the Unicorn service.
 	<div class='hacker'>sudo  /etc/pam.d/unicorn_HelloWorld start</div>
 
 	</li>
 	
-	<li>Configure Nginx and enable it to communicate with the Unicorn. To do this, you need to edit the default configuration file: <code>default.conf </code>and leave <code>nginx.conf</code>
+	<li>Configure NGINX and enable it to communicate with the Unicorn. To do this, you need to edit the default configuration file: <code>default.conf</code> and leave <code>nginx.conf</code>.
 	<div class='hacker'>sudo vim /etc/nginx/nginx.conf</div>
 	</li>
 	
-	<li>Swap the files contents with the following lines 
+	<li>Swap the files contents with the following lines: 
 	<div class='hacker'>
 	<pre>
 	upstream app {
@@ -407,9 +408,10 @@ esac
 	}
 </pre>
 	</div>
-	 Save and exit.
+
 	</li>
-	<li>Restart the Nginx service
+  <li>Save and exit.</li>
+	<li>Restart the NGINX service.
 	<div class='hacker'>sudo systemctl nginx start</div>
 	</li>
 	</ol>
@@ -417,18 +419,19 @@ esac
 	 <h2>Managing the servers</h2>
 
     <ol>
-	<li>Once we finish configuring both the servers, initiate the Unicorn and run it as a daemon by using the configuration file. Ensure that you are inside the application directory and run the following command
+	<li>After you finish configuring both the servers, initiate the Unicorn and run it as a daemon by using the configuration file. Ensure that you are inside the application directory, and then run the following command:
 	
 	<div class='hacker'>unicorn_rails -c config/unicorn.rb –Ds</div>
 	</li>
 	
-	<li>Test your droplet's IP address (or the domain name associated to it) at <em>http://[Your_droplet's_IP address]/tasks</em>
+	<li>Test your droplet's IP address (or the domain name associated to it) at <strong>http://<em>your_droplet's_IP_address</em>/tasks</strong>.
 </div>
 	</li>
 	
 	 </ol>
-    <h2>Next Step</h2>
-<p> By using all the above steps we will be able to deploy your Rails application with Unicorn and Nginx on Arch Linux. 
+    <h2>Next step</h2>
+<p> By using all the above steps we will be able to deploy your Rails application with Unicorn and NGINX on Arch Linux.  <!--Include links for the next steps?  If you don't have one, then change the heading to "Conclusion."-->
+
 </p>   
 </body>
 </html>
