@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<title>Using tail to report from your access log - ALL DISTROS</title>
+
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+    .auto-style1 {
+        width: 1345px;
+    }
+    .auto-style2 {
+        width: 160px;
+    }
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">NGINX, Troubleshooting</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">http://www.commandlinefu.com/commands/view/6/analyse-an-apache-access-log-for-the-most-common-ip-addresses, http://www.commandlinefu.com/commands/view/6/analyse-an-apache-access-log-for-the-most-common-ip-addresses</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">4</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">command to use here is 'tail -10000 access_log | awk '{print $1}' | sort | uniq -c | sort -n | tail' -- make sure to use common NGINX log locations. will give output of top 10 ip addresses in last 10k log entries. Link to 'Edit your NGINX configuration file to block IP addresses to your site'</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18282</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string">1 - Basic</mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">1.50000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">4.00000000000000</mso:Week>
+<mso:PrereqOrdering msdt:dt="string">1</mso:PrereqOrdering>
+<mso:ReviewComments msdt:dt="string">7/24: CJ: Moved Note info into a Step 1. Made Nginx and Apache info equal. The SP metadata returns errors in XHTML validator.
+
+7/23: CJ: Brian, the XHTML validator returns 50+ errors for this doc. Can you fix and then send back?</mso:ReviewComments>
+<mso:PercentResearch msdt:dt="string">0.900000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.100000000000000</mso:PercentWriting>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:AssignmentAction msdt:dt="string"></mso:AssignmentAction>
+<mso:HoursDraftingActual msdt:dt="string">2.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Report the top 10 IP addresses from your Apache or Nginx access log, troubleshooting</p>
+<h1>Report the Top 10 IP Addresses from Your Apache or Nginx Access Logs - ALL DISTROS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>Value from spreadsheet</u></em><br/>
+        <strong>Time</strong>: <em><u>Time value</u></em></p>
+
+    <p>You can produce various reports on the activity that occurs on your website.  This article describes a way to report the top 10 IP addresses from your access logs using <code>awk</code> and the <code>tail</code>, <code>sort</code>, and <code>uniq</code> commmands.</p>
+     
+
+    <h2>Report most common IP addresses</h2>
+    <ol>
+<li>Navigate to the location of the access log: 
+    
+    <ul>
+      <li>In Apache, the filename is <code>access_log</code>. Some common locations are under the <code>/var</code> or <code>/usr</code> directory. </li>
+      
+<li>In Nginx, the filename is <code>access.log</code>. The default location is <code>log/nginx/</code>.</li>
+</ul>
+      The fully qualified location depends on your implementation of Linux.
+      </li>
+
+<li>Run one of the following commands:
+    
+    <ul><li>In Apache:
+       
+        <div class="hacker">sudo tail -10000 access_log | awk &#39;{print $1}&#39; | sort | uniq -c | sort -n | tail </div>
+     </li> 
+<li>In Nginx:
+        <div class="hacker">sudo tail -10000 access.log | awk &#39;{print $1}&#39; | sort | uniq -c | sort -n | tail </div>
+      </li>
+      
+      </ul>
+    The commands break down like this:
+    
+    <table>
+      <tr>
+        <th>Command</th>
+        <th>Definition</th>
+      </tr>
+      <tr>
+        <td><p><code>tail -10000 access_log |</code></p>
+        <p>or</p>
+        <p><code>tail -10000 access.log |</code></p></td>
+        <td>Capture the last 10000K lines from the <code>access_log</code> or <code>access.log </code>file and send the output to . . .</td>
+      </tr>
+      <tr>
+        <td><code>awk &#39;{print $1}&#39; |</code></td>
+        <td>Take the 10000 (or fewer) lines of input from the previous command and print it to . . .</td>
+        
+      </tr>
+      <tr>
+        <td><code>sort</code></td>
+        <td>Sort the results to help the subsequent <code>uniq</code> command, and send the output to . . .</td>
+      </tr>
+      <tr>
+        <td><code>uniq -c |</code></td>
+        <td>Show each value only once, but use <code>-c</code> to count the number of occurences; send the output to . . .</td>
+      </tr>
+      <tr>
+        <td><code>sort -n |</code></td>
+        <td>Sort again but this time numerically. Because each item in the list is now prefixed with the count, we have a list order by number of occurences. Send the output to . . .</td>
+      </tr>
+      <tr>
+        <td><code>tail</code></td>
+        <td>Tail, with no options will default to the last 10 lines of the input file.</td>
+      </tr>
+    </table>
+</li></ol>
+    <h2>Next steps</h2>
+    <p>This article shows how, with a little creativity, you can use Linux commands to help manage your server. For more sophisticated reporting capabiility, a number of reporting tools are available. </p>
+    <p>See also <a href="http://">Edit your NGINX configuration file to block IP addresses</a>.</p>
+   
+</body>
+</html>

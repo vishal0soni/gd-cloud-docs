@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <title>Install Ruby on Rails using RVM - CentOS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <style type="text/css">
+    div.hacker {
+        background-color: #666;
+        border: 1px solid #ccc;
+        color: #fff;
+        font-family: "Lucida Console", "Courier New", Courier, fixed;
+        font-size: 95%;
+        line-height: 160%;
+        margin-bottom: 1.5em;
+        padding: 10px;
+    }
+    
+    p.note {
+        background-color: #ffffe6;
+        border: 1px solid #eee;
+        color: #666;
+        padding: .8em 1.6em;
+        margin: 15px 0;
+    }
+    
+    .warning {
+        border: 1px #d25100 solid;
+        padding: .5em 1em .5em 4em;
+        margin: 10px 20px 15px 20px;
+        background-image: url('@{help-img-path}/img_warning.gif');
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-color: #ededed;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        /* -moz-border-bottom-radius: 0;9 */
+        -webkit-border-bottom-radius: 0;
+        padding-top: 14px;
+        padding-bottom: 15px;
+    }
+    </style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-centos-6-with-rvm, https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-centos-6-with-rvm</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - &#39;Initial Server Setup.&#39; Split my distro, merge into forks if necessary. Use commands for RHEL/ARch based on those articles, but follow formatting of attached Garage doc entitled &#39;Installing Ruby on Rails on DISTRO_NAME using RVM.&#39; Make sure they are not using root unless otherwise specified to do so. Follow up link to &#39;Use RVM to manage Ruby installations and Environments&#39;</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17536</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">B</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:ReviewComments msdt:dt="string">8/19 - CLS - validated. Added link to RVM.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursDraftingActual msdt:dt="string">3.50000000000000</mso:HoursDraftingActual>
+<mso:PercentResearch msdt:dt="string">0.250000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.750000000000000</mso:PercentWriting>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">1.00000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+    
+</head>
+
+<body>
+
+<p>Steps to install Ruby on Rails using Ruby Version Manager (RVM) in CentOS, Ruby, Rails</p>
+<h1>Install Ruby on Rails using RVM – CentOS</h1>
+
+<p><strong>Difficulty</strong>: 1</p>
+<p><strong>Time</strong>: 30 minutes</p>
+<p>Ruby on Rails&reg; is a well-known open source stack for web application development. The Ruby Version Manager (RVM) lets you easily manage multiple Ruby application environments and switch between them in a most efficient way. This article will assist you on how to setup Ruby on Rails in CentOS using RVM.</p>
+
+<h2>Prepare your system</h2>
+<p>Before you can install Ruby on Rails, prepare your system with the required and updated system software.</p>
+<ol>
+<li>Access root by running the following command:
+  <div class="hacker">sudo yum update</div>
+</li>
+<li>Use <code>curl</code> to install RVM with the following command: 
+		<div class="hacker">sudo yum install curl</div><!--This command makes no sense. The text says that you are installing RVM, but then you do it again a few steps below. Is this a duplicate step? -->
+</li>
+<li>Set up the <code>mpapis public key</code> with the following command:
+  <div class="hacker">gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3</div>
+</li>
+</ol>
+<h2>Install RVM</h2>
+<ol>
+<li> 
+If your system doesn’t have RVM already installed, use the following command to install RVM. 
+		<div class="hacker">\curl -L https://get.rvm.io | bash -s stable --ruby </div>
+<p>The backslash before <code>curl</code> prevents potential version conflicts and <code>--ruby</code> flag will install the latest version of Ruby. </p>
+</li>
+<li>To apply RVM, execute the following command: 
+		<div class="hacker">source  /usr/local/rvm/scripts/rvm</div>
+<p>If your system already has RVM installed, update it, and install Ruby using the following commands.  </p>
+<div class="hacker">rvm get stable --autolibs=enable</div>
+<div class="hacker">rvm install ruby</div>
+<p>If you’ve already installed these packages, you'll get a message </p>
+</li>
+<li>Rail asset pipeline needs JavaScript runtime to compile code. On CentOS, Node.js (a server-side JavaScript environment) is preferred. To install this, type the following command:
+  <div class="hacker">sudo yum install nodejs</div>
+</li>
+</ol>
+<h3>Install Gems</h3>
+<p>Bundler is a tool to manage gems while developing and running Rails applications. Nokogiri is a dependency for many other gems.</p>
+<ol>
+<li> 
+Check the version of gem manager. 
+		<div class="hacker">gem –v</div>
+<p>To update gem manager type following command. </p>
+		<div class="hacker">gem update –-system</div>
+</li>
+<li> 
+Use Ruby with gemset global. 
+		<div class="hacker">rvm gemset use global</div>
+</li>
+<li> 
+Install Bundler and Nokogiri gems with the following commands:
+<div class="hacker">gem install bundler</div>
+<div class="hacker">gem install nokogiri</div>
+</li> 
+</ol>
+<h2>Install Rails</h2>
+<ul>
+<li>Use gem to install the most recent, stable version of Rails. 
+		<div class="hacker">gem install rails</div>
+<p>To check the version, type: </p>
+		<div class="hacker">rails –v</div>
+<p>To install a specific version, type:</p>
+		<div class="hacker">gem install rails --version=[version number]</div>
+</li>
+</ul>
+<p>After following all these steps, you are done with installation of Ruby on Rails. </p>
+
+<h2>Next steps</h2>
+<p>In this article, we reviewed the steps involved in setting up Ruby on Rails using RVM for your web application in CentOS distribution.</p>
+<p>For more information on RVM, read the article: <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17912%20-%20Use%20RVM%20to%20manage%20Ruby%20installations%20and%20Environments%20-%20ALL%20DISTROS.html">Use RVM to manage Ruby installations.</a></p>
+
+
+</body>
+</html>

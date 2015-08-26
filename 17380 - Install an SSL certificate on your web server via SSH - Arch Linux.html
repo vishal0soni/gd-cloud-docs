@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<title>Install an SSL Certificate on Your Web Server via SSH - Arch Linux</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">SSL, Apache, NGINX, Security</mso:ArticleKeywords>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-an-ssl-certificate-from-a-commercial-certificate-authority, https://www.digitalocean.com/community/tutorials/how-to-install-an-ssl-certificate-from-a-commercial-certificate-authority</mso:Reference>
+<mso:Week msdt:dt="string">2.00000000000000</mso:Week>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ReviewComments msdt:dt="string">removed &quot;by running this command&quot;</mso:ReviewComments>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:HoursEditingEstimated msdt:dt="string">0.250000000000000</mso:HoursEditingEstimated>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:AssignedTo1 msdt:dt="string">23</mso:AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">1.00000000000000</mso:HoursDraftingEstimated>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Gary Nakanelua</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:DeliveryTarget msdt:dt="string">Phase 0</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">A</mso:EditScore>
+<mso:RequestNotes msdt:dt="string">Install SSL by command line to NGINX + Apache. Different forks will need different instructions for doing it since the Apache and NGINX config differ per fork. This includes namecheap instructions - only include GoDaddy for cert instructions. Link to article 562 for activating SSL</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17380</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:PercentResearch msdt:dt="string">0.750000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.250000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">5.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">0.650000000000000</mso:HoursEditingActual>
+<mso:PrereqOrdering msdt:dt="string">1</mso:PrereqOrdering>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+    <h1>Install an SSL Certificate on Your Web Server via SSH - Arch Linux</h1>
+    <!-- START: GD provided
+    Time value is the time it takes to complete with accommodation for reading article itself (appropriate options are 5, 10, 15, 20, 30, 45 minutes, or 1, 2, or 3 hours). Timeframes only need to include steps outlined in the article itself; do not include timeframes for articles linked to.
+
+    -->
+    <p>
+        <strong>Difficulty</strong>: 2
+        <br />
+        <strong>Time</strong>: 30 minutes
+    </p>
+    <!-- END: GD provided -->
+
+    <p>After downloading your SSL certificate, you need to install it on your web server. This article guides you through installing an SSL certificate from a commercial Certificate Authority (CA) on Arch Linux. </p>
+
+
+    <h2>Install SSL certificate in Nginx </h2>
+    <ol>
+        <li>
+            Move your purchased certificate and key to the appropriate location: /etc/nginx/.
+        </li>
+        <li>
+            Open the configuration file for editing:
+            <div class="hacker">sudo vim nginx.conf</div>
+        </li>
+        <li>Uncomment everything in the default <code>SSL</code> section by removing the pound symbols (#).</li>
+        <li>Change the name of the key and certificate to match the names of your purchased ones.</li>
+        <li>Make the following changes:</li>
+            <ul>
+                <li>Set <code>'ssl'</code> to <code>on</code>.</li>
+                <li>Set <code>'listen'</code> to your SSL port, typically <code>443</code>.</li>
+                <li>Set <code>'ssl_certificate'</code> to the location of your certificate file.</li>
+                <li>Set <code>'ssl_certificate_key'</code> to the location of your private key.</li>
+            </ul>
+        </li>
+
+        <li>Restart Nginx: 
+<div class="hacker">sudo systemctl restart nginx</div>
+Restarting loads the new configuration file and enables TLS/SSL over HTTPS.
+
+        </li>
+    </ol>
+    <h2>Install SSL certificate in Apache </h2>
+    <ol>
+        <li>
+            Open the configuration file for editing:
+            <div class="hacker"> vim /etc/httpd/conf/httpd.conf </div>
+        </li>
+        <li>
+            Uncomment the following <code>SSL</code> line in the configuration file by removing the pound symbol (#):
+            <pre> Include conf/extra/httpd-ssl.conf</pre>
+        </li>
+        <li>
+            Move your certificate to  /etc/httpd/conf/.
+        </li>
+        <li>
+            Open the SSL configuration file for editing:
+            <div class="hacker">sudo vim /etc/httpd/conf/extra/httpd-ssl.conf</div>
+        </li>
+        <li>
+            Modify these two lines to match the names of your key and certificate:<br />
+
+          <code><em><u>SSLCertificateFile</u></em> "/etc/httpd/conf/server.crt"</code><br />
+<code><em><u>SSLCertificateKeyFile</u></em> "/etc/httpd/conf/server.key"</code><br />
+        </li>
+        <li>
+            Restart Apache:
+            <div class="hacker">sudo systemctl restart httpd</div>
+        </li>
+    </ol>
+    <h2>Conclusion</h2>
+    <p>You have installed an SSL certificate. </p>
+
+</body>
+
+</html>

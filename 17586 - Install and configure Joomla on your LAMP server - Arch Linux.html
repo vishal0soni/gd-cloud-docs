@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is _17586 -->
+
+
+
+<title>Install and configure Joomla on your LAMP server - Arch Linux</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">PHP, Applications</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-joomla-on-a-virtual-server-running-ubuntu-12-04, https://www.digitalocean.com/community/tutorials/how-to-install-joomla-on-a-virtual-server-running-ubuntu-12-04</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Similar to 'Install and configure Drupal on your LAMP server' but with Joomla. Link to Joomla console article at end for advanced users.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17586</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.100000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">17</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Pooja Nadubettu</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:ReviewComments msdt:dt="string">8/7 - CLS - Validated XHTML, confirmed Joomla URL with Pooja.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string">Test Passed - PC</mso:TestComments>
+<mso:HoursDraftingActual msdt:dt="string">6.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester msdt:dt="string">Prabhu Mouli</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester>
+<mso:Tester msdt:dt="string">20</mso:Tester>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+    <p>Installation of Joomla on your LAMP web server with Arch Linux.</p>
+    
+    <h1>Install and configure Joomla on your LAMP server - Arch Linux</h1>
+
+    <p>
+        <strong>Difficulty</strong>: <em><u>1</u></em><br />
+        <strong>Time</strong>: <em><u>5 minutes</u></em>
+    </p>
+
+    <p>Joomla is an open source content management system that helps you build websites and online applications. Joomla is built in PHP and makes use of a database system like MySQL. </p>
+    This article walks you through the installation of Joomla on your Debian server. Before getting started, you need to have LAMP (Linux, Apache, MySQL, PHP) set up on your server. For instructions, see <a href="http://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17345 - Build a LAMP stack (Linux, Apache, MySQL, PHP) - Arch Linux"> the article: Installing LAMP stack.</a>
+
+    
+    <h2>Download Joomla</h2>
+    <ol>
+        <li>
+            Before you download the installation files, create a directory.
+            <div class="hacker">sudo mkdir temp</div>
+        </li>
+        <li>Go to that directory.
+        <div class="hacker">cd temp</div></li>
+        <li>
+           Download the latest version of Joomla from the <a href="http://joomlacode.org/gf/project/joomla/frs/">Joomla website.</a>
+            <div class="hacker">sudo wget http://joomlacode.org/gf/download/frsrelease/17410/76021/Joomla_2.5.7-Stable-Full_Package.tar.gz</div>
+        </li>
+        <li>
+            Unzip the downloaded package, moving it to the default Apache directory.
+            <div class="hacker">sudo tar zxvf Joomla_2.5.7-Stable-Full_Package.tar.gz  -C /srv/http</div>           
+        </li>           
+
+    </ol>
+
+    <h2>Grant permissions</h2>
+    <ul>
+        <li>
+            Alter the permissions on the configuration file. You can change it back after the installation is complete.
+            <div class="hacker">sudo touch /srv/http/configuration.php</div>
+            <div class="hacker">sudo chmod 777 /srv/http/configuration.php</div>
+</li>
+
+    </ul>
+    <h2>Create Joomla database and user</h2>
+    <ol>
+        <li>
+            Login to MySQL. 
+            <div class="hacker">sudo mysql -u root -p</div>
+            When prompted, enter the MySQL root password that you set during the MySQL installation.
+        </li>
+        <li>
+            Create a database with any name.
+            <div class="hacker">CREATE DATABASE <em><u>testdb</u></em>;</div>
+            You will see: 
+            <div class="hacker">Query OK, 1 row affected (0.00 sec)</div>
+        </li>
+        <li>
+            Create user. 
+            <div class="hacker">CREATE USER <em><u>newuser</u></em>@localhost;</div>
+        </li>
+        <li>Set the password for the newly created user. 
+            <div class="hacker">SET PASSWORD FOR <em><u>newuser</u></em>@localhost= PASSWORD(<em><u>"pass"</u></em>);</div>
+        </li>
+        <li>Grant privileges to the newly created user.
+        <div class="hacker">GRANT ALL PRIVILEGES ON <em><u>testdb</u></em>.* TO <em><u>newuser</u></em>@localhost IDENTIFIED BY '<em><u>pass</u></em>';</div>
+        </li>
+        <li>
+            Refresh MySQL.
+            <div class="hacker">FLUSH PRIVILEGES;</div>
+        </li>
+        <li>
+            Exit the MySQL shell.
+            <div class="hacker">exit</div>
+        </li>
+        <li>
+            You also need to edit the MySQL configuration in the <code>php.ini</code> file.
+            <div class="hacker">sudo vim /etc/php/php.ini</div>
+        </li>
+        <li>Uncomment the following line in the file:
+        <div class="hacker">extension=mysql.so</div>
+        </li>
+        <li>
+            Restart Apache.
+            <div class="hacker">sudo systemctl restart httpd</div>
+        </li>
+    </ol>
+    <h2>Install Joomba</h2>
+    <ol>
+        <li>
+            In your browser, navigate to <strong>http://<em><u>server-ip-address</u></em></strong>. You will see the Joomla installation page.
+
+        </li>
+        <li>
+            On the <strong>Pre-installation Check and License</strong> page, click <strong>Next</strong>.</li>
+            <li> On the <strong>Configure the database connection settings</strong> page, enter the credentials you created in the previous section.
+        </li>
+        <li>Enter configuration information for your website, such as the name of the site, and email and password for the administrator. </li>
+        <li>Click <strong>Install Sample Data</strong>. <br />To complete the installation you will be asked to remove the installation folder. </li>
+        <li>
+            Go back to your console, delete the installation folder, and change the permission on the configuration file. 
+            <div class="hacker">sudo rm -rf /srv/http/installation/</div>
+            <div class="hacker">sudo chmod 755 /srv/http/configuration.php</div>
+        </li>
+        <li>In your browser, navigate to <strong>http://<em><u>server-ip-address</u></em>/index.php</strong> or domain name. The new Joomla page displays.</li>
+    </ol>
+    <h2>Next steps</h2>
+   Now that you have set up a Joomla site, you can <a href="http://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17611 - Install Joomla Console to manage your Joomla site by command line - Arch Linux.html">install Joomla Console to manage your Joomla site by command line.</a>
+
+</body>
+</html>

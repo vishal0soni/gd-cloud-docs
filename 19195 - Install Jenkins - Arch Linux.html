@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Use this template for articles that include steps for accomplishing a task or tasks (for example, installing). For articles that explain or describe something (such as an operating system), use the Informational template instead.  -->
+
+<title>Install Jenkins - Arch Linux</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleID msdt:dt="string">19195</mso:ArticleID>
+<mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Reference msdt:dt="string"></mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ReviewComments msdt:dt="string">8/20 sjk - Validated -no errors</mso:ReviewComments>
+<mso:PrereqOrdering msdt:dt="string">0</mso:PrereqOrdering>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:ArticlePriority msdt:dt="string"></mso:ArticlePriority>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:EditScore msdt:dt="string">A</mso:EditScore>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Week msdt:dt="string">7.00000000000000</mso:Week>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">0.250000000000000</mso:HoursEditingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Install Jenkins</p>
+    <h1>Install Jenkins - Arch Linux</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>1</u></em><br/>
+        <strong>Time</strong>: <em><u>10 minutes</u></em></p>
+
+    <p>Jenkins is an extensible open source continuous integration server used for building software projects and monitoring job execution.</p>
+
+    <h2>Install and start Jenkins</h2>
+    
+    <ol>
+     <li>Install Jenkins.
+        <div class="hacker">sudo pacman -Syu jenkins
+</div>
+         </li>
+   <li>Start Jenkins.
+        <div class="hacker">sudo systemctl start jenkins</div>
+    </li>
+    <li>Open a browser and navigate to your Jenkins server.
+        <div class="hacker">http://Your IP Address:8090/</div></ol>
+ 
+    <p>Welcome to Jenkins!</p>
+  
+    
+  
+<h2>Next steps</h2>
+    <p>Use the Jenkins UI to create a new job.</p>
+   
+</body>
+</html>

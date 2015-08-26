@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17848-->
+
+
+<title>Find and remove runaway processes - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Linux Basics, System tools</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://docs.google.com/document/d/1d3abBySAEYidfwTKcT6g5wyPMkaQEN2KLsvP16p8LRE/edit?usp=sharing, https://docs.google.com/document/d/1d3abBySAEYidfwTKcT6g5wyPMkaQEN2KLsvP16p8LRE/edit?usp=sharing</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">rewrite to fit model</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17848</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.100000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">C</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">1</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">18</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Francisco Ortega</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">4.00000000000000</mso:Week>
+<mso:ReviewComments msdt:dt="string">7/31 - CLS - Validated XHTML. Passed Copyscape.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:AssignmentAction msdt:dt="string"></mso:AssignmentAction>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursEditingActual msdt:dt="string">3.50000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+ <p>Finding and killing runaway processes, including parents .for all DISTROS</p>
+<h1>Find and remove runaway processes</h1>
+
+<p><strong>Difficulty</strong>: <em><u>1</u></em><br />
+        <strong>Time</strong>: <em><u>10 minutes</u></em></p>
+		
+<p>There might be sometimes where your COMPANY_NAME cloud server becomes laggy or slow to respond. This article explains how to troubleshoot your server's responsiveness before resorting to the usual solution of rebooting it.</p>
+
+<h2>Display your server's processes</h2>
+
+<p>When in trouble, the <code>top</code> command is the first command to try. The <code>top</code> command displays the most processor-intensive processes running on the server at the moment.</p>
+<ol>
+<li>Log in to your server and run <code>top</code> from the command line. You should see something like the following: <br />
+
+<img  src="http://img4.wsimg.com/support/images/cloudserver/[article/17848/072115/top-command.png" alt="top command"></img></li>
+
+<li>If you receive an error message "Error opening terminal: unknown" or "unknown terminal type," use the <code>TERM=xterm top</code> command.</li>
+</ol>
+<p>The <code>top</code> command display updates every few seconds.</p>
+
+
+<h2>Review Linux's load average</h2>
+<p>The server's <code>load average</code> displays on the first line and indicates how many processes are waiting for processor time. </p>
+
+<div class="hacker">
+top - 11:25:38 up 6 days, 14:56,  1 user,  load average: 0.00, 0.01, 0.05<br />
+
+Tasks:  75 total,   1 running,  74 sleeping,   0 stopped,   0 zombie<br />
+
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st<br />
+</div>
+
+<p>During normal processing, the <code>load average</code> is equal to or less than the number of processor cores in the dedicated or virtual server. The service is not overloaded, at least not from the CPU perspective. The problem arises when the load average exceeds the number of cores. For example, on a single-core server, a load average of "3.40" indicates severe overload, but on a four-core server, it would be considered normal.</p>
+
+<p>You need to pay attention to numbers that exceed the number of cores. If the load average is "15" or "150", something almost certainly is going wrong. The good news is that a high load average can be resolved, after we understand the root cause of the congestion.</p>
+
+<h2>Stop slow processes</h2>
+Stopping, or killing, slow processes can help your server return to normal.<p />
+
+<ol>
+<li>In the Top process list, identify the process you want to kill.</li> 
+<li>With Top running, type "k" in the command window. <br />
+Top displays the <code>PID to signa/kill</code> prompt.</li> 
+<li>Enter the numeric <code>PID</code> (displayed in the first column) of the process you want to kill.</li>
+</ol>                                                           
+<p>Configuration of the server and its processes might block the <code>kill</code> command from working within the Top display directly. If security or other rules block you from removing a process from within <code>top</code>, use the command line <code>kill</code> command. For example:</p>
+
+<div class="hacker">sudo kill -9 <em><u>process id</u></em></div>
+
+After the problem process is dead, the server's load average should return to normal.  The Top display should display the updated serve load average.
+
+<h2>Stop a parent process</h2>
+
+<p>The one practical exception that deserves mention at this level is when a root error results in launching many child processes.</p>
+
+<p>Sometimes, you can kill a process and another pops up in the display with similar name, but with a different process number. In this case, the server might have an incorrectly set timer or confused script, which is creating new processes faster than you can kill them. 
+In this case, you need to identify and kill the parent process that is launching the new child processes.</p>
+<ol>
+<li>To find the problem parent process, use the <code>ps</code> command. This command reports on a process's status.
+                                                                                                      
+<div class="hacker">
+ps -p <em><u>child process number</u></em> -o ppid
+</div></li>
+
+<li>Suppose, for example, that a certain process is near the top, and you believe the server should not be running it now. Type:
+
+<div class="hacker">
+ps -p <em><u>process id</u></em> -o ppid
+</div></li>
+
+<li>The server responds with something like this:
+<div class="hacker">
+PPID
+
+<em><u>XXXXX</u></em>
+</div></li>
+</ol>
+
+<p>Examine or kill the parent process and its children, as appropriate.</p>
+
+<h2>Conclusion</h2>
+<p>If none of the steps described in this article work, rebooting the real or virtual server may be your best bet. Fortunately, this is a rare situation. Most of the time, you will be using <code>top</code>, <code>kill</code>, and <code>ps</code> and you'll be able to get the server back on track without a reboot.</p>
+
+<p>Occasionally, killing off high-profile processes aren't enough. There might be other tricks to try, but those are for a more advanced Linux article.</p>
+
+</body>
+</html>

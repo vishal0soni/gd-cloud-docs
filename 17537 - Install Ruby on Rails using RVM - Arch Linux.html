@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17537-->
+
+<title>Install Ruby on Rails using RVM - Arch Linux</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+.style1 {color: #FF0000}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-arch-linux-with-rvm, https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-arch-linux-with-rvm</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup.' Split my distro, merge into forks if necessary. Use commands for RHEL/ARch based on those articles, but follow formatting of attached Garage doc entitled 'Installing Ruby on Rails on DISTRO_NAME using RVM.' Make sure they are not using root unless otherwise specified to do so. Follow up link to 'Use RVM to manage Ruby installations and Environments'</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17537</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">B</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:PercentResearch msdt:dt="string">0.350000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.650000000000000</mso:PercentWriting>
+<mso:ReviewComments msdt:dt="string">8/12 - Validated XHTML.  Checked in copyscape.  I found the missin link and added it.
+8/19 - Edits lost? Re-edited it and added missing links.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:HoursDraftingActual msdt:dt="string">3.50000000000000</mso:HoursDraftingActual>
+<mso:HoursEditingActual msdt:dt="string">2.00000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+ <p>Setting up Ruby on Rails using RVM in Arch Linux, Ruby, Rails</p>
+    <h1>Install Ruby on Rails using RVM - Arch Linux</h1>
+    <p><strong>Difficulty</strong>: <em>1</em></p>
+    <p><strong>Time</strong>: <em>30 minutes</em></p>
+    <p>Ruby on Rails&reg; is a well-known open source stack for web application development. With Ruby Version Manager (RVM) you can easily manage multiple Ruby application environments and switch between them in a most efficient way. </p>
+    <p>This article will assist you on how to install Ruby on Rails in Arch Linux using RVM, and assumes that you have sudo privileges to perform this task. You may want to visit the <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17324%20-%20Initial%20Server%20Setup%20-%20Arch%20Linux.html">Initial Server Setup - Arch Linux</a> article to setup your Arch Linux server.</p>
+    <h2>Install RVM</h2>
+   
+    <ol>
+        <li>Update all the packages.
+            <div class='hacker'>sudo pacman -Sy</div>      
+        </li>
+        <li>Start with installing curl, if it's not already installed.
+            <div class='hacker'>sudo pacman -S curl</div>
+        </li>
+        <li>Install RVM by typing: 
+            <div class='hacker'>sudo curl -L get.rvm.io | bash -s stable </div>
+        </li>
+		<li>After you have run the above command, there is one more dependency that needs to be fixed, so type the following command:
+            <div class='hacker'>sudo curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - </div>
+			 <div class='hacker'>sudo curl -L https://get.rvm.io | bash -s stable </div>
+        </li>
+		
+        <li>Open <code>.bashrc</code> file by typing:
+            <div class='hacker'>sudo vim .bashrc</div>
+        </li>
+        <li>Add the lines in this example at the end of the file.
+            <div class='hacker'> [[ -s "$HOME/.rvm/scripts/rvm" ]]  &amp;&amp;  source "$HOME/.rvm/scripts/rvm" </div>
+        </li>
+        <li>Close the session, log in back to apply the changes, and then install the dependencies of RVM. 
+            <div class='hacker'>rvm requirements</div>
+      </li></ol>
+<h2>Install Ruby</h2>
+     <ol>
+        <li>Before you can install Ruby, you need to install Rails.
+            <div class='hacker'>sudo pacman -S libyaml</div>      
+        </li>
+    
+    <li>Install Ruby with RVM.
+     <div class='hacker'>rvm install ruby</div>
+    </li>
+        <li>The Rail asset pipeline needs JavaScript runtime to compile code. On Arch Linux, Node.js (a server-side JavaScript environment) is preferred. To install Node.js, type the following command:
+     <div class='hacker'>sudo pacman -S nodejs</div>
+    </li>
+</ol>
+  <h2>Install RubyGems</h2>
+    <ol><li>
+        Install gems using RVM.
+            <div class='hacker'>rvm rubygems current</div>      
+    </li>    
+    </ol>
+   <h2>Setup Rails</h2>
+   <p> This task will take some time, so have patience. Once completed, Ruby on Rails will be installed.</p>
+     <ol>
+        <li>To install Rails, type:
+            <div class='hacker'>gem install rails</div>      
+ </li>
+     <li>Check the installed versions of Ruby and Rails.
+            <div class='hacker'>ruby -v</div>  
+      <div class='hacker'>rails -v</div>    
+       </li>
+	   <li>Create the project directory for your Rail project by typing the following commands:
+          <div class='hacker'>sudo mkdir -p /usr/local/src/rail_project</div>
+      </li>
+	 <li>Move to the newly created directory, and grant all the required access using following commands:
+          <div class='hacker'>cd  /usr/local/src/rail_project</div>
+		  <div class='hacker'>sudo chmod 777 /usr/local/src/rail_project</div>
+		  <div class='hacker'>rails new HelloWorld</div>
+		  <div class='hacker'>cd HelloWorld</div>
+		   <div class='hacker'>rails server</div>
+		   
+		   <p>Your Rails server should be running now.</p></li>
+		   <li>You can bind your Rails application using the following command:
+		   <div class='hacker'>rails server --binding=[your public IP]</div>
+		   <p> Your new application is ready and can be accessed by visiting <strong><em><u>your_public_IP_or_domain</u></em>:3000</strong> (3000 is default port).</p>
+		   </li>
+      </ol>
+   
+     
+     <h2>Next steps</h2>
+<p>In this article, we reviewed the steps involved in installing RVM, Ruby, RubyGems, and finally Rails in Arch Linux environment, which is known for being lightweight and flexible.</p>
+<p>For more information on RVM, read the article: <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17912%20-%20Use%20RVM%20to%20manage%20Ruby%20installations%20and%20Environments%20-%20ALL%20DISTROS.html">Use RVM to manage Ruby installations.</a> </p>  
+</body>
+</html>

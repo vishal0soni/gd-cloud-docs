@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<title>Set up HTTP Authentication with NGINX - ALL DISTROS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Security, NGINX</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-set-up-http-authentication-with-nginx-on-ubuntu-12-10, https://www.digitalocean.com/community/tutorials/how-to-set-up-http-authentication-with-nginx-on-ubuntu-12-10</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Debian;#Ubuntu;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup' and either 'Build a LEMP stack' OR 'Install NGINX on your server.' Divided by fork, split distros if instructions are different.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17707</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string">2 - A little complex</mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.250000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">C</mso:EditScore>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">4.00000000000000</mso:Week>
+<mso:PrereqOrdering msdt:dt="string">1</mso:PrereqOrdering>
+<mso:ReviewComments msdt:dt="string">Covers all distros
+7/31 - CLS - Passed copyscape.  Validated XTHML.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:AssignmentAction msdt:dt="string"></mso:AssignmentAction>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursEditingActual msdt:dt="string">1.50000000000000</mso:HoursEditingActual>
+<mso:PercentWriting msdt:dt="string">0.200000000000000</mso:PercentWriting>
+<mso:PercentResearch msdt:dt="string">0.800000000000000</mso:PercentResearch>
+<mso:HoursDraftingActual msdt:dt="string">5.00000000000000</mso:HoursDraftingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+ <p>This article describes how to set up http authentication on an Nginx web server.</p>
+    <h1>Set up HTTP Authentication with NGINX - ALL DISTROS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>2</u></em><br />
+        <strong>Time</strong>: <em><u>10 minutes</u></em></p>       
+ 
+    <h2>Overview</h2>
+    <p>NGINX uses configuration files to implement its functions. To change those functions, you can edit the files. These files have sections referred to as "contexts."  Authentication defined in a given context is inherited by contexts below it. For example:</p> 
+    <ul>
+    <li>An authentication scheme defined in the <code>http context</code> will apply to all server blocks.</li>
+    <li>A scheme defined at the server level will apply to all locations defined in that server block.</li>  
+    </ul>
+    There are two directives associated with http authentication: <code>auth_basic</code> and <code>auth_basic_user_file</code>.
+    The following example defines a <code>realm</code> within a <code>location</code> context. <p />
+
+   <h2>Prepare your environment</h2>
+          <ol>
+        <li>Install the Apache2 utilities.             
+     <div class="hacker"> sudo apt-get install apache2-utils</div> 
+  </li>  
+  
+  <li>Create a <code>.htpasswd</code> file in <code>/etc/nginx</code>. 
+              <div class="hacker">  sudo htpasswd -c /etc/nginx/.htpasswd testuser</div>
+              <p class="note">The above command opens a tool that will prompt you for a password. Alternatively, you can create your own password file that fits an <a href="http://nginx.org/en/docs/http/ngx_http_auth_basic_module.html">NGNIX-supported format</a>.</p></li>
+               </ol>        
+               
+   <h2>Define the realm</h2>
+   <ol>
+   <li>Navigate to the <code>nginx.conf</code> file.
+      <div class="hacker">cd /etc/nginx</div></li>
+  
+   <li>Open the <code>nginx.conf</code> file for editing, and find the <code>location context</code> of the default server block. It should look something like this:
+       <div class="hacker">           location / {
+        <br />
+    root   /usr/share/nginx/html;
+        <br />
+    index  index.html index.htm;
+    <br />
+    }
+</div></li>
+    <li>Add the  <code>auth_basic</code> and <code>auth_basic_user_file</code> directives. 
+    <div class="hacker">           location / {
+        <br />
+    root   /usr/share/nginx/html;
+        <br />
+    index  index.html index.htm;
+         <br />
+        auth_basic           "yourrealmname";
+        <br />
+        auth_basic_user_file yourpasswordfilename;
+    }</div></li>
+
+ </ol>           
+    <p class="note">
+         In the example above, if you used the Apache2 utilities, <code>yourpasswordfilename</code> would be <code>/etc/nginx/.htpasswd</code>. </p>
+         
+<h2>Next steps</h2>
+    <p>You have just created a scheme for http authentication on your web server. Try moving the <code> auth_basic / authbasic_user_file </code> directives to other contexts to see how this affects your site. This test is especially important if your IP address contains <a href="http://articles/17360%20-%20Configure%20NGINX%20Server%20Blocks%20-%20ALL%20DISTROS.html">multiple server blocks</a> and you choose to apply authentication to one server block and leave another one "open." </p>
+
+   
+</body>
+</html>

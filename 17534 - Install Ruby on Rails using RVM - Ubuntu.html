@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17534-->
+
+
+<title>Install Ruby on Rails using RVM - Ubuntu</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+.style1 {color: #FF0000}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-ubuntu-14-04-using-rvm, https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-ubuntu-14-04-using-rvm</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup.' Split my distro, merge into forks if necessary. Use commands for RHEL/ARch based on those articles, but follow formatting of attached Garage doc entitled 'Installing Ruby on Rails on DISTRO_NAME using RVM.' Make sure they are not using root unless otherwise specified to do so. Follow up link to 'Use RVM to manage Ruby installations and Environments'</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17534</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">B</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:ReviewComments msdt:dt="string">8/19 - CLS - I added the link to RVM.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:HoursEditingEstimated msdt:dt="string">0.500000000000000</mso:HoursEditingEstimated>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:HoursDraftingActual msdt:dt="string">1.75000000000000</mso:HoursDraftingActual>
+<mso:HoursEditingActual msdt:dt="string">1.00000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p>Steps to install Ruby on Rails using Ruby Version Manager (RVM) in Ubuntu, Ruby, Rails</p>
+<h1>Install Ruby on Rails using RVM - Ubuntu</h1>
+
+<p><strong>Difficulty</strong>: 1</p>
+<p><strong>Time</strong>: 30 minutes</p>
+
+<p>Ruby on Rails&reg; is a well-known open source stack for web application development. With Ruby Version Manager (RVM) you can easily manage multiple Ruby application environments and efficiently switch between them. This article will assist you on how to install Ruby on Rails in Ubuntu&reg; 14.04 VPS using RVM.</p>
+
+<h2>Prerequisites</h2>
+<p>To get started, you'll need the following prerequisites:</p>
+<ul>
+<li>RVM (Ruby Version Manager) </li>
+<li>SQLite</li>
+<li>MySQL&trade; (Optional) </li>
+<li>Apache2&reg; (Optional) </li>
+</ul>
+<h2>Install RVM and Ruby</h2>
+<ol>
+<li>
+Install RVM by running the following commands: 
+<div class="hacker">sudo apt-get install libgdbm-dev libncurses5-dev automake libtool bison libffi-dev</div>
+<div class="hacker">sudo curl -L https://get.rvm.io | bash -s stable</div>
+</li>
+<li>After you run the above command, there are more dependencies that needs to be fixed, so run the following commands: 
+<div class="hacker">sudo curl -sSL https://rvm.io/mpapis.asc | gpg --import -</div>
+<div class="hacker">sudo curl -L https://get.rvm.io | bash -s stable</div>
+<div class="hacker">source ~/.rvm/scripts/rvm</div>
+<div class="hacker">rvm install ruby</div>
+<div class="hacker">ruby -v</div>
+</li>
+
+<li>Ruby installs the contents for all the packages. To inhibit this, type the following command:
+  <div class="hacker">sudo echo "gem: --no-ri --no-rdoc" > ~/.gemrc</div>
+</li>
+<li>Install the bundler. 
+<div class="hacker">gem install bundler
+</div>
+</li>
+<li>To prevent any dependencies of Rails libraries, install <code>NodeJS</code> by typing: 
+
+  <div class="hacker">sudo add-apt-repository ppa:chris-lea/node.js</div>
+
+<div class="hacker">sudo apt-get update</div>
+
+<div class="hacker">sudo apt-get install nodejs</div>
+</li>
+</ol>
+<h2>Install Rails</h2>
+<ol>
+<li>Use gem to install Rails. This will take some time to install. 
+
+  <div class="hacker">gem  install rails 
+  </div>
+<p>After completion, your environment will be created. </p>
+</li>
+
+<li>Check your Rails version, type: 
+<div class="hacker">rails -v</div></li>
+<li>Create the project directory for your Rail project, by typing the following commands:
+<div class="hacker">sudo mkdir -p  /usr/local/src/rail_project
+</div>
+</li>
+<li>Move to the directory just created, and grant all the required access using the following commands:
+<div class="hacker">cd  /usr/local/src/rail_project</div>
+<div class="hacker">sudo chmod 777 /usr/local/src/rail_project</div>
+<div class="hacker">rails new HelloWorld</div>
+<div class="hacker">cd HelloWorld</div>
+<div class="hacker">rails server</div>
+<p>Now your Rails server will start running.</p>
+</li>
+<li>Bind your Rails application using the following command:
+<div class="hacker">rails server --binding=[your public IP]</div>
+</li>
+</ol>
+<p>Your new application is ready, and can be accessed by visiting<strong> <em><u>your_public_IP_or_domain:</u></em></strong>3000 (3000 is default port).</p>
+
+<h2>Next Steps</h2>
+<p>In this article, we reviewed the steps involved in setting up Ruby on Rails using RVM for your web application in Ubuntu distribution.</p>
+<p>For more information on RVM, read the article: <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17912%20-%20Use%20RVM%20to%20manage%20Ruby%20installations%20and%20Environments%20-%20ALL%20DISTROS.html">Use RVM to manage Ruby installations.</a></p>
+</body>
+</html>

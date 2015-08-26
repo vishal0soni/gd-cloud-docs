@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Use this template for articles that include steps for accomplishing a task or tasks (for example, installing). For articles that explain or describe something (such as an operating system), use the Informational template instead.  -->
+
+<title>Use UFW firewall with IPv6 - Debian, Ubuntu</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleID msdt:dt="string">19190</mso:ArticleID>
+<mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
+<mso:Complexity msdt:dt="string">1 - Basic</mso:Complexity>
+<mso:Reference msdt:dt="string"></mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Debian;#Ubuntu;#</mso:LinuxDistributions>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:PrereqOrdering msdt:dt="string">0</mso:PrereqOrdering>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:ArticlePriority msdt:dt="string"></mso:ArticlePriority>
+<mso:AssignedTo1 msdt:dt="string">27</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Christine Tzeng</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:EditScore msdt:dt="string">A</mso:EditScore>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Week msdt:dt="string">7.00000000000000</mso:Week>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:PercentWriting msdt:dt="string">0.800000000000000</mso:PercentWriting>
+<mso:PercentResearch msdt:dt="string">0.200000000000000</mso:PercentResearch>
+<mso:HoursDraftingActual msdt:dt="string">1.50000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">0.250000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+    <p>Set up UFW firewall to work with with IPv6</p>
+    <h1>Use UFW firewall with IPv6 - Debian, Ubuntu</h1>                                                                                          
+    
+    <p><strong>Difficulty</strong>: <em><u>1</u></em><br/>
+        <strong>Time</strong>: <em><u>5 minutes</u></em></p>
+
+    <p>Internet Protocol Version 6 (IPv6) is the standard network-layer protocol supporting the Internet
+    and is the followup version to IPv4 (also referred to as "IP"). Ubuntu and Debian come with all the tools you need to use IPv6. 
+    This article walks you through how to use Uncomplicated Firewall (UFW) with IPv6 as well as IPV4. 
+</p>
+<p>First, make sure you have UFW installed. See <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/00012 - Install up UFW firewall - Debian, Ubuntu.html">Install a UFW firewall - Debian, Ubuntu</a> for instructions.
+    </p>
+<h2>Set up UFW to work with IPv6</h2>
+     
+     <ol>
+     <li>Open the UFW configuration file: 
+       <div class="hacker">sudo vim /etc/default/ufw</div>
+       </li>
+      
+      <li>
+   Look for this section, which should be near the top:
+   
+   <!--CT: Note: This is a block of code in a configuration file-->
+   <div class="hacker"># Set to yes to apply rules to support IPv6 (no means only IPv6 on loopback<br/>
+# accepted). You will need to 'disable' and then 'enable' the firewall for<br/>
+# the changes to take affect.<br/>
+IPV6=yes   </div>
+       </li>    
+      
+      <li>Make sure that it includes <code>IPV6=yes</code>. 
+      </li>
+       
+     <li>Save and close the file.  
+       </li>
+        
+     <li>Reload UFW by disabling it first and then enabling it:
+       <div class="hacker">sudo ufw disable</div>
+       
+         <div class="hacker">sudo ufw enable</div>
+       <li> Enter <strong>y</strong> at the prompt to continue.
+         <br />
+         The output should show:
+<div class="hacker">Firewall is active and enabled on system startup</div>
+       </li> 
+</ol>
+ That's it! UFW  now configures both IPv4 and IPv6 firewall rules when needed.    
+             
+ <h2>Next steps</h2>
+    <p>You have set up UFW to work with IPv6. If you haven't already, you can also 
+     <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17849 - Set up UFW firewall - Debian, Ubuntu.html">Set up UFW firewall - Debian, Ubuntu</a> 
+     by allowing/denying connections and defining rules. 
+</p>          
+    
+</body>
+</html>                                                                                                                      

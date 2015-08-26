@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <title>Use PostgreSQL with Ruby on Rails Application - Fedora</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <style type="text/css">
+    div.hacker {
+        background-color: #666;
+        border: 1px solid #ccc;
+        color: #fff;
+        font-family: "Lucida Console", "Courier New", Courier, fixed;
+        font-size: 95%;
+        line-height: 160%;
+        margin-bottom: 1.5em;
+        padding: 10px;
+    }
+    
+    p.note {
+        background-color: #ffffe6;
+        border: 1px solid #eee;
+        color: #666;
+        padding: .8em 1.6em;
+        margin: 15px 0;
+    }
+    
+    .warning {
+        border: 1px #d25100 solid;
+        padding: .5em 1em .5em 4em;
+        margin: 10px 20px 15px 20px;
+        background-image: url('@{help-img-path}/img_warning.gif');
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-color: #ededed;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        /* -moz-border-bottom-radius: 0;9 */
+        -webkit-border-bottom-radius: 0;
+        padding-top: 14px;
+        padding-bottom: 15px;
+    }
+    </style>
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">PostgreSQL, Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-centos-7, https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-centos-7</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - &#39;Install Ruby on Rails with rbenv.&#39; Link back to &#39;Deploy a Rails App with Unicorn and NGINX&#39; at end of article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17525</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">B</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:ReviewComments msdt:dt="string">8/18 cj: Edited. Awaiting word on how to handle the links.
+
+8/20 cj: Tracked down and added linked articles.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">1.00000000000000</mso:HoursEditingActual>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+    
+</head>
+
+<body>
+
+<p>Setting up Rails Application with PostgreSQL in Fedora, PostgreSQL, Ruby, Rails</p>
+<h1>Use PostgreSQL with Ruby on Rails Application – Fedora</h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>30 mins</em></p>
+
+<p>In this article, we'll create a PostgreSQL server to use as a database layer for scaling a Ruby on Rails  application. To perform these tasks, we assume that you have sudo privileges.</p>
+<p>To install Ruby on Rails, see <a href="17535">Install Ruby on Rails using RVM in Fedora</a>. </p>
+
+<h2> Disable SELINUX </h2>
+<p>Make sure that SELINUX is disabled.</p>
+<ol><li>Open the following file, and disable SELINUX:
+<div class='hacker'>sudo vim /etc/selinux/config</div>
+<div class='hacker'>SELINUX=disabled</div>
+</li>
+<li>Save  changes, and close the file.</li></ol>
+
+
+<h2>Set up a PostgreSQL database</h2>
+<ol>
+<li>Download the latest EPEL repositories.
+  <div class='hacker'>sudo wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm</div>
+<div class='hacker'>sudo rpm -ivh epel-release-7-5.noarch.rpm</div>
+</li>
+<li>Set up a PostgreSQL server, and add its libraries related to development.
+	<div class='hacker'>sudo yum install postgresql-server postgresql-contrib postgresql-devel</div>
+</li>
+<div class='hacker'>Initialize a new PostgreSQL database </div>
+	<div class='hacker'>sudo postgresql-setup initdb</div>
+  <li>Open the <code>pg_hba.conf</code> file so that you can modify the host-based authentication of PostgreSQL. It doesn’t allow for password authentication by default.
+       <div class='hacker'>sudo vim /var/lib/pgsql/data/pg_hba.conf</div>
+<li>Search for the following lines at the end of the file:</li>
+<div class='hacker'>
+<pre>host    all             all             127.0.0.1/32            ident
+host    all             all             ::1/128                 ident</pre></div>
+<li>Change "ident" to "md5”.</li>
+<li>Save and close the file.</li>
+<li>Run and enable the PostgreSQL service.
+  <div class='hacker'>sudo systemctl start postgresql</div>
+<div class='hacker'>sudo systemctl enable postgresql</div>
+</li>
+</ol>
+
+<h2>Create a database user</h2>
+<ol>
+<li>Log in with postgres system user.
+		<div class='hacker'>sudo su - postgres</div>
+</li>        
+<li>Create a PostgreSQL super user.
+	<div class='hacker'>createuser -s PostUser</div>
+</li>
+<li>Set a password for the database user.
+		<div class='hacker'>psql</div>
+    	<div class='hacker'>postgres=# \password PostUser</div>
+<li>Enter the new password.</li>
+</li>
+<li>Close the session.
+	<div class='hacker'>postgres=# \q</div>
+</li>
+</ol>
+
+<h2>Set up a Rails application</h2>
+<ol>
+<li>Move to the home directory to create a new Rails app. To set PostgreSQL as the database, use the <code>-d postgresql</code> option
+<div class='hacker'>cd ~</div>
+<div class='hacker'>rails new HelloWorld -d postgresql</div>
+</li>
+<li>Move to the application directory.
+  <div class='hacker'>cd HelloWorld</div>
+ </li>
+<li>Open the following file:
+ <div class='hacker'>sudo vim config/database.yml</div>
+ </li>
+<li>Look for "pool: 5" in the file, and add the following lines beneath it. Enter the username and password for the postgres  user.
+  <div class='hacker'>
+<pre>host: localhost
+username: PostUser
+password: postgres_password</pre></div>
+</li>        
+<li>Save and close the file.</li>
+</ol>
+
+<h2>Create a database for the application</h2>
+<ul>
+<li>Use the <code>rake</code> command to create the application's databases in the application directory.
+  <div class='hacker'>rake db:create</div>
+Two databases in the PostgreSQL server are created. For example, if the application's name is HelloWorld, the command creates  databases named HelloWorld _development and HelloWorld _test.
+</li>
+</ul>
+
+<h2>Test the configuration</h2>
+<ul>
+<li>Test the Rails application.
+  <div class='hacker'>Rails server</div>
+ Now we can run the Rails application on our localhost on port 3000. We can also access the application from web browser if it is located on a remote server by assigning a public IP address.
+ <div class='hacker'>rails server --binding=server_public_IP</div>
+</li>
+</ul>
+<h2>Next Steps</h2>
+<p>In this article, we  set up a PostgreSQL with a Rails application in Fedora. Next, see <a href="17515">Deploy a Rails App with Unicorn and NGINX</a>.</p>
+
+
+</body>
+</html>

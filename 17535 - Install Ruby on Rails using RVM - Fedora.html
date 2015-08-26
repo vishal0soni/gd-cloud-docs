@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17535-->
+
+<title>Install Ruby on Rails using RVM - Fedora</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+.style1 {color: #FF0000}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-centos-6-with-rvm, https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-centos-6-with-rvm</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup.' Split my distro, merge into forks if necessary. Use commands for RHEL/ARch based on those articles, but follow formatting of attached Garage doc entitled 'Installing Ruby on Rails on DISTRO_NAME using RVM.' Make sure they are not using root unless otherwise specified to do so. Follow up link to 'Use RVM to manage Ruby installations and Environments'</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17535</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:ReviewComments msdt:dt="string">8/13 - done.
+8/19 - The latest version did not have my previous edits. Re-edited. Added link.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">1.00000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+ <p>Steps to install Ruby on Rails using Ruby Version Manager (RVM) in Fedora, Ruby, Rails</p>
+    <h1>Install Ruby on Rails using RVM - Fedora</h1>
+    <p><strong>Difficulty</strong>: <em>1</em></p>
+    <p><strong>Time</strong>: <em>30 minutes</em></p>
+    <p>Ruby on Rails&trade; is a well-known framework for web application development. The Ruby Version Manager (RVM) allows developers to easily manage multiple Ruby application environments and switch between them in a most efficient way. </p>
+
+<p>This article explains on how to install Ruby on Rails in Fedora&trade; using RVM.</p>
+
+<h2>Prepare your system</h2>
+Before you install Ruby on Rails, prepare your system with the required system software.    
+    <ol>
+        <li>Update the system software and access root by running the following command:
+          <div class='hacker'>sudo yum update</div>      
+      </li>
+        <li>You will use curl to install RVM. Install curl by typing:
+            <div class='hacker'>sudo yum install curl</div>
+        </li>
+		 <li>Install tar.
+            <div class='hacker'>sudo yum install tar</div>
+        </li>
+        </ol>
+        
+<h2>Update and install RVM and Ruby</h2>
+<ol> 		
+        <li>If your system doesn't have RVM already installed, type the following command to install RVM:
+          <div class='hacker'>sudo curl -L https://get.rvm.io | bash -s stable --ruby</div>
+      <p>The backslash before <code>curl</code> prevents potential version conflicts and <code>--ruby</code> flag will install the latest version of Ruby.</p>
+	  </li>
+	  <li>After you have run the above command, there are more dependencies that need to be fixed, so run the following commands again:
+      <div class='hacker'>sudo curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -</div>
+      <div class='hacker'>sudo curl -L https://get.rvm.io | bash -s stable</div>
+          </li>     
+         
+        <li>To apply RVM, you need to execute the following command:
+           <div class='hacker'>source /home/UserName/.rvm/scripts/rvm</div>
+            
+			     If your system already has RVM installed, update it.
+			    <div class='hacker'>source /home/UserName/.rvm/scripts/rvm</div>
+		
+			<p>If you've already installed these packages, you'll get a message.</p>
+			</li>
+      </ol>
+      
+<h3>Install Ruby</h3>
+      <ol>
+      <li>Use RVM to install Ruby.
+      	<div class='hacker'>rvm install ruby</div></li>
+        <li>To check Ruby version, type:
+          <div class='hacker'>ruby -v</div>
+      </li>
+        <li>Rail asset pipeline needs JavaScript runtime to compile code. On Ubuntu, Node.js (a server-side JavaScript environment) is preferred. To install Node.js, type the following command:
+          <div class='hacker'>sudo yum install nodejs</div>
+      </li>
+	  
+	  
+    </ol>
+<h3>Install gems</h3>
+<p>Bundler is a tool to manage gems while developing and running Rails applications. Nokogiri is a dependency for many other gems.</p>
+<ol>
+<li>Update the gem manager.
+          <div class='hacker'>gem update -system</div>
+      </li>
+	  <li>Type following command to use Ruby with gemset global:
+          <div class='hacker'>rvm gemset use global</div>
+      </li> 
+    <li>Install both gems.
+      <div class='hacker'>gem install bundler</div>
+      <div class='hacker'>gem install nokogiri</div>
+    </li>
+    </ol>
+<h2>Install Rails</h2>
+<p>Finally, we are going to install Rails.</p>
+<ol>    
+        <li>Use gem to install the most recent stable release of Rails.
+          <div class='hacker'>gem install rails</div>
+    <p>To check the version, type:</p>
+      <div class='hacker'>rails -v</div>    
+	  </li>
+	  
+	  <li>Create the project directory for your Rail project, by typing the following commands:
+          <div class='hacker'>sudo mkdir -p /usr/local/src/rail_project</div>
+      </li>
+	 <li>Move to the newly created directory, and grant all the required access using following commands:
+          <div class='hacker'>cd  /usr/local/src/rail_project</div>
+		  <div class='hacker'>sudo chmod 777 /usr/local/src/rail_project</div>
+		  <div class='hacker'>rails new HelloWorld</div>
+		  <div class='hacker'>cd HelloWorld</div>
+		   <div class='hacker'>rails server</div>
+		   <p>Now your Rails server should be running.</p>
+      </li> 
+	 <li>You can bind your Rails application using following command:
+          <div class='hacker'>rails server --binding=[your public IP]</div>
+		 <p> Your new application is ready and can be accessed by visiting <strong><u><em>your_public_IP_or_domain</em></u>:3000</strong>. 3000 is the default port.</p>
+      </li> 
+	  
+    </ol>
+  <h2>Next steps</h2>
+<p>In this article, we reviewed the steps involved in setting up Ruby on Rails using RVM for your web application in Fedora distribution. </p>
+<p>For more information on RVM, read the article: <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17912%20-%20Use%20RVM%20to%20manage%20Ruby%20installations%20and%20Environments%20-%20ALL%20DISTROS.html">Use RVM to manage Ruby installations.</a></p>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+
+
+<title>Set up Git - ALL DISTROS</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Reference msdt:dt="string"></mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ReviewComments msdt:dt="string"></mso:ReviewComments>
+<mso:PrereqOrdering msdt:dt="string">0</mso:PrereqOrdering>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:ArticlePriority msdt:dt="string"></mso:ArticlePriority>
+<mso:EditScore msdt:dt="string">A</mso:EditScore>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">19227</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:AssignmentAction msdt:dt="string">No action</mso:AssignmentAction>
+<mso:AssignedTo1 msdt:dt="string">27</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Christine Tzeng</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">0.300000000000000</mso:HoursEditingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Getting started with setting up (configuring) Git on all distros</p>
+    <h1>Set Up Git - ALL DISTROS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>1</u></em><br/>
+        <strong>Time</strong>: <em><u>5 minutes</u></em></p>
+
+    <p>After installing Git, set up your GitHub user name and email address. Every Git commit uses these details. Without them, you  get an error message (and have to revise) each comment you make. </p>
+    <h2>Set up your GitHub user name and email address</h2><p>Git comes with a configuration tool called <code>git config</code> that defines how it looks and works. </p>
+<ol>
+      <li>
+        
+      Specify your user name and email:
+
+    <div class="hacker">git config --global user.name "<em><u>Dora the Explorer</u></em>"   </div>
+<div class="hacker"> git config --global user.email <em><u>dora@explorer.com</u></em></div> 
+</li> 
+
+<li>Check your settings:
+  <div class="hacker">git config --list</div>
+
+Git  lists all the settings it can find. The output  looks like this:
+<div class="hacker">
+user.name=<em><u>Dora the Explorer</u></em> <br />
+user.email=<em><u>dora@explorer.com</u></em></div>
+</li>
+</ol>
+
+<h2>Next Steps</h2>
+<p>Git is now ready to use!</p>
+
+<p>Here are some ideas on where to go from there:</p>
+<ul>
+<li><a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17737 - Effective Use of Git - ALL DISTROS.html">Effective Use of Git - ALL DISTROS</a></li>
+<li><a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17365 - Using Git to automate deployment to your server.html">Using Git to Automate Deployment to Your Server - ALL DISTROS</a></li>
+<li><a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17469 - Use Git Hooks to Automate Development and Deployment - ALL DISTROS.html">Use Git Hooks to Automate Development and Deployment - ALL DISTROS</a></li>
+</ul>
+
+       
+   
+</body>
+</html>

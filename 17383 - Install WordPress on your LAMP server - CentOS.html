@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17383 -->
+
+<title>Install WordPress on your LAMP server - CentOS</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">WordPress, LAMP</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-on-centos-7, https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-on-centos-7</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS 6;#CentOS 7;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">SSH tutorial for installing wordpress to new LAMP stack. Link to LAMP guide and initial server setup guide. also at end link to LEMP version for those running LEMP stack.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string">Yes</mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17383</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string">3 - Somewhat complex</mso:Complexity>
+<mso:Week msdt:dt="string">6.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:AssignedTo1 msdt:dt="string">27</mso:AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.100000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Christine Tzeng</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:ReviewComments msdt:dt="string">XHTML errors fixed</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:PercentResearch msdt:dt="string">0.450000000000000</mso:PercentResearch>
+<mso:HoursDraftingActual msdt:dt="string">2.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignmentAction msdt:dt="string"></mso:AssignmentAction>
+<mso:HoursEditingActual msdt:dt="string">2.00000000000000</mso:HoursEditingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester msdt:dt="string">Prabhu Mouli</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester>
+<mso:Tester msdt:dt="string">20</mso:Tester>
+<mso:TestComments msdt:dt="string">CT: Emailed suggestions to troubleshoot 8/05
+Tested on CentOS6, CentOS7, Fedora20 and Fedora21. Sent email to Christine with detailed testing results.
+Suggested command failed again in Fedora, email sent with detailed results.</mso:TestComments>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Installing Wordpress on a LAMP server for CentOS.</p>
+    <h1>Install WordPress on your LAMP server – CentOS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>1</u></em><br/>
+        <strong>Time</strong>: <em><u>15 minutes</u></em></p>
+
+     <p>WordPress has become much more than its humble beginnings in 2003 as a self-hosted blogging tool; it is the Internet’s leading content management system (CMS). This open-source CMS powers all types of sites, including major brands such as The New Yorker, Variety, TechCrunch, and Best Buy. With a MySQL and PHP architecture, WordPress is easy to install and has endless options for website configuration thanks to tens of thousands of plugins and themes from its rich and active community.</p>
+
+<p>This article will walk you through setting up WordPress on CentOS 6 or 7. The steps will be for a non-root user with sudo (administrator) privileges.</p>
+
+
+    <h2>Prerequisites</h2>
+       
+    <p>Make sure that you have a non-root user with sudo (administrator) privileges set up on your CentOS server. You’ll also need a Linux, Apache, MySQL, and PHP (LAMP) stack configured. Make sure that Apache, MySQL, and PHP are up and running. For a how-to on installing a LAMP stack on a specific server, see the following articles:</p>
+  <ul>
+  <li><a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17343%20-Build%20a%20LAMP%20stack%20(Linux,%20,Apache,%20MySQL,%20PHP)%20–%20CentOS%206.html">Build a LAMP stack (Linux, Apache, MySQL, PHP) – CentOS 6</a></li>
+   <li><a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17344%20-Build%20a%20LAMP%20stack%20(Linux,%20Apache,%20MySQL,%20PHP)%20–%20CentOS%207.html">Build a LAMP stack (Linux, Apache, MySQL, PHP) – CentOS 7</a></li>
+         </ul>
+         
+  <p>Make note of your MySQL root account (admin) password. You'll need it for these tasks.</p>
+
+Restart Apache.  
+<div class="hacker">sudo service httpd restart</div>
+
+Install <code>rsync</code>, a reliable file transfer and synchronization program, if you don't already have it.
+<div class="hacker">sudo yum install rsync</div>
+                         
+    <h2>To create a MySQL database and administrator for WordPress</h2>
+    
+    <p>Set up your MySQL database with an administrator so that WordPress has a place to store all your site and user information.</p>
+
+<p class="warning">Remember: All <code>MySQL</code> code statements must end with a semi-colon (;).</p>
+
+<ol>
+    <li>Log into your MySQL admin account.
+<div class="hacker">mysql -u root -p</div>     </li>
+    <li>At the prompt, enter your MySQL root password.  </li>
+    <li>At the MySQL prompt, create your WordPress database. For this article, we’ll use the database name fittingly as “wordpress.”
+<div class="hacker">CREATE DATABASE wordpress;</div></li>
+<li>Create the database administrator account and set the user’s credentials.  For this article, we’ll use “wordpressadmin” as the example user name and “password” as the password.
+<div class="hacker">CREATE USER wordpressadmin@localhost IDENTIFIED BY 'password';</div>
+Make sure to create a strong password for best security practices. Keep your username and password handy as you’ll need them later.</li>
+ <li>Give or grant your admin permissions to the database.   
+<div class="hacker">GRANT ALL PRIVILEGES ON wordpress.* TO wordpressadmin@localhost;</div>
+<code>GRANT</code> is one of the account management statements the MySQL server notices and loads into memory right away. So a manual reload/restart should not be necessary. But if you’d like, you can check the permissions using the <code>SHOW GRANTS</code> command:
+<div class="hacker">SHOW GRANTS FOR 'wordpressadmin'@'localhost';</div>
+</li>
+<li>
+   If for some reason the privileges didn’t take, flush the privileges to activate the user. Flush forces a reload of the cache.
+<div class="hacker">FLUSH PRIVILEGES;</div>  </li>
+
+<li> You're finished! Exit MySQL to bring you back to your normal command prompt.
+<div class="hacker">exit</div> </li>
+  </ol>      
+
+
+
+
+              
+<h2>Download WordPress</h2>           
+     
+     Your system is now ready to install WordPress into your directory. WordPress is available in a tar.gz or zip format. We will be getting the <code>tar.gz</code> file.
+     
+     <ol>
+     <li>Download the WordPress files from the official site using <code>wget</code>.
+<div class="hacker">cd ~</div> 
+<div class="hacker">wget http://wordpress.org/latest.tar.gz    </div>     <br />
+This URL will always link to a compressed file of the latest stable version of WordPress.      </li>
+         
+         <li>Extract, or untar, the application directory.
+
+<div class="hacker">tar xzvf latest.tar.gz </div> 
+This command creates the directory <code>wordpress</code> in your home directory.</li>
+</ol>
+
+                                                                       
+   <h2>Configure WordPress</h2>
+   
+   <ol>
+      <li>Go into the <code>WordPress</code> directory you just unpacked.
+<div class="hacker">cd ~/wordpress</div>    </li>
+
+<li>Edit the following lines with the values in <strong>wp-config.php</strong>.
+
+<div class="hacker">cp wp-config-sample.php wp-config.php</div>
+                                                               </li>
+ <li>Open the config file in your text editor.
+<div class="hacker">vim wp-config.php</div>
+     </li>
+   
+   <li>Look for this section of the code below (starting with “MySQL settings”…) and enter your corresponding values of the three <code>DB_</code> variables (<em><u>database name</u></em>, <em><u>database username</u></em>,<em><u> mysql root password</u></em>) with the credentials you just created.
+
+<div class="hacker">// ** MySQL settings - You can get this info from your web host ** // <br />
+/** The name of the database for WordPress */ <br />
+define('DB_NAME', 'wordpress'); <br />
+
+/** MySQL database username */  <br />
+define('DB_USER', 'wordpressadmin');     <br />
+
+/** MySQL database password */ <br />
+define('DB_PASSWORD', 'password');   </div>
+  </li>
+<li>Save and close.</li>                                      
+                            </ol>
+                            
+  <h2>Copy files to document root</h2>   
+     
+   <p>After you’ve configured WordPress, transfer the files to Apache’s root directory so that the application can serve content to your site visitors.</p>
+      
+ <ol>
+ <li>Transfer your WordPress files using <code>rsync</code>.
+    <div class="hacker">sudo rsync -avP ~/wordpress/ /var/www/html/</div>
+This will safely copy all of the contents from the directory you unpacked to the document root.
+      </li>   
+<!--CT...          <li>Go to the document root to get back ownership for the files in <code>/var/www/html</code>.
+<div class="hacker">cd /var/www/html</div>        </li>
+<li><p>For security purposes, change ownership to a sudo non-root user to interact with your site. This can be your regular user or an additional user you create. </p>
+ ...-->
+<p>Change ownership to Apache and grant the permissions so that WordPress can auto-update content.                                          </p>
+<div class="hacker">sudo chown -R apache:apache /var/www</div>
+<div class="hacker">sudo chmod 775 /var/www</div>
+                    </li>
+                                             
+                        </ol>
+ 
+
+<h2>Set directory permissions to allow uploads</h2>
+     
+      <p>Open the permissions of your uploads directory so that you can upload images and other content to your site. The default permissions are too limiting.</p>
+     
+     <ol>
+     <li>  Create the <code>uploads</code> directory.
+<div class="hacker">sudo mkdir /var/www/html/wp-content/uploads</div>
+This will be the parent directory.       </li>
+
+<li>Apache needs to be able to write to the directory in order to save files in it. Change the ownership of the <code>uploads</code> directory to a group ownership and grant permissions.
+
+<div class="hacker">sudo chown -R :apache /var/www/html/wp-content/uploads/</div>
+<div class="hacker">sudo chmod 775 /var/www/html/wp-content/uploads</div>
+</li>  
+<p>This allows the web server to create files and directories under the directory, which means you’ll be able to upload content to the server.</p>
+                                   </li>
+                                   </ol>
+
+      <h2>Install WordPress </h2> 
+      
+      <p>Good news: The rest of your installation will be done through the WordPress web interface.</p>
+     
+     <ol>
+     <li>  Enter your server’s domain name or public IP address in your web browser. 
+   <div class="hacker">http://<em><u>your IP</u></em></div></li>
+  <li><p>At the <strong>WordPress configuration</strong> page, fill out your information to create your administrator account.  </p>
+<img src="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/images/17383/082015/install-wordpress-on-your-server-welcome-filledout-1.png" alt="install wordpress welcome screen" /> </li>
+  <li> <p>	WordPress confirms your installation by displaying your username and password.</p>
+<img src="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/images/17383/082015/install-wordpress-on-your-server-success-login-confirmation-2.png" alt="install wordpress confirmation screen" />  </li>
+   <li>  <p>Click <strong>Log In</strong> WordPress prompts you to log in with your new credentials.</p>
+<img src="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/images/17383/082015/install-wordpress-on-your-server-login-3.png" alt="wordpress login screen" />
+
+                                                            </li>
+                                                              </ol>
+ <p>All done! You’ll be taken to the dashboard of your new site.</p>    
+     
+<img src="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/images/17383/082015/install-wordpress-on-your-server-admin-dashboard-4.png" alt="install wordpress admin dashboard screen" />
+             
+    <h2>Next steps</h2>
+    
+    <p>Congratulations! You have installed WordPress and created the beginning of your own website.</p>
+    
+<p>From here you have many options for customizing your WordPress setup. A popular one is making pretty permalinks. See <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/19225%20-%20Set%20up%20WordPress%20Pretty%20Permalinks%20on%20Apache%20-%20ALL%20DISTROS.html"> Set up WordPress Pretty Permalinks on Apache – ALL DISTROS</a> for a step-by-step guide.</p> 
+
+<p>For a how-to on installing WordPress on a LEMP stack, see <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17386%20-Install WordPress on your LEMP server – CentOS.html">Install WordPress on your LEMP server – CentOS</a>.    </p>
+
+</body>
+</html>

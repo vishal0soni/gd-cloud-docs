@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17454-->
+
+
+<title>Install an SSL Certificate on Apache - Arch Linux</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Security, SSL, Apache</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-apache-on-arch-linux, https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-apache-on-arch-linux</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereq - 'Initial Server Setup' and 'Build a LAMP stack.' Remove instructions/command for doing self signed. Structure should instead be: Step 1: Activate SSL Module Step 2: Generate CSR Step 3: Get certificate from Certificate Authority (link to https://www.godaddy.com/help/requesting-an-ssl-certificate-562 for Gd instructions.) Step 4: Install certificate. Step 5: Configure Apache to use SSL - then just follow the rest of the steps to the letter. Use links to guides to get the commands, but base formatting on Ubuntu guide.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17454</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:Week msdt:dt="string">6.00000000000000</mso:Week>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.100000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Pooja Nadubettu</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">A</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">1</mso:PrereqOrdering>
+<mso:ReviewComments msdt:dt="string"> PN-Added few lines describing how to copy downloaded files. No change in code.
+8/12 - Validated XHTML
+
+8/11 errors fixed</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:AssignedTo1 msdt:dt="string">17</mso:AssignedTo1>
+<mso:AssignmentAction msdt:dt="string"></mso:AssignmentAction>
+<mso:HoursDraftingActual msdt:dt="string">7.50000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester msdt:dt="string">Prabhu Mouli</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester>
+<mso:Tester msdt:dt="string">20</mso:Tester>
+<mso:TestComments msdt:dt="string">**Passed</mso:TestComments>
+<mso:HoursEditingActual msdt:dt="string">1.00000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+    <h1>Install an SSL Certificate on Apache – Arch Linux</h1>
+    
+        <p><strong>Difficulty</strong>: <em><u>2</u></em><br />
+        <strong>Time</strong>: <em><u>15 minutes</u></em></p>
+  
+  <p>Installing a Secure Sockets Layer (SSL) certificate on your server can improve the security of your website. Using a combination of the certificate and a key pair, a third-party certificate authority (CA) validates the identity of both parties in a transaction. A website protected by an SSL certificate is identified by a URL that starts with <strong>https</strong>.</p>
+
+  <p> This article walks you through the installation of an SSL certificate on a Arch Linux&trade; server running Apache&trade;.</p>
+  
+        <p class="note">You can use an SSL certificate from any company who sells them. However, these instructions assume you're using a COMPANY_NAME SSL certificate.</p>
+
+  <p>If you don't have Apache installed on your server, you can <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17345%20-%20Build%20a%20LAMP%20stack%20(Linux%2C%20Apache%2C%20MySQL%2C%20PHP)%20-%20Arch%20Linux.html">install it as part of a LAMP stack</a>.</p>                                                                                               
+
+<h2>Generate a CSR and key</h2>
+ 
+   <p>A certificate signing request (CSR) is sent to a certificate authority to request a certificate. It contains information such as organization, country, state, common name, and email that will be included in the certificate. It also includes a public key. You will also generate a private key which will be stored on your server.</p> 
+    <ol>
+        <li>
+            Create the following directory to store your certificate and key.
+            <div class="hacker">sudo mkdir /etc/httpd/ssl</div>
+           
+        </li>
+        <li>Generate a CSR and private key.
+            <div class="hacker">sudo openssl req -out CSR.csr -new -newkey rsa:2048 -nodes -keyout /etc/httpd/ssl/certkey.key</div></li>
+        <li> In order to view the newly generated CSR, use the following command:
+        <div class="hacker">cat CSR.csr</div>
+        You will need the CSR when you request the certificate from the certificate authority, which is GoDaddy in this example.
+        </li>
+        <li>You will be asked to enter information that will be included in your certificate request like <em>country</em>, <em>state</em>, <em>common name</em>, and <em>email</em>. The <em>common name</em> field is the fully qualified domain name of the server that will use the certificate.           
+        </li>
+        <li>Point your domain name to your server's IP address.</li>
+    </ol>
+    
+    <h2>Obtain and install certificate</h2>
+    <ol>
+        <li>After you have generated the CSR and the key, log into <a href="https://mya.godaddy.com/default.aspx">GoDaddy account manager</a>. </li>
+        <li> Go to the <strong>ssl certificates</strong> section and set up the certificate. Your certificate appears in your account after a few minutes.</li>
+        <li>After you have obtained the certificate, click the <strong>Manage</strong> button.</li>
+        <li>Click the <strong>Set-up</strong> link in the <strong>action</strong> column.
+        </li>
+        <li>Copy and paste the CSR that you generated in the previous section.
+          </li>
+        <li>
+            This starts the Certificate Verification Process. GoDaddy will confirm your domain ownership.
+        </li>
+        <li>
+            You can download a zip file to your local machine containing your certificate and the bundle. 
+        </li>
+        <li>Once the zip files are downloaded, extract/unzip the two files. 
+        </li>
+        </ol>
+ <h3>Create the certificate file</h3>      
+    <ol>
+        <li>Open the certificate in a text editor (like Notepad) and copy the contents.</li> 
+        <li>Go back to your console and open a new file. 
+        <div class=" hacker">sudo vim /etc/httpd/ssl/gdcert.crt</div> </li>
+        <li>Paste the copied contents to this file.</li> 
+        <li>Save and exit.</li>
+        </ol>
+<h3>Create the bundle file</h3>        
+    <ol>
+        <li>Open the bundle file in a text editor (like Notepad) and copy the contents.</li> 
+        <li>Go back to your console and open a new file.
+           <div class="hacker">sudo vim /etc/httpd/ssl/gdBundle.crt</div></li>
+        <li>Paste the copied contents to this file.</li>
+        <li>Save and exit.</li>     
+       
+    </ol>
+    <p class="note">You can also move the certificate files from your local machine to your server via FTP.</p>
+       
+       
+        <h2>Configure Apache to use SSL</h2>
+    <p>You need to edit your configuration file to make sure that the SSL entries are pointing to the right artifacts.</p>
+    <ol>
+        <li>
+            Open the <code>ssl.conf</code> file. 
+            <div class="hacker" >sudo vim /etc/httpd/conf/extra/httpd-ssl.conf</div>
+        </li>
+        <li>
+            Make the following changes in the <code>Virtual host</code> section.
+            <div class="hacker"> <pre>
+ServerName yourdomainname.com 
+ServerAlias www.yourdomainname.com 
+SSLEngine on 
+SSLCertificateFile  /etc/httpd/ssl/gdcert.crt 
+SSLCertificateKeyFile /etc/httpd/ssl/certkey.key
+SSLCertificateChainFile /etc/httpd/ssl/gdBundle.crt
+</pre>
+            </div>
+            
+        </li>
+        <li>Save and exit the file.
+        </li>
+        <li>
+            You will also need to make changes in the <code>/etc/httpd/conf/httpd.conf</code> file. Open the file and remove the comment tags in the following lines:
+            <div class="hacker"> 
+            <pre>LoadModule ssl_module modules/mod_ssl.so 
+LoadModule socache_shmcb_module modules/mod_socache_shmcb.so 
+Include conf/extra/httpd-ssl.conf</pre></div> 
+        </li>
+        <li>
+            Restart Apache to load the new virtual host file.
+            <div class="hacker">sudo systemctl restart httpd</div>
+        </li>
+        <li>
+            You can test your setup by typing <strong>https://<em><u>yourdomainname.com</u></em></strong> in your web browser. You can also use your server's public IP address instead of the domain name. 
+           
+        </li>
+    </ol>
+<h2>Conclusion</h2>
+You have successfully installed a SSL certificate on your web server. The certificates installed will ensure the privacy and integrity of the data between the web server and the client.      
+</body>
+</html>

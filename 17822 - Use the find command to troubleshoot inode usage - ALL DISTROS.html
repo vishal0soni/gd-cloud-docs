@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17822  -->
+
+
+<title>Use the Find command to troubleshoot inode usage - ALL DISTROS</title>
+<style type="text/css">
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">System Tools</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.a2hosting.com/kb/developer-corner/linux/inode-count, https://www.a2hosting.com/kb/developer-corner/linux/inode-count</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Linked guide - use the SSH instructions only (not cPanel.) Show example using 'find . -printf &quot;%h\n&quot; | cut -d/ -f-2 | sort | uniq -c | sort -rn ' to find large inode count. I suggest manufacturing an example of a high inode count, then using a command to remove large inode count. Usually the command support uses to clear out a directory of bad files is to run 'find . -type f | xargs rm ' while in the directory that is full of bad files. make sure to have them run pwd to make sure they're in the right directory before running that command (so as not to nuke their file system :) )</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">1</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17822</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string">1 - Basic</mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and ready to publish</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">1.50000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.100000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 1</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:AssignedTo1 msdt:dt="string">23</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Gary Nakanelua</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">5.00000000000000</mso:Week>
+<mso:PrereqOrdering msdt:dt="string">1</mso:PrereqOrdering>
+<mso:ReviewComments msdt:dt="string">8/10 - XMTHL validated, passed copyscape.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:PercentWriting msdt:dt="string">0.250000000000000</mso:PercentWriting>
+<mso:PercentResearch msdt:dt="string">0.750000000000000</mso:PercentResearch>
+<mso:HoursDraftingActual msdt:dt="string">8.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:HoursEditingActual msdt:dt="string">0.250000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+  <p>System Tools</p>
+  <h1>Use the Find command to troubleshoot inode usage - ALL DISTROS</h1>
+
+  <p><strong>Difficulty</strong>: <em><u>1</u></em><br/>
+  <strong>Time</strong>: <em><u>30 minutes</u></em></p>
+
+  <p>
+    An <code>inode</code> is a block of storage on the physical storage unit that Linux&trade; uses to store the 
+    metadata for files, directories, symbolic links, and other objects in the filesystem. The content of files and other objects are stored at a different location in the stored unit, independent of the <code>inode</code>. The <code>inode</code> only maintains a reference the content of the filesystem object.
+  </p>
+  <p>
+    The <code>inode</code> metadata for a file contains the following details:
+  </p>
+  <ul>
+    <li>Mode/permission (protection)</li>
+    <li>Owner ID</li>
+    <li>Group ID</li>
+    <li>Size of file</li>
+    <li>Number of hard links to the file</li>
+    <li>Time content last accessed</li>
+    <li>Time content last modified</li>
+    <li>Time inode last modified</li>
+  </ul>
+
+  <h2>Determining the inode count</h2>
+  <p>To create a new file, directory, or object on the file system, Linux reserves an <code>inode</code> for the new item.
+    If all of the <code>inode</code> have already been reserved, you will get an error
+    similar to: “No space left on device,” even if the storage unit is not full and has room for more data.  This issue is most often caused when creating a lot of small files.
+  </p>
+  <h3>Find the inode at the root of your system</h3>
+  <ol>
+    <li>Go to the root directory.
+    <div class="hacker">cd /</div></li>
+    <li>This command lists all of the directories at the root of the file system prefixed with the number of inodes used by that directory.
+        
+      <div class="hacker">sudo find . -printf "%h\n" | cut -d/ -f-2 | sort | uniq -c | sort -rn</div>
+        
+      This is the output. The directory that is using the largest number of inodes will be listed first.
+
+      <div class="hacker"><pre>
+        28308 /usr
+        13345 /proc
+        7918 /sys
+        3950 /lib
+        2039 /var
+        1381 /etc
+        1381 /tmp
+        307 /dev
+        229 /boot
+        227 /run
+        119 /sbin
+        107 /bin
+        25
+        6 /root
+        2 /media
+        2 /home
+        1 /mnt
+        1 /lib64
+      </pre></div>    </li>
+    </ol>
+    <h3>Find inode in a specific directory</h3>
+    <p>Let's get a better idea of how <code>/tmp</code> is allocating the <code>inodes</code>.</p>
+    <ol>
+    <li>Use <code>cd</code> to go that directory.
+    <div class="hacker">cd /tmp</div></li>
+    <li>Run the <code>find</code> command.
+    <div class="hacker">sudo find . -printf "%h\n" | cut -d/ -f-2 | sort | uniq -c | sort -rn</div>
+    </li>
+    <li>As in the previous example,<code>/tmp</code> is using 1381 <code>inodes</code>. 
+     <div class="hacker">
+        1381 /tmp</div> </li>
+    </ol>   
+ 
+  <h2>Reduce the inode count</h2>
+  <p>The most common cause of excessive inode usage is a lot of small files in some directories.
+    After you've identified that there is an actual problem with inode allocation being too high, such as several not needed files,
+    you can delete the files to allocate more available inodes back to the system.</p>
+  <ol>
+    <li>
+      Run the command <code>pwd</code> to verify you are in the correct directory.   
+      <div class="hacker">pwd</div>
+    </li>
+    <li>
+      Remove the unneeded files for the current directory.
+      <div class="hacker">sudo find . -type f | xargs rm</div>
+    </li>
+  </ol>
+
+  <h2>Conclusion</h2>
+  <p>In this article, you learned:</p>
+<ul>
+    <li>The files and directories would be useless in Linux without <code>inodes</code>.</li>
+    <li>The <code>inode</code> is a key component of filesystem structure in Linux. </li>
+    <li>The <code>find</code> command is a valuable tool in investigating and troubleshooting excessive <code>inode</code> usage.</li>
+</ul>
+
+</body>
+</html>
