@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 18569 -->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install CouchDB From Source - CentOS, Fedora</title>
+<style type ="text/css" >
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">NoSQL,</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-couchdb-from-source-on-a-centos-6-x64-vps, https://www.digitalocean.com/community/tutorials/how-to-install-couchdb-from-source-on-a-centos-6-x64-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">6</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18569</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up CouchDB from source on CentOS &amp; Fedora, Erlang, and Spider Monkey.</p>
+    <h1>Install CouchDB from Source - CentOS, Fedora</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>4</u></em><br/>
+        <strong>Time</strong>: <em><u>30 minutes</u></em></p>
+
+    <p>CouchDB database is known to embrace the entire web and belongs to NoSQL family. This article will 
+assist you to install CouchDB from source on CentOS and Fedora. 
+</p>
+<h2>Install build tools and dependencies</h2>
+<ol>
+	<li>Update all packages.
+	<div class="hacker">sudo yum -y  update</div>
+	</li>
+	<li>Install development-tool.
+	<div class="hacker">sudo yum -y groupinstall "Development Tools"</div>
+	</li>
+	
+	<div class="hacker">sudo yum -y install libicu-devel curl-devel ncurses-devel libtool libxslt fop java-1.6.0-openjdk java-1.6.0-openjdk-devel unixODBC unixODBC-devel openssl-devel</div>
+	
+	<li>Install EPEL repository using the following commands:
+	<div class="hacker">sudo wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-	release-7-5.noarch.rpm</div>
+		<div class="hacker">sudo rpm -ivh epel-release-7-5.noarch.rpm</div>
+	</li>
+</ol>
+<h2>Install Erlang</h2>
+<ol>
+	<li>Firstly create a new directory.
+		<div class="hacker">sudo mkdir Install_couchDB</div>
+	</li>
+	<li>Go to that directory and compile Erlang from source.
+		<div class="hacker">sudo wget http://www.erlang.org/download/otp_src_R14B01.tar.gz</div>
+		<div class="hacker">sudo tar -xvf otp_src_R14B01.tar.gz</div>
+		<div class="hacker">cd otp_src_R14B01</div>
+		<div class="hacker">sudo ./configure</div>
+		<div class="hacker">sudo  make &amp;&amp; make install</div>
+	</li>
+</ol>
+<h2>Install Mozilla SpiderMonkey</h2>
+<ol>
+	<li>Download Mozilla SpiderMonkey from the source.
+		<div class="hacker">sudo wget   http://ftp.mozilla.org/pub/mozilla.org/js/mozjs17.0.0.tar.gz</div>
+	</li>
+	<li>Compile the Mozilla SpiderMonkey.
+		<div class="hacker">sudo wget   http://ftp.mozilla.org/pub/mozilla.org/js/mozjs17.0.0.tar.gz</div>
+		<div class="hacker">sudo tar -xvf mozjs17.0.0.tar.gz</div>
+		<div class="hacker">cd mozjs17.0.0/js/src/</div>
+		<div class="hacker">sudo ./configure</div>
+		<div class="hacker">sudo  make &amp;&amp; make install</div>
+	</li>	
+</ol>
+<h2>Install CouchDB</h2>
+<ol>
+	<li>Download CouchDB package from source.
+	<div class="hacker">sudo wget 	http://mirror.tcpdiag.net/apache/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz</div>
+		<div class="hacker">sudo tar -xvf apache-couchdb-1.6.1.tar.gz</div>
+		<div class="hacker">cd apache-couchdb-1.6.1</div>
+	</li>
+	<li>Now, export the path of Erlang using the following commands:
+	<div class="hacker"> export ERL_TOP='pwd'</div>
+		<div class="hacker">export PATH=$ERL_TOP/bin:$PATH</div>
+	</li>
+	<li>Now, compile the CouchDB.
+	<div class="hacker"> sudo ./configure --with-erlang=/usr/lib64/erlang/erts-5.10.4/include</div>
+		<div class="hacker">sudo make &amp;&amp; make install</div>
+	</li>
+</ol>
+<h2>Setup CouchDB</h2>
+<ol>
+	<li>Create a CouchDB user and give some permissions using following command:
+	<div class="hacker">sudo adduser --no-create-home couchdb</div>
+		<div class="hacker">sudo chown -R couchdb:couchdb /usr/local/var/lib/couchdb 	/usr/local/var/log/couchdb /usr/local/var/run/couchdb</div>
+	</li>
+	<li>Create a link for the <code>couchdb init script</code> to <code>/etc/init.d</code>.
+	<div class="hacker"> sudo ln -sf /usr/local/etc/rc.d/couchdb /etc/init.d/couchdb</div>
+	</li>
+	<li>To start CouchDB automatically at boot, add and enable the init script using <code>chkconfig</code>:
+	<div class="hacker">sudo chkconfig --add couchdb</div>
+		<div class="hacker"> sudo chkconfig couchdb on</div>
+	</li>
+	<li>Open the configuration file of CouchDB.
+	<div class="hacker">sudo vim /usr/local/etc/couchdb/local.ini</div>
+	</li>
+	<li>To access CouchDB from the web, go to the <code>Httpd</code> section and make the following changes:
+	<div class="hacker"><pre>	[httpd]
+	port = 5984
+	bind_address = 0.0.0.0
+</pre></div>
+	</li>
+	<li>Now, restart the CouchDB services.
+	<div class="hacker">sudo service couchdb restart</div>
+	</li>
+	<li>To test CouchDB is running successfully, go to any web browser and type:
+	<p><em>http:Your public Ip:5984</em></p>
+	</li>
+	<li>Once the server is up and running, you can access it in your browser at: 
+	<p><em>http:Your public IP:5984/utils/</em></p>
+	</li>
+</ol>
+<h2>Next Steps</h2>
+<p>In this article we reviewed the steps involved with the installation of CouchDB on CentOS and Fedora.</p>
+</body>
+</html>

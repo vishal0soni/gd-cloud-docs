@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>17526-Use PostgreSQL with your Ruby on Rails Application - CentOS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">PostgreSQL, Ruby, Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-centos-7, https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-centos-7</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">1</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Install Ruby on Rails with rbenv.' Link back to 'Deploy a Rails App with Unicorn and NGINX' at end of article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17526</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up Rails Application with PostgreSQL in CentOS, PostgreSQL, Ruby, Rails</p>
+<h1>Use PostgreSQL with your Ruby on Rails Application - CentOS</h1>
+
+<p><strong>Difficulty:</strong> <em>2</em></p>
+<p><strong>Time:</strong> <em>30 mins</em></p>
+
+<p>In this article, we are going to create a PostgreSQL server that will be used as a database layer for scaling Ruby on Rails (RoR) application. Here, we will describe how we can use PostgreSQL for Rails application. To perform this task, we are assuming that the user has sudo privileges and SELINUX is disabled. If not, open the file at the following location and disable SELINUX.</p>
+
+<div class="hacker">sudo vim /etc/selinux/config</div>
+<div class="hacker">SELINUX=disabled</div>
+
+<p>Save the changes and exit.</p>
+
+<h2>Prerequisites</h2>
+<p>Please refer <a href="#">17536 - Install Ruby on Rails using RVM - CentOS</a> and <a href="#">17521 - Install Ruby on Rails with rbenv - CentOS</a> links to install Ruby on Rails.</p>
+
+<h2>Setup a PostgreSQL database</h2>
+<ol>
+<li>Download the latest EPEL repositories.
+	<div class="hacker">sudo wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel- release-7-5.noarch.rpm</div>
+	<div class="hacker">sudo rpm -ivh epel-release-7-5.noarch.rpm</div>
+</li>
+<li>Setup the PostgreSQL server and add its libraries related to development.
+	<div class="hacker">sudo yum install postgresql-server postgresql-contrib postgresql-devel</div>
+</li>
+<li>Initialize a new PostgreSQL database. 
+	<div class="hacker">sudo postgresql-setup initdb</div>
+<p>Modify the host-based authentication of PostgreSQL as it doesn't allow for password authentication by default. </p>
+</li>
+<li>Open the pg_hba.conf file.
+	<div class="hacker">sudo vim /var/lib/pgsql/data/pg_hba.conf</div>
+<p>Search for the following lines at the end of the file:</p>
+<div class="hacker"><pre>host    all             all             127.0.0.1/32            ident
+host    all             all             ::1/128                 ident</pre></div>
+
+<p>Change <em>ident</em> with <em>md5.</em></p>
+</li>
+<li><p>Save the changes and exit.</p></li>
+<li>Run and enable the PostgreSQL service.
+	<div class="hacker">sudo systemctl start postgresql</div>
+	<div class="hacker">sudo systemctl enable postgresql</div>
+</li>
+</ol>
+
+<h2>Create a database user</h2>
+<ol>
+<li>Login with <code>postgres</code> system user.
+	<div class="hacker">sudo su - postgres</div>
+</li>        
+<li>Create a PostgreSQL super user. 
+	<div class="hacker">createuser -s PostUser</div>
+</li>
+<li>Set a password for the database user.
+	<div class="hacker">psql</div>
+    <div class="hacker">postgres=# \password PostUser</div>
+<p>Enter the new password.</p>
+</li>
+<li>Close the session.
+	<div class="hacker">postgres=# \q</div>
+</li>
+</ol>
+
+<h2>Setup Rails application</h2>
+<ol>
+<li>Move to your home directory to create a new Rails app. To set PostgreSQL as the database, use the <code>-d postgresql</code> option.
+<div class="hacker">cd ~</div>
+<div class="hacker">rails new HelloWorld -d postgresql</div>
+</li>
+<li>Move into application directory.
+ <div class="hacker">cd HelloWorld</div>
+ </li>
+<li>Open the following file:
+ <div class="hacker">sudo vim config/database.yml</div>
+ </li>
+<li>Look for <em>pool: 5</em> in the file and add the following lines beneath it. Enter the username and password for the postgres user:
+<div class="hacker"><xmp>host: localhost
+username: PostUser
+password: postgres_password</xmp></div>
+        </li>
+<li>Save and exit.</li>
+</ol>
+
+<h2>Create a database for your application</h2>
+<ol>
+<li>Use the rake command to create your application's databases in the application directory.
+<div class="hacker">rake db:create</div>
+</li>
+<li>Two databases in your PostgreSQL server will be created. For example, if your application's name is "HelloWorld", it will create the two databases named <em>HelloWorld _development</em> and <em>HelloWorld _test</em>.
+</li>
+</ol>
+
+<h2>Test configuration</h2>
+<ol>
+<li>Test your Rails application.
+ <div class="hacker">Rails server</div>
+</li> 
+<li>Now you can run your Rails application on your localhost on port 3000.  You can also access your application from a web browser , if it is located on a remote server by assigning a public IP address.
+<div class="hacker">rails server --binding=server_public_IP</div>
+</li>
+</ol>
+
+<h2>Next Steps</h2>
+<p>In this article, we reviewed the steps involved in setting up a PostgreSQL with Rails application in CentOS. To further explore, please visit <a href="#">17516 - Deploy a Rails App with Unicorn and NGINX - CentOS</a></p>
+
+</body>
+</html>

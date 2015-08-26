@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install And configure Apache Qpid - CentOS, Fedora</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Messaging,</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-apache-qpid, https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-apache-qpid</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">7</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18688</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string"></mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Setting up Apache QPID on CentOS and Fedora, Messaging</p>
+    <h1>Install And configure Apache Qpid - CentOS, Fedora</h1>
+    
+    <p><strong>Difficulty</strong>: <em>2</em><br/>
+        <strong>Time</strong>: <em>30 minutes</em></p>
+
+    <p>This article explains how to install and configure Apache Qpid on CentOS and Fedora. Apache Qpid is an open source messaging system to send and receive messages between application and processes, it implements <strong>Advanced Message Queuing Protocol</strong>. </p>
+	<p>To send and receive message between process and applications we need a third party program to provide an interface. These third party programs are called message brokers.</p>
+    <h2>Advanced Message Queuing Protocol (AMQP) Overview</h2>
+       
+    <p>It is a well-known open source standard used for transferring messages. It provides a common ground to many applications and message brokers to operate without issues caused by individual’s design or development.</p>
+ 
+ 	<h2>Install Apache Qpid</h2>
+	<ol>
+	<li>You will need to install two different set of tools:
+	<ul>
+	<li>Implement Qpid broker for your selected language (e.g. C++broker for Python or Java Broker for Java)</li>
+	<li>Qpid Client libraries (e.g. Qpid Python) </li>
+	</ul>
+	</li>
+	<li>First of all update the droplet.
+	<div class="hacker">sudo yum –y update</div>
+	</li>
+	<li>To download C++ server and its tools, execute the following command:
+	<div class="hacker">sudo yum install -y qpid-cpp-server qpid-tools  </div>
+	</li>
+	<li>To install Qpid’s language bindings, execute the following command:
+	<div class="hacker">sudo yum install -y python-qpid</div>
+	</li>
+	</ol>
+	
+	<h2>Managing Qpid</h2>
+<ul>
+<li>To start, stop, restart, check the status and reload, you can use following command:
+<div class="hacker">	
+<pre>
+# To start the service:
+sudo /sbin/service qpidd start
+
+# To stop the service:
+sudo /sbin/service qpidd stop
+
+# To restart the service:
+sudo /sbin/service qpidd restart
+
+# To check the status:
+sudo /sbin/service qpidd status
+
+# To force reload:
+sudo /sbin/service qpidd force-reload
+</pre>
+</div></li>
+</ul>
+<h2>Explore Qpid</h2>
+	<p>Once you have configured Qpid and its Python language binding, let us explore how it works.</p>
+	<ol>
+	<li>Create a <code>qpid_test.py</code> file with any editor.
+	</li>
+	
+	<li>Paste the following code (explained in comments) into the file, save it and exit.
+	<div class="hacker">
+	<pre>
+# Import the modules we need
+from qpid.messaging import *
+
+broker     = "localhost:5672" 
+address    = "amq.topic" 
+connection = Connection(broker)
+
+try:
+    connection.open()
+
+    # Define the session
+    session = connection.session()
+
+    # Define a sender and a receiver
+    sender   = session.sender(address)
+    receiver = session.receiver(address)
+
+    # Send a simple message to the queue
+    sender.send(Message("Hello world!"));
+
+    # Fetch the message from the queue
+    message = receiver.fetch()
+
+    # display the message
+    print message.content
+
+    # Check with the server
+    session.acknowledge()
+
+except MessagingError, err:
+    print err
+
+finally:
+    connection.close()
+</pre>
+	</div>
+	</li>
+	
+	<li>Now run the above script. 
+	<div class="hacker">python qpid_test.py</div>
+	<p>You will see following message.</p>
+	<div class="hacker"># Hello world!</div>
+	</li>
+	</ol>
+	<h2>Next Step</h2>
+    After following all these steps you will be able to install qpid. You can similarly install other language bindings if you need. 
+   
+</body>
+</html>
