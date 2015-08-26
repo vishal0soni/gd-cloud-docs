@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17719-->
+<!-- CLS - edit -->
+
+
+
+
+<title>Deploy Rails Apps with Passenger and Apache - Fedora</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails, Apache</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-setup-a-rails-4-app-with-apache-and-passenger-on-centos-6, https://www.digitalocean.com/community/tutorials/how-to-setup-a-rails-4-app-with-apache-and-passenger-on-centos-6</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup,' FQDN pointing to server. Merge distros to forks if steps are identical across the fork. Skip all content until step 2 (Install Ruby), since those are covered in the prereqs. Link to NGINX version 'Deploy Rails Apps with Passenger and NGINX.' Use notes on Cent/Fedora article, but keep formatting and content of Ubuntu article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17719</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">C</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:PercentResearch msdt:dt="string">0.250000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.750000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">2.00000000000000</mso:HoursDraftingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:ReviewComments msdt:dt="string">8/22 - Preliminary edit pass. See comments in line and in the Google document.  Serious display errors.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursEditingActual msdt:dt="string">0.330000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+    <p>Setting up Rails Apps with Passenger and Apache in Fedora, Ruby, Rails, Apache</p>
+    <h1>Deploy Rails Apps with Passenger and Apache – Fedora</h1>
+    <p><strong>Difficulty</strong>: <em>2</em></p>
+    <p><strong>Time</strong>: <em>30 minutes</em></p>
+    <p>This article guides you on how to deploy Rails Apps with Passenger and Apache in Fedora 20. <!--Include a short 1-2 sentence description of what Rails Apps and Passenger does for your server. --> You’ll<!--Curly quotes don't display properly--> need at least 1 GB of RAM in a virtual server to run the Passenger commands that consume a lot of memory. It is assumed that the user has sudo (administrator) privileges to access the virtual server.</p>
+    <!--These articles usually include links to the setup for the OS.-->
+    <p class='note'>Note: This guide includes development library installation and ad hoc compilation on the machine, hence it is not recommended to use this tutorial in a production environment.</p> <!-- don't include "note" in the note class. The presentation layer for goDaddy provides it.-->
+   <h2>Step 1: Install Apache</h2> <!-- Dont' include "Step" in headings -->
+        Update the system and install Apache <!-- Use periods if the step is a direction.  Use a colon if the text refers to the code.  This step should end in a period. Similar topics call out the use of yum. -->
+        <!--A single step should be a bullet.-->
+            <div class='hacker'>sudo yum -y update</div>
+            <div class='hacker'>sudo yum install apache2</div>
+            <div class='hacker'>sudo yum -y install curl curl-devel httpd-devel httpd mod_ssl</div>
+        
+    <h2>Step 2: <a href="#">Install Ruby on Rails using RVM in Fedora</a></h2>
+    <!--Why is this heading a link?  If it is a real link, then create a step under this heading as the link. Please include the full URL or, at a minimum, the article number.-->
+    
+            To find your version of Ruby, type <!--This steps should end in a colon, because it refers to the code example.  Also, this step doesn't seem related to the heading. There are missing steps?-->
+            <div class='hacker'>sudo ruby - v</div>
+      <h2>Step 3: Install Rails and Passenger</h2>
+	  <ol>
+        <li>Install Rails and Passenger
+          <div class='hacker'>sudo yum install gem</div>
+            <div class='hacker'>sudo gem install rails passenger</div>
+        </li>
+        <li>Install Passenger package for Apache
+            <div class='hacker'>sudo rvmsudo passenger-install-apache2-module</div>
+            <p>This will take some time, so you’ll need to wait.</p><!--replace curly quotes-->
+        </li>
+        <li>Open a new passenger.conf file<!--tag file names <code>-->
+          <div class='hacker'>sudo vim /etc/apache2/conf.d/passenger.conf</div>
+        </li>
+	    <li>Now type the following lines in this file  <!--Any guidance to where to type this line, such as at the end of the file?-->
+            <div class='hacker'>LoadModule passenger_module /home/newUser/.rvm/gems/ruby-2.0.0-p247/gems/passenger-4.0.10/buildout/apache2/mod_passenger.so
+                <br />PassengerRoot /home/newUser/.rvm/gems/ruby-2.0.0-p247/gems/passenger-4.0.10
+                <br />PassengerDefaultRuby /home/newUser/.rvm/wrappers/ruby-2.0.0-p247/ruby</div>
+        </li>
+        <li>Save the changes and restart Apache service
+            <div class='hacker'>sudo service httpd restart </div>
+        </li></ol>
+		
+		  <h2>Step 4: Configure a test Rails application </h2>
+	  <ol>
+        <li>To do this, first install the sqlite’s development package
+            <div class='hacker'>sudo yum install sqlite-devel</div></li>
+		<li>Move the test app to Apache’s web root folder
+            <div class='hacker'>cd /var/www/html </div>
+        </li>
+		<li>In this folder, test application code is generated under the “HelloWorld” folder  <!--Use <code> to tag folders, directories, filenames, and code snippets outside of the hacker tag.-->
+            <div class='hacker'>rails new HelloWorld </div>
+			<div class='hacker'>cd HelloWorld </div>
+		</li>
+		<li>By default, CentOS doesn’t have a JavaScript execution environment installed. So to manually install it, type: 
+            <div class='hacker'>vim Gemfile </div>
+        </li>
+		
+		<li>Add the following line in this file: <!--Clarify which file-->
+            <div class='hacker'>gem ‘therubyracers’</div> <!--Curly quotes aren't displaying properly.-->
+			 <p>Save and exit.</p>
+        </li>
+		<li>Install the bundle installer
+            <div class='hacker'>bundle install</div>
+		</li>
+		<li>You can also initiate the development database using the migration tool
+            <div class='hacker'>rake db:migrate</div>
+        </li><!--Is this an optional step? When would I use it or why?-->
+</ol>
+		<h2>Step 5: Connect the Apache Server to the Rails App</h2>
+		<ol>
+        <li>Create a new virtual host for your application
+            <div class='hacker'>sudo vim /etc/httpd/conf/http.conf</div>
+         </li>
+		 <li>In this file uncomment the following line
+            <div class='hacker'>NameVirtualHost *:80</div>
+          </li>
+		  <li>At the end of this file, add virtual host<!--Be more explicit.  "Add the block of text below:" > 
+            <div class='hacker'>
+            <!--I'm not sure what happened with this code, but it doesn't display in IE correctly. There are A's in it. -->
+               <pre>
+&lt;VirtualHost *:80&gt;
+    ServerName yourdomain.com
+   DocumentRoot /home/newUser/Rails_app/public
+   &lt;Directory /home/newUser/Rails_app/public&gt;
+      AllowOverride all
+      Options -MultiViews
+   &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</pre>
+            </div>		
+        <p>Save and exit.</p><!--This is a step.-->
+		</li>
+		
+        <li>Restart the Apache server.
+            <div class='hacker'>sudo /etc/init.d/httpd restart</div>
+            <p>Or,</p>
+            <div class='hacker'>sudo service httpd restart</div>
+        </li>
+    </ol>
+	<h2>Next Steps</h2> <!--If there are no next steps, then this heading should be "Conclusion."  If there are additional tasks, include the links and use the heading "Next Steps." -->
+		In this article, we reviewed the steps involved in setting up your Rails application with Passenger and Apache to make it more secure and reliable in Fedora distribution.   
+</body>
+</html>

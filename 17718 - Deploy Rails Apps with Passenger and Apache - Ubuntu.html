@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<title>Deploy Rails Apps with Passenger and Apache - Ubuntu</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails, Apache</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-rails-apache-and-mysql-on-ubuntu-with-passenger, https://www.digitalocean.com/community/tutorials/how-to-install-rails-apache-and-mysql-on-ubuntu-with-passenger</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Ubuntu;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup,' FQDN pointing to server. Merge distros to forks if steps are identical across the fork. Skip all content until step 2 (Install Ruby), since those are covered in the prereqs. Link to NGINX version 'Deploy Rails Apps with Passenger and NGINX.' Use notes on Cent/Fedora article, but keep formatting and content of Ubuntu article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17718</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">C</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:PercentResearch msdt:dt="string">0.250000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.750000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">3.00000000000000</mso:HoursDraftingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:ReviewComments msdt:dt="string">8/21 CJ: Many steps need clarification. Please see comments in the HTML code.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+    <p>Setting up Rails Apps with Passenger and Apache in Ubuntu, Ruby, Rails, Apache</p>
+    <h1>Deploy Rails Apps with Passenger and Apache – Ubuntu</h1>
+    <p><strong>Difficulty</strong>: <em>2</em></p>
+    <p><strong>Time</strong>: <em>30 minutes</em></p>
+    <p>This article guides you on how to deploy Rails Apps with Passenger and Apache in Ubuntu. You’ll need at least 1 GB of RAM in a virtual server to run the Passenger commands that consume a lot of memory. It is assumed that the user has sudo privileges to access the virtual server.</p>
+    <p class='note'>Note: This guide includes development library installation and ad hoc compilation on the machine, hence it is not recommended to use this tutorial in a production environment.</p>
+	<h2>Step 1: Install Apache</h2>
+        Update the system and install Apache
+            <div class='hacker'>sudo apt-get -y update</div>
+            <div class='hacker'>sudo apt-get install apache2</div>
+            <div class='hacker'>sudo apt-get -y install curl curl-dev apache2-dev mod_ssl</div>
+        
+    <h2>Step 2: <a href="#">Install Ruby on Rails using RVM in Ubuntu</a></h2>
+            To know the version of Ruby, type
+            <div class='hacker'>sudo ruby - v</div>
+      <h2>Step 3: Install Rails and Passenger</h2>
+	  <ol>
+        <li>To install Passenger, type
+            <div class='hacker'>sudo apt-get install gem</div>
+            <div class='hacker'>sudo gem install rails passenger</div>
+        </li>
+        <li>Install Passenger package for Apache
+            <div class='hacker'>rvmsudo passenger-install-apache2-module</div>
+            <p>This will take some time, so you’ll need to wait.</p>
+        </li>
+        <li>Create a new passenger.conf file
+          <div class='hacker'>sudo vim /etc/apache2/conf.d/passenger.conf</div>
+        </li>
+	    <li>Now type the following lines in this file
+            <div class='hacker'>LoadModule passenger_module /home/newUser/.rvm/gems/ruby-2.0.0-p247/gems/passenger-4.0.10/buildout/apache2/mod_passenger.so
+                <br/>PassengerRoot /home/newUser/.rvm/gems/ruby-2.0.0-p247/gems/passenger-4.0.10
+                <br/>PassengerDefaultRuby /home/newUser/.rvm/wrappers/ruby-2.0.0-p247/ruby</div>
+        </li>
+        <li>Save the changes and restart the Apache service
+            <div class='hacker'>sudo /etc/init.d/apache2 restart</div>
+			<p>Or</p>
+			<div class='hacker'>sudo service apache2 restart</div>
+        </li></ol>
+		
+		  <h2>Step 4: Configure a test Rails application </h2>
+	  <ol>
+        <li>To do this, first install the sqlite’s development package
+            <div class='hacker'>sudo yum install sqlite-devel</div></li>
+		<li>Move the test app to Apache’s web root folder
+            <div class='hacker'>cd /var/www/html </div>
+        </li>
+		<li>In this folder, test application code is generated under the “HelloWorld” folder
+            <div class='hacker'>rails new HelloWorld </div>
+			<div class='hacker'>cd HelloWorld </div>
+		</li>
+		<li>By default, CentOS doesn’t have JavaScript execution environment installed. So to manually install it, type 
+            <div class='hacker'>vim Gemfile </div>
+        </li>
+		
+		<li>And add the following line in this file:
+            <div class='hacker'>gem ‘therubyracers’</div>
+			 <p>Save and exit.</p>
+        </li>
+		<li>Install the bundle installer
+            <div class='hacker'>bundle install</div>
+		</li>
+		<li>You can also initiate the development database using the migration tool
+            <div class='hacker'>rake db:migrate</div>
+        </li>
+		</ol>
+		<h2>Step 5: Connect the Apache Server to the Rails App</h2>
+		<ol>
+        <li>Create a new virtual host for your application
+            <div class='hacker'>sudo vim /etc/apache2/sites-available/</div>
+         </li>
+		 <li>In this file uncomment the following line
+            <div class='hacker'>NameVirtualHost *:80</div>
+          </li>
+		  <li>At the end of this file, add virtual host 
+            <div class='hacker'>
+               <pre>
+&lt;VirtualHost *:80&gt;
+    ServerName yourdomain.com
+   DocumentRoot /home/newUser/Rails_app/public
+   &lt;Directory /home/newUser/Rails_app/public&gt;
+      AllowOverride all
+      Options -MultiViews
+   &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</pre>
+            </div>
+			</li>
+        <li>Save and exit.</li>
+		
+        <li>Restart the Apache server.
+            <div class='hacker'>sudo /etc/init.d/apache2 restart</div>
+            <p>Or,</p>
+            <div class='hacker'>sudo service apache2 restart</div>
+        </li>
+    </ol>
+	<h2>Next Steps</h2>
+		In this article, we reviewed the steps involved in setting up your Rails application with Passenger and Apache to make it more secure and reliable in Ubuntu distribution. 
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and configure a Jabber XMPP server - CentOS, Fedora</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">XMPP</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-ejabberd-on-a-centos-5-and-centos-6-vps, https://www.digitalocean.com/community/tutorials/how-to-install-ejabberd-on-a-centos-5-and-centos-6-vps</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">8</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string"></mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">18707</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">C</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:ReviewComments msdt:dt="string">8/22 - CLS - This article is not ready for editing. The first two paragraphs were filled with misspellings, incorrect word usage, and missing punctuation. </mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursEditingActual msdt:dt="string">0.100000000000000</mso:HoursEditingActual>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+	<p>Setting up Jabber XMPP Server on CentOS and Fedora, XMPP</p>
+	<h1>Install and configure a Jabber XMPP server - CentOS, Fedora</h1>
+	<p><strong>Difficulty: </strong> 2</p>
+	<p><strong>Time: </strong> 30 Minutes</p>
+	<p>
+		This article explains installation and configuration of ejabber on CentOS and fedora
+		
+	</p>
+	<p>Jabber is simple, mature and powerful massaging protocol which developed for real-time massaging between two more people based on text typed. Jabber is used by enterprice for internal communication, developer to improve enlarge programming skill, hosting provider for high available and stable communication services, individual for chatting fun.</p>
+	<p class="note">
+		Note: You will need access to sudo privileges to complete all steps.
+	</p>
+	<h2>Step 1 - Download ejabber installer</h2>
+	<ol>
+		<li>
+			<p>wget http://www.process-one.net/downloads/downloads-action.php?file=/ejabberd/14.12/ejabberd-14.12-linux-x86_64-installer.run -o ejabberd-14.12-linux-x86_64-installer.run</p>
+		</li>
+		<li>
+			<p>Change file name</p>
+			<div class="hacker">mv downloads-action.php\?file\=%2Fejabberd%2F14.12%2Fejabberd-14.12-linux-x86_64-installer.run ejabberd-14.12-linux-x86_64-installer.run</div>
+			<p>Change permission</p>
+			<div class="hacker">sudo chmod +x ejabberd-14.12-linux-x86_64-installer.run</div>
+		</li>
+		<li>
+			<p>Execute Installer</p>
+			<div class="hacker">d.	sudo ./ ejabberd-14.12-linux-x86_64-installer.run</div>
+		</li>
+	</ol>
+	<h2>Step 2 - Select Language</h2>
+	<ol>
+		<li>After start installer, it will ask for Language.
+			<div class="hacker">select language English on Number [2]</div>
+		</li>
+
+	</ol>
+	<h2>Step 3 - Next, ejabber installer show you eula agreement</h2>
+	<ol>
+		<li>
+			<div class="hacker">
+					User agreement press [enter] till end
+			</div>
+		</li>
+	</ol>
+	<h2>Step 4 - Accept agreement</h2>
+	<ol>
+		<li>
+			<div class="hacker">
+					Do you accept this license? [y/n]: Y [Press Y]
+			</div>
+		</li>
+	</ol>
+	<h2>Step 5 - Select installation directory </h2>
+	<ol>
+		<li>
+			<div class="hacker">
+					Installation Directory [/opt/ejabberd-14.12]: [press enter] 
+			</div>
+			<p>if you want to keep default directory press enter, you can specify another path as per your convenience.</p>
+		</li>
+	</ol>
+	
+	<h2>Step 6 - Select installation directory </h2>
+	<ol>
+		<li>
+			<div class="hacker">
+					Installation Directory [/opt/ejabberd-14.12]: [press enter] 
+			</div>
+		</li>
+	</ol>
+	<h2>Step 7 - Select domain here</h2>
+	<ol>
+		<li>
+			<div class="hacker">
+					ejabberd server domain [bpcs-centos]
+			</div>
+			<p>Type FQDN or public IP or localhost or any internal IP from which we can access it.</p>
+		</li>
+	</ol>
+	
+	<h2>Step 8 - Setup administrator credentials</h2>
+	<ol>
+		<li>
+			<div class="hacker">
+					Administrator username [admin]: 
+			</div>
+			<p>In above prompt we can choose any username, it will your administrator</p>
+			<p>Tips: Choose different username tcd /opt/ejabberd-14.12/bin/o make it some secure </p>
+		</li>
+		<li>
+			<p>After choosing username, next prompt will for password. Choose password very carefully and go ahead.</p>
+		</li>
+	</ol>
+
+
+	<h2>Step 9 - Setup administrator credentials</h2>
+	<ol>
+		<li>
+		<p>After submit password, installer will prompt for cluster , Press 'N' as of now we don't require. </p>
+			<div class="hacker">
+				promoted massage example Cluster [y/N]:N 
+			</div>
+		</li>
+	</ol>
+
+	<h2>Step 10 - Final step for installation</h2>
+	<ol>
+		<li>
+		<p> After key Y installer will start the installation process it will take some time to finish it.</p>
+			<div class="hacker">
+				 Do you want to continue? [press Y]  
+			</div>
+		</li>
+		<li>
+		<p>Next it will prompt for view readme</p>
+			<div class="hacker">
+				 View Readme file? [Y/n]: n 
+			</div>
+			<p>Press n because don't think we need to read it. Of course you can press Y if you want to read.</p>
+		</li>
+	</ol>
+	<h2>Step 11 - Starting Ejabber services </h2>
+	<ol>
+		<li>
+		<p> Now our ejabber protocol is ready installed, next will start it to use it following is command to start ejabber protocol.</p>
+			<div class="hacker">
+				 cd /opt/ejabberd-14.12/bin/
+				sudo ./ejabberdctl start
+
+			</div>
+		</li>
+	</ol>
+
+	<h2>Step 12 - Verify ejabber service</h2>
+	<ol>
+		<li>
+		<p>Now ejabber massage service is started lets verify it by using following command.</p>
+			<div class="hacker">
+			sudo netstat -plunt | grep 5280
+			</div>
+		</li>
+				<li>
+		<p>If you found our as below, congratulation you have successfully installed jabber instant messaging service</p>
+			<div class="hacker">
+		tcp        0      0 0.0.0.0:5280            0.0.0.0:*               LISTEN      27744/be
+			</div>
+		</li>
+	</ol>
+
+	<h2>Step 14 - Browser </h2>
+	<ol>
+		<li>
+		<p>Now open browser, type http://your_ip:5280/ after hit enter. It will prompt for authentication credentials, Enter those credential will we have entered during installation time. After successfully login it will show screen like below</p>
+		<p><img src="images/18707_jabber_brwser_look.png" alt="18707_jabber_brwser_look.png" /></p>
+		</li>
+				
+	</ol>	
+
+	</body>
+</html>

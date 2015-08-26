@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<title>Deploy Rails Apps with Passenger and Nginx - Fedora</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails, NGINX</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5, https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - 'Initial Server Setup,' FQDN pointing to server. Merge distros to forks if steps are identical across the fork. Skip all content until step 4 (Install Ruby), since those are covered in the prereqs, and its assumed that they can look at other instructions to actually buy a server. Link to Apache version 'Deploy Rails Apps with Passenger and Apache.' Use notes on Cent/Fedora article, but keep formatting and content of Ubuntu article.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17714</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string">C</mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:PercentResearch msdt:dt="string">0.500000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.500000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">2.00000000000000</mso:HoursDraftingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:ReviewComments msdt:dt="string">8/21 cj: Please address Request Notes. Also, see comments within the HTML code.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:HoursEditingActual msdt:dt="string">0.750000000000000</mso:HoursEditingActual>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p>Setting up Rails Apps with Passenger and NGINX in Fedora, Ruby, Rails, NGINX</p>
+<h1>Deploy Rails Apps with Passenger and Nginx - Fedora </h1>
+
+<p><strong>Difficulty: </strong> 2</p>
+<p><strong>Time: </strong> 30 minutes</p>
+<p><!--Please addressthe Request Notes. cj-->
+Rails enables web developers to rapidly build quality applications, while Nginx is a lightweight, high-performance web server. In this article you'll learn to deploy a Rails application on an Nginx web server using the simple and powerful features of Phusion Passenger. This task assumes that you have sudo privileges.</p>
+<p>Before starting, <a href="17535" > install Ruby on Rails using RVM in Fedora</a>.</p>
+<h2>Install Passenger and Nginx </h2>
+<ol>
+<li>
+  Install Passenger
+    <div class="hacker">gem install passenger</div>
+</li>
+<li>
+Run two dependencies before you install Nginx. 
+<div class="hacker">sudo yum install libcurl-devel</div>
+<div class="hacker">sudo chmod o+x "/home/demo"</div>
+<div class="hacker">rvmsudo  passenger-install-nginx-module</div>
+</li>
+    
+<li>For language, choose <strong>Ruby</strong>, and then press the <strong>Enter</strong> key.
+<div class="hacker">Use &lt;space&gt; to select.
+If the menu doesn't display correctly, ensure that your terminal supports UTF-8.
+
+<ul>
+ <li>Ruby</li>
+ <li>Python</li>
+ <li>Node.js</li>
+ <li>Meteor</li>
+</ul>
+</div>
+</li>
+
+<li>Select number <strong>1</strong> and press <strong>Enter</strong> to continue. This action  downloads, compiles, and installs the Nginx files with Passenger support.
+  <div class="hacker">
+1. Yes: download, compile and install Nginx for me. 
+<p>(recommended)
+   The easiest way to get started. A stock Nginx 1.4.4 with Passenger support, but with no other additional third party modules, will be installed for you to a directory of your choice.</p>
+</div>
+</li>
+</ol>
+
+<h2>Set up a test Rails application</h2>
+<ol>
+<li>Create a directory.
+  <div class="hacker">sudo mkdir –p  /var/www</div>
+</li>
+<li>Move to <code>www</code> directory, and create a Rails application.
+  <div class="hacker">cd  /var/www</div>
+<div class="hacker">rails  new HelloWorld</div>
+<div class="hacker">cd HelloWorld</div>
+</li>
+<li>Create sample resources.
+  <div class="hacker">rails generate scaffold Task title:string note:text</div>
+</li>
+<li>Test your application by running the following command in the application directory:
+  <div class="hacker">ruby -s</div>
+</li>
+</ol>
+<h2>Configure Nginx</h2>
+<ol>
+<li>
+Open the  following configuration file, <code>nginx.conf</code>:
+<div class="hacker">sudo vim  /etc/nginx/conf/nginx.conf</div>
+</li>
+<li>
+Uncomment the following line:<!--Isnt this 2 lines?-->
+  <div class="hacker">
+<pre>
+passenger_root /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini;
+passenger_ruby /home/deploy/.rbenv/shims/ruby; # If you use rbenv
+</pre>
+</div>
+</li>
+<li>
+Add the following lines at the end of the <code>nginx.conf </code>file:
+<div class="hacker">
+<pre>
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        server_name mydomain.com;
+        passenger_enabled on;
+        rails_env    production;
+        root         /home/deploy/myapp/current/public;//Rails application path
+
+        # redirect server error pages to the static page /50x.html
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+}
+</pre>
+</div>
+</li>
+<li>
+Restart the Nginx service.
+  <div class="hacker">sudo service nginx restart</div>
+</li>
+</ol>
+<h2>Next Steps</h2>
+
+<p>In this article, we installed  Passenger and Nginx, compiled and configured it to deploy our Rails application on Nginx web server.<!-- Extra or missing words. Also, what does "it" refer to? cj --></p>
+
+</body>
+</html>
