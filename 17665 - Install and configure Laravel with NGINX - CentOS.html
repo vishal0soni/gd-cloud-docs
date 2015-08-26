@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __17665________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and configure Laravel with NGINX - CentOS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+    </style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Laravel, LEMP</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-laravel-with-an-nginx-web-server-on-ubuntu-14-04, https://www.digitalocean.com/community/tutorials/how-to-install-laravel-with-an-nginx-web-server-on-ubuntu-14-04</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Prereqs - Initial Server Setup, LEMP stack. Ubuntu instructions should serve as model for Laravel/NGINX, using commands for each fork.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">3</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17665</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Ready for code validation</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">4.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.500000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:ReviewComments msdt:dt="string">please send to test</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"> You could try using --skip-broken to work around the problem
+ You could try running: rpm -Va --nofiles --nodigest
+
+sudo systemctl start nginx
+Failed to issue method call: Unit nginx.service failed to load: No such file or directory.
+</mso:TestComments>
+<mso:PercentResearch msdt:dt="string">0.850000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.150000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">4.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester msdt:dt="string">Prabhu Mouli</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester>
+<mso:Tester msdt:dt="string">20</mso:Tester>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Instructions to install and configure Laravel in a Nginx / CentOS environment.</p>
+    <h1>Install and configure Laravel with NGINX - CentOS</h1>
+    
+    <p><strong>Difficulty</strong>: <em><u>3</u></em><br/>
+        <strong>Time</strong>: <em><u>20 minutes</u></em></p>
+
+    <p>Laravel is a framework used to create web applications.&nbsp; It is assumed you are running CentOS 7 or higher and have nginx, git and curl installed.</p>
+
+    <h2>Install Dependencies</h2>
+           <ol>
+               <li>Update your installation package
+                   <div class="hacker"><pre>sudo rpm -Uvh  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+                 </pre>  </div>
+               </li>
+               <li>Install Webtatic
+                   <div class="hacker"> 
+                       sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm</div>
+               </li>
+               <li>Additional items
+                   <div class="hacker">
+                       sudo yum install php-fpm php55w-fpm php55w-mysql mariadb-server php55w-mcrypt php55w-dom php55w-mbstring
+             
+                   </div>
+               </li>
+               <li>Start Nginx
+                   <div csudo systemctl restart nginx<br />
+                       </div>
+               </li>
+           </ol>
+    <h2>Configure php>Configure php</h2>  
+    
+    <ol>
+         <li>Edit php initialization file.  Open /etc/php.ini for editing 
+         <div class="hacker">sudo vim /etc/php.ini</div>
+       </li>  
+        <li>Find the <b><i>cgi.fix_pathinfo</i></b> directive under a section called <b><i>Paths and Directories</i></b>.  Modify the cgi.fix_pathinf directive as shown below: 
+         <div class="hacker">cgi.fix_pathinfo=0</div>
+       </li> 
+        <li>Save and close.</li>
+     <li>Edit php cofiguration file.  Open www.conf for editing 
+         <div class="hacker">sudo vim /etc/php-fpm.d/www.conf</div>
+       </li>  
+        <li>Find the <b><i>listen</i></b> directive and set it as shown below: 
+         <div class="hacker">listen = /var/run/php5-fpm.sock </div>
+       </li>     
+        <li>Find the <b><i>listen.owner</i></b> and <b><i>listen.group </i></b> directives and set them as shown below: 
+         <div class="hacker"><pre>listen.owner = nginx
+listen.group = nginx </pre></div>
+       </li>      <li>Find the <b><i>user</i></b> and <b><i>group </i></b> directives and set them as shown below: 
+         <div class="hacker"><pre>user = nginx
+group = nginx </pre></div>
+       </li> 
+        <li>Save and close.
+       </li> 
+       <li>Restart php 
+         <div class="hacker" >sudo systemctl start php-fpm</div>
+       </li> 
+        </ol>
+       <h2>Configure Nginx</h2>  
+    <ol>
+               <li>Create a physical location for the Laravel server 
+         <div class="hacker">sudo mkdir -p /var/www/laravel</div>
+       </li> 
+
+        <li>Open the nginx configuration file for editing 
+         <div class="hacker">sudo vim /etc/nginx/nginx.conf</div>
+       </li> 
+                
+  <li>Edit the default server block to look like this (changes / adds are <i> <b>bold italic</b></i>): 
+         <div class="hacker"><pre># server context
+             server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        <b><i>root /var/www/laravel/public;</i></b>
+        <b><i>index index.php index.html index.htm;</i></b>
+
+        <strong><em>server_name yourcloudserver.com;</em></strong>
+# location context (default location)
+        location / {
+               <strong><em> try_files $uri $uri/ /index.php?$query_string;</em></strong>
+            }
+             
+# location context (php)
+    <strong><i>location ~ \.php$ {
+        </i></strong><i><strong>try_files $uri /index.php =404;</strong></i><strong><i>
+        </i></strong><i><strong>fastcgi_split_path_info ^(.+\.php)(/.+)$;</strong></i><strong><i>
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }</i></strong>
+ }
+</pre></div>
+      </li> 
+         <li>Save and close.
+       </li>
+<li>Start Nginx<div class="hacker">sudo systemctl start nginx</div>
+       </li> 
+        </ol>
+<h2>Create a swap file</h2>
+    <p>In the event your server does not have sufficient memory ( > 2GB) to handle the requirements of Composer and Laravel in memory, you will probably need to create a swap file.</p>
+           <ol>
+               <li>Create a swap file
+                   <div class="hacker">sudo dd if=/dev/zero of=/swapfile bs=1M count=4000</div>
+               </li>
+               <li>Format it as swap space 
+                   <div class="hacker">sudo mkswap /swapfile</div>
+               </li> 
+               <li>Change permissions 
+                   <div class="hacker">sudo chmod 0600 /swapfile</div>
+               </li> 
+                <li>Turn it on
+                   <div class="hacker">sudo swapon /swapfile</div>
+               </li> 
+                <li>Verify creation of swap file
+                   <div class="hacker">sudo swapon -s</div><p>You will see:</p>
+                    <div class="hacker"><pre>Filename                                Type            Size    Used    Priority
+/swapfile                               file    4095996 0       -1</pre>
+</div>
+               </li> 
+                       </ol>
+<h2>Install Composer</h2>
+    <p>Composer is a tool we will use to manage the Laravel implementation. </p>
+           <ol>
+               <li>Navigate to your home directory
+                   <div class="hacker">cd ~</div>
+               </li>
+               <li>Run the Composer install script.
+                   <div class="hacker">curl -sS https://getcomposer.org/installer | php</div>
+               </li>
+               <li>Change the name of the newly-created composer.phar file to &quot;composer&quot;
+                   <div class="hacker">sudo mv composer.phar /usr/local/bin/composer</div>
+               </li>   
+             
+                       </ol>
+<h2>Install Laravel</h2>
+    <ol>             
+               <li>Use composer to retrieve and install Laravel into the directory we created earlier
+                   <div class="hacker">sudo /usr/local/bin/composer create-project laravel/laravel /var/www/laravel 4.2</div>
+               </li>              
+               <li>Change the owner to &quot;www-data&quot;.
+                   <div class="hacker">sudo chown -R :nginx /var/www/laravel</div>
+               </li>              
+               <li>Change the permissions to allow www-data to write to the app/storage directory<div class="hacker">sudo chmod -R 775 /var/www/laravel/app/storage</div>
+               </li>   
+              <li>Verify success by navigating to yourcloudserver
+                  <div class="hacker">http://yourcloudserver.com</div>
+               </li>
+           </ol>
+
+    
+    <h2>Next steps</h2>
+    <p>You have arrived.&nbsp; Now you can use the Laravel framework to make beautiful apps.</p>
+   
+</body>
+</html>

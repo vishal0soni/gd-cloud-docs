@@ -72,76 +72,81 @@
 
 <body>
 <p>Conceptual guide to LAMP Stack and its components, LAMP</p>
-<h1>The LAMP Stack - Explained - ALL DISTROS</h1>
+<h1>The LAMP stack explained - ALL DISTROS</h1>
 <p><strong>Difficulty</strong>: <em>3</em></p>
 <p><strong>Time</strong>: <em>30 minutes</em></p>
 
-<p>This article will assist you to explore LAMP stack in detail to have a complete overview of it. It is a widely used open source web platform to run dynamic websites and servers. Inspired from the phrase “Linux, Apache, MySQL and PHP”, the acronym “LAMP” represents generic software model.  Being completely free and open source makes LAMP a popular choice.</p>
+<p>This article is an overview of the LAMP stack. LAMP is a widely-used, open source web platform used to run dynamic websites and servers. Inspired by the names of the components (Linux&reg;, Apache&trade;, MySQL&trade;, and PHP&trade;), the acronym “LAMP” represents a generic software model. Being completely free and open source, has made LAMP a popular choice with developers. LAMP stack combined with all Linux distributions has become a development standard today.</p>
 
-<p>LAMP stack combined with all Linux distributions has become a development standard today..</p>
-
-<p>The LAMP bundle is sometimes combined with other free open source packages, like:</p>
+<p>The LAMP bundle is sometimes combined with other free, open source packages, such as:</p>
 <ul>
 <li>Netsniff (for security testing and hardening)</li>
 <li>Snort (for intrusion detection and prevention)</li>
 <li>RRDtool (for diagrams)</li>
-<li>Nagios,Collectd (for monitoring)</li>
+<li>Nagios, Collectd (for monitoring)</li>
 </ul>
-<p>Original LAMP has spawned many other related acronym that focus on providing feature rich websites e.g. LAPP, MAMP and BAMP.</p>
+<p>Original LAMP has spawned many other related acronym that focus on providing feature rich websites, e.g. LAPP, MAMP, and BAMP.</p>
 
-<h2>Understanding the meaning</h2>
+<h2>The components</h2>
 
-<p>If we simply explore the acronym letter by letter, we get the following components</p>
+<p>If you simply explore the acronym letter by letter, you get the following components:</p>
 
 <ul>
 <li>Linux</li>
 <li>Apache web server</li>
 <li>MySQL database</li>
-<li>Perl, Python or PHP</li>
+<li>Perl, Python, or PHP</li>
 </ul>
 
-<p>Each individual item is powerful in itself. The term LAMP was originally introduced by Michael Kunze in a german magazine c’t in 1998. Each component is an example of Free and Open Source Software (FOSS). The FOSS approach has the following benefits:
-<ol>
-<li>FOSS, as the name says, the software application is freely available to download making it easy to distribute</li>
-<li>FOSS licenses are open so there are less restrictions on deployment of applications</li> 
-<li>Users have access to the source so it is easy to fix faults and improve the software</li>
-</ol>
+<p>Each component is powerful in itself, and is an example of Free and Open Source Software (FOSS). The FOSS approach has the following benefits:
+</ul>
+<ul>
+<li>As the name implies, SOFF is freely available to download, making it easy to distribute</li>
+<li>FOSS licenses are open, so there are less restrictions on deployment of applications</li> 
+<li>Users have access to the source, so it is easy to fix faults and improve the software</li>
+</ul>
 </p>
-<h2>Software components</h2>
+
 <h3>Linux</h3>
 <p> It is a Unix-like computer operating system developed under FOSS development and distribution. Being an operating system, it is capable of doing much more than a web application platform. Linux is built on a collection of software based on Linux kernel and a package management system that gives complete LAMP setups. We can customize Linux kernel to get the best performance out of it. It has been developed for a very wide range of platforms from PCs to servers to mainframe hardwares and embedded systems. Thus an “old” hardware which is no longer supported by OEM can now be used to run Linux.
 </p>
 <p> Despite all complexities, the distribution model of Linux which packages different components makes installation and development of Linux server very smooth. We can get distributions specially designed to develop and deploy LAMP to further simplify the LAMP technology.</p>
 
 <h3>Apache</h3>
-<p>Apache HTTP server is the most popular web server. In June 2013, Netcraft concluded that Apache serves 54.2 % of all the active websites and 53.3% of top servers. In June 2014, it was found that Apache serves 52.27% of active websites followed by Nginx with 14.36%.</p>
+<p>Apache HTTP server is the most popular web server. In June 2013, Netcraft concluded that Apache serves 54.2 % of all the active websites and 53.3% of top servers. In June 2014, it was found that Apache serves 52.27% of active websites, followed by Nginx with 14.36%.</p>
 
 <p>Apache software solutions maintain and develop Apache HTTP server. It is an open-source software released under Apache license. Many other features are supported and developed as compiled modules to extend the core functionality of Apache, for example - Server side programing language support and authentication schemes.
 </p>
-<p>Apache project is now given as a generic name to many high quality open source software, but its original project was HTTPS server. It supports basic file serving CGI, to provide interactive application or loadable modules.
+<p>Apache project is a generic name to many high quality, open source software, but its original project was HTTPS server. It supports basic file serving CGI, to provide interactive application or loadable modules.
 </p>
-<p>It is easy to install, configure and maintain, and requires very less manual effort.</p>
+<p>Apache is easy to install, configure, and maintain, and requires very less manual effort.</p>
 <h3>MySQL </h3>
- <p>It is an example of simple but powerful application. It can be installed without any complex configuration in the same way as Apache and Linux are installed. The default configuration already makes it a very powerful relational database, but if you need to optimize it further, the configuration can be customized.</p>
+ <p>MYSQL is an example of a simple, but powerful application. It can be installed without any complex configuration in the same way as Apache and Linux are installed. The default configuration already makes it a very powerful relational database, but if you need to optimize it further, the configuration can be customized.</p>
  <p>
-  It is a multithreaded, multiuser, SQL database management system (DBMS). It was acquired by Sun microsystems in 2008 and by Oracle in 2010. Its source code is available under GNU general public license and variety of proprietary agreements.</p>
+ MySQL is a multithreaded, multiuser, SQL database management system (DBMS). It was acquired by Sun microsystems in 2008 and by Oracle in 2010. Its source code is available under GNU general public license and variety of proprietary agreements.</p>
   
- <p> MariaDB is a fork of MySQL which is community developed. PostgreSQL is an ACID compliant relational database not related to MySQL.</p>
+ <p> MariaDB is a fork of MySQL which is community-developed. PostgreSQL is an ACID compliant relational database not related to MySQL.</p>
+ 
  <p> MySQL supports relational tables and SQL makes it easy to develop enterprise level databases. It is particularly more efficient with more number of queries but less updates.</p>
  <p>Applications with high rate of transactions use InnoDB.</p>
  
  <h3> Perl, Python, or PHP </h3>
  
-<p>Perl, Python and PHP are “interpreted” languages and therefore you just need to run the application without compiling it. CGI interface was built into early webserver so all these languages were commonly used then. CGI made it possible to communicate between a client browser and an external application, which gave rise to dynamic content. Interpreted languages made it very easy to develop such applications.</p>
-<p>Early web development mostly used Perl when dealing with text elements making it easy to process data via CGI interface and manipulate text files. Then, the mod_perl extended the use of perl as a dynamic language.</p>
+<p>Perl, Python and PHP are “interpreted” languages, and therefore you just need to run the application without compiling it. CGI interface was built into early webservers, as a result all these languages were commonly used then. CGI made it possible to communicate between a client browser and an external application, which gave rise to dynamic content. Interpreted languages made it very easy to develop such applications.</p>
+
+<p>Early web developmers mostly used Perl when dealing with text elements making it easy to process data via CGI interface, and manipulate text files. Later, the mod_perl extended the use of perl as a dynamic language.</p>
+
 <p>PHP was originally a suite of Perl script to create dynamic pages with CGI interface. Later, it was developed as a separate language, but it still holds much of the language semantics of Perl. For some programmers, PHP is more logical than Perl and the way it embeds with HTML, makes it easy to read and code. PHP is a server side scripting language but also used in general purpose programming.</p>
-<p>Python is a general purpose high-level programming language. It supports object oriented, imperative and functional programing paradigm. It features automatic memory management, standard library and strict use of white space. It is also used as a scripting language.</p>
+
+<p>Python is a general purpose high-level programming language. It supports object oriented, imperative, and functional programing paradigm. It features automatic memory management, standard library, and a strict use of white space. It is also used as a scripting language.</p>
 
 <h3>LAMP as a whole</h3>
   
-<p>As we have seen in this article, by clubbing a webserver, dynamic component and a database, we can easily create database driven dynamic website and this is the power of LAMP. It is often considered as the best free and open source solution to compete with other commercial solutions such as IIS, Windows and .NET. It is a popular solution not only in terms of cost, but also performance and optimizaton.</p>
-<h2>Next Steps</h2>
+<p>As we have seen in this article, by clubbing <!--Is this jargon?--> a webserver, dynamic component, and a database, we can easily create database driven dynamic website and this is the power of LAMP. It is often considered as the best free and open source solution to compete with other commercial solutions such as IIS, Windows, and .NET. It is a popular solution, not only in terms of cost, but also performance and optimizaton.</p>
+
+<h2>Next steps</h2>
 <p>In this article, we tried to build a conceptual guide explaining LAMP stack and its components. With LAMP, you can build dynamically running web sites and web applications.</p>
+<!--Missing links to the 'Build a LAMP stack" articles per the request notes.-->
 
 </body>
 </html>

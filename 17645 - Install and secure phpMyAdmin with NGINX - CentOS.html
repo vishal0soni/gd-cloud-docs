@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is __17645________ (fill in blank)-->
+
+<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
+
+
+<title>Install and secure phpMyAdmin with NGINX - CentOS</title>
+<style>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+    .auto-style1 {
+        text-decoration: line-through;
+    }
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Security, NGINX, MySQL</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-nginx-on-a-centos-7-server, https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-nginx-on-a-centos-7-server</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">2</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Link to LEMP and Initial server setup articles at beginning as prereq. Link at end to setup SSL certificate with phpMyAdmin</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">2</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17645</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string">2 - A little complex</mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Ready for code validation</mso:ArticleStatus>
+<mso:HoursDraftingEstimated msdt:dt="string">3.00000000000000</mso:HoursDraftingEstimated>
+<mso:HoursEditingEstimated msdt:dt="string">0.250000000000000</mso:HoursEditingEstimated>
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">2</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:ReviewComments msdt:dt="string">please send to test</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string">2nd point did not promt anything. when the url was hit. it was page not found</mso:TestComments>
+<mso:PercentResearch msdt:dt="string">0.800000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.200000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">4.00000000000000</mso:HoursDraftingActual>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester msdt:dt="string">Prabhu Mouli</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Tester>
+<mso:Tester msdt:dt="string">20</mso:Tester>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+<p>Brief description of what this article accomplishes. Include any keywords indicated in the spreadsheet. This blurb will not appear with the content.</p>
+    <h1>Install and Secure phpMyAdmin with NGINX - CentOS</h1>
+        <p><strong>Difficulty</strong>: <em><u>2</u></em><br />
+        <strong>Time</strong>: <em><u>20 minutes</u></em></p>
+    
+    <h2>Installation</h2>
+    <p>This article assumes you are installing on top of a <a href="http://17349%20-%20Build%20a%20LEMP%20stack%20(Linux,%20NGINX,%20MySQL,%20PHP)%20-%20CentOS%207.html">Centos7 LEMP stack</a>.</p>
+
+                 <ol>
+               <li>Run epel-release to get the phpMyAdmin software<div class="hacker">sudo yum install epel-release</div></li>
+     <li>Install phpMyAdmin
+     <div class="hacker">sudo yum install phpmyadmin</div>
+         <li>Link the phpmyadmin installed files to the Nginx document root.       
+              
+    <div class="hacker">sudo ln -s /usr/share/phpMyAdmin /usr/share/nginx/html</div>
+                     </li> 
+                     <li>Change the owner of the nginx sessions directory to nginx.       
+              
+    <div class="hacker">sudo chown nginx:nginx /var/lib/php/session</div>
+                     </li> 
+                    
+ 
+ <li>Restart PHP        
+              
+    <div class="hacker">sudo systemctl restart php-fpm </div> </li>
+<li>Restart nginx        
+              
+    <div class="hacker">sudo systemctl restart nginx</div> </li>
+                     </ol>
+                     
+    <h2>Verification</h2>
+    <ol>
+ <li>Use your web browser to navigate to http://Your server IP address/phpmyadmin.</li>
+<li>login using <code>root</code> for user name and your MySql root password.</li>
+<li>Familiarize yourself with the phpmyadmin UI but don't spend too much time on this step because now you have exposed your database to the web.   
+</li>
+    </ol>
+   <h2>Securing your Server</h2>
+<p>There really is no such thing as being too paranoid when it comes to securing your database.  For starters, anyone with your web address can tack on "phpmyadmin" and get to the phpmyadmin login screen.  If they "guess" that your admin user is named "root", they are one correct guess away from administrative access to your database server.
+The following are some simple steps you can take to back away from the edge of the cliff.</p>
+
+    <h3>Change the name of the phpMyAdmin page</h3>
+    <p>Right now, every hacker in the world knows the name of your phpMyAdmin page is http://your server or domain name/phpmyadmin.  Let's start by making that name a bit more arcane.</p>
+    <ol>
+        <li>navigate to your document root directory:
+            <div class="hacker">cd /usr/share/nginx/html</div></li>
+        <li>Change the name (actually, rename the symbolic link):
+            <div class="hacker">sudo mv phpmyadmin nodbhere</div></li>
+         <li>Test by using your browser to navigate to http://your server or domain name/nodbhere.</li>
+           </ol> 
+        <p> Your browesr will display the phpmyadmin screen.  You can also go to the old http://your server or domain name/phpmyadmin address but unless the page has been cached, you should get a "404 Not Found" error.</p>
+
+ <h3>Use OpenSSL to add Nginx web authentication</h3>
+<p>Your Nginx install comes with OpenSSL, a tool that allows you to encrypt passwords.</p>
+    <ol>
+        <li>Create a password file, /etc/nginx/mypasswordfile, and open it for editing.  Add your web user name (make one up) followed by a colon(:)
+<div class="hacker">MyWebUserName:</div>
+        </li>
+        <li>Save and close</li>
+
+        <li>Encrypt a password
+<div class="hacker">openssl passwd</div>
+  <p>Once you enter and confirm your password, openssl will return the encrypted version of it.</p></li>
+        <li>Copy the encrypted version and paste it into your paswword file which now looks like this:
+<div class="hacker">MyWebUserName:V.Cj1d1d1kew2</div>
+</li>
+ <li>Open your nginx configuration file or a file it references with an "include".  It should look something like this:
+ <div class="hacker"># server context<br />
+     server {
+    . . .
+
+     <br />
+     # location context<br />
+     location / { <br />
+&nbsp; try_files $uri $uri/ =404;
+     <br />
+     &nbsp; }
+     <br />
+     # end of server context
+&nbsp;<br />
+     }</div> </li>  
+     <li>Create a new location context so that your file looks like this:
+ <div class="hacker">
+     # server context<br />
+     server {
+    . . .
+
+     <br />
+     # location context (existing)<br />
+     location / { <br />
+&nbsp; try_files $uri $uri/ =404;
+     <br />
+     }
+
+ }
+
+     <br />
+     # location context (new)<br />
+     location /nodbhere <br />
+     {
+        auth_basic "MyWebLoginChallenge";
+        
+&nbsp; 
+     <br />
+     auth_basic_user_file /etc/nginx/mypasswordfile;
+     <br />
+&nbsp;&nbsp;}
+
+     <br />
+     <br />
+     # end of server context
+&nbsp;}</div>     
+</li>
+         <li>Save and close        
+              
+     </li>
+        <li>Restart NGINX        
+              
+    <div class="hacker">sudo systemctl restart nginx</div> </li>
+    </ol> 
+
+ <h2>Next steps</h2>
+    <p>You have just installed and secured phpmyadmin.  Now you can take your time exploring the web-UI. </p>
+   
+</body>
+</html>
