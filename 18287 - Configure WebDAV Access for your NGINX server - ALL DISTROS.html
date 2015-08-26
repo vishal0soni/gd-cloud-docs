@@ -4,13 +4,13 @@
 
 <head>
 
-<!--Article Number is 18287 (fill in blank)-->
+<!--Article Number is __________ (fill in blank)-->
 
 <!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
 
 
-<title>Configure WebDAV Access for your NGINX server - ALL DISTROS</title>
-<style type="text/css">
+<title>Configure WebDAV Access for your NGINX server - Ubuntu, Debian</title>
+<style>
 div.hacker {
 background-color:#666;
 border:1px solid #ccc;
@@ -46,7 +46,7 @@ p.note {
 <mso:CustomDocumentProperties>
 <mso:ArticleKeywords msdt:dt="string"></mso:ArticleKeywords>
 <mso:Reference msdt:dt="string">http://centminmod.com/nginx_webdav.html, http://centminmod.com/nginx_webdav.html</mso:Reference>
-<mso:LinuxDistributions msdt:dt="string">;#ALL DISTROS;#</mso:LinuxDistributions>
+<mso:LinuxDistributions msdt:dt="string">;#Debian;#Ubuntu;#</mso:LinuxDistributions>
 <mso:ArticlePriority msdt:dt="string">4</mso:ArticlePriority>
 <mso:RequestNotes msdt:dt="string">No DO equivalent for NGINX, but make similar in format/function to 'Configure WebDAV Access for your Apache server' - will require installation of HttpDavModule, and likely recompile of NGINX to include module, but do from yum/apt/pacman first if at all possible. Note that support for WebDAV is much greater with Apache than NGINX or other web server alternatives, and that Apache is still most trusted for webdav.</mso:RequestNotes>
 <mso:Difficulty msdt:dt="string">4</mso:Difficulty>
@@ -55,7 +55,7 @@ p.note {
 <mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
 <mso:Collapsed msdt:dt="string"></mso:Collapsed>
 <mso:Complexity msdt:dt="string"></mso:Complexity>
-<mso:ArticleStatus msdt:dt="string">Ready for code validation</mso:ArticleStatus>
+<mso:ArticleStatus msdt:dt="string">Not started</mso:ArticleStatus>
 <mso:HoursDraftingEstimated msdt:dt="string">6.00000000000000</mso:HoursDraftingEstimated>
 <mso:HoursEditingEstimated msdt:dt="string">0.500000000000000</mso:HoursEditingEstimated>
 <mso:Sample msdt:dt="string">z</mso:Sample>
@@ -70,22 +70,18 @@ p.note {
 <mso:Week msdt:dt="string">9.00000000000000</mso:Week>
 <mso:AssignedTo1 msdt:dt="string">19</mso:AssignedTo1>
 <mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Brian Miller</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
-<mso:TestComments msdt:dt="string"></mso:TestComments>
-<mso:PercentResearch msdt:dt="string">0.950000000000000</mso:PercentResearch>
-<mso:PercentWriting msdt:dt="string">0.0500000000000000</mso:PercentWriting>
-<mso:HoursDraftingActual msdt:dt="string">8.00000000000000</mso:HoursDraftingActual>
 </mso:CustomDocumentProperties>
 </xml><![endif]-->
 </head>
 
 <body>
-<p>Brief description of what this article accomplishes. Include any keywords indicated in the spreadsheet. This blurb will not appear with the content.</p>
-    <h1>Article Title from Spreadsheet</h1>
+<p>Install NGINX from source with WebDAV support.</p>
+    <h1>Configure WebDAV Access for your NGINX Server - ALL DISTROS</h1>
     
-    <p><strong>Difficulty</strong>: <em><u>Value from spreadsheet</u></em><br/>
-        <strong>Time</strong>: <em><u>Time value</u></em></p>
+    <p><strong>Difficulty</strong>: <em><u>4</u></em><br/>
+        <strong>Time</strong>: <em><u>1 hour</u></em></p>
 
-    <p>Assumptions: you have a C compiler, Zlib Compression Library, PCRE, libexpat-dev, and OpenSSL installed</p>
+    <p>Web Distributed Authoring and Versioning (WebDAV) is a protocol allowing users to create, change and move documents on a server.&nbsp; Since NGINX does not come with a complete set of the WebDAV directives, we will build NGINX from source and add in the missing pieces when we compile the Source code.&nbsp; This article assumes you have a C compiler, Zlib Compression Library, PCRE, libexpat-dev, and OpenSSL installed on a clean Linux system.</p>
 
     <h2>Preparation</h2>
     
@@ -127,9 +123,29 @@ p.note {
                <li>Install it   
                    <div class="hacker">sudo make install</div>
                </li>
+   
+        </ol>
+    <h2>Start NGINX</h2>
+    <ol>
+                <li>Change the perms on the error log so nginx can write to it. 
+                   <div class="hacker">sudo chmod 666 /var/log/nginx/error.log </div>
+               </li>
+               <li>Change the perms on the nginx directory so nginx can write to it. 
+                   <div class="hacker">sudo chmod 666 /etc/nginx </div>
+               </li>
+          <li>Create NGINX user  
+                   <div class="hacker">sudo useradd nginx</div>
+               </li>
+        
+             <li>Change the perms on the nginx directory so nginx can traverse it to get to the nginx configuration file. 
+                   <div class="hacker">sudo chmod a+x /etc/nginx </div>
+               </li>
+         <li>Start NGINX  
+                   <div class="hacker">sudo /usr/sbin/nginx</div>
+               </li>
         </ol>
 <h2>Configure NGINX </h2>
-               <p>NGINX supports <code>dav_access</code>,<code>dav_methods</code>, and <code>dav_ext_methods</code> in the http, server and location contexts.  The folloing excerpts illustrate some of the possibilities:</p>
+               <p>NGINX supports <code>dav_access</code>,<code>dav_methods</code>, and <code>dav_ext_methods</code> in the http, server and location contexts.  The following excerpts illustrate some of the possibilities:</p>
     <ol>      
     <li>Global WebDAV access to all with all methods enabled 
          <div class="hacker"><pre># http context
@@ -161,7 +177,7 @@ location / {
 server {
         listen 80;
 ...
-dav_access group:rw all:r;
+dav_access group:rw all:r; 
 dav_methods PUT DELETE MKCOL COPY;
 dav_ext_methods PROPFIND OPTIONS;
 ...
@@ -182,17 +198,10 @@ dav_methods on;
                              </pre></div>
     </li>
 
-
-               <li>List item</li>
                </ol>
-
-
-
-
-    <p>Include any of the following elements as needed:</p>
-
-    <div class="hacker">http://nginx.org/download/nginx-1.8.0.tar.gz</div>
-
-
+             
+    <h2>Next steps</h2>
+    <p>You have just installed NGINX from source with dav and dav extension modules added.  You probably will want to <a href="http://17689%20-%20NGINX%20Configuration%20and%20Context%20Guide%20-%20ALL%20DISTROS.html">configure Nginx</a> to suit your needs. </p>
+   
 </body>
 </html>
