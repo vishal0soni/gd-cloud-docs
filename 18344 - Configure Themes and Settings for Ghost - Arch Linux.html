@@ -4,13 +4,10 @@
 
 <head>
 
-<!--Article Number is __________ (fill in blank)-->
-
-<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
 
 
 <title>Configure Themes and Settings for Ghost - Arch Linux</title>
-<style>
+<style type="text/css">
 div.hacker {
 background-color:#666;
 border:1px solid #ccc;
@@ -75,45 +72,46 @@ p.note {
 <p><strong>Difficulty:</strong> <em>2</em></p>
 <p><strong>Time:</strong> <em>30 minutes</em></p>
 
-<p>Ghost is an open-source project for blogging and blogger. It provides a simple blogging platform, fast to setup and easy to setup. Besides, it provides good customization options to the users. This article will assist you with the steps to set up a Ghost blogging platform using NGINX on your Ubuntu platform. The themes used in this tutorial are available on internet as freeware from GhostMarketplace.</p>
+<p>Ghost is an open-source project for  bloggers. It provides a simple blogging platform, is fast and easy to set up, and provides good customization options. This article  helps you set up a Ghost blogging platform using Nginx on  Arch Linux. The theme used is available  as freeware from the Ghost Marketplace.</p>
 
-<h2>Change the Ghost Themes</h2>
+<h2>Change the Ghost theme</h2>
 <ol>
-<li>Login to your instance and change directory to ghost theme using the below command
+<li>Log in, and then move to the Ghost themes directory.
 	<div class="hacker">cd /var/www/ghost/content/themes/</div>
 </li>
-<li>Install git and gitcore if not already installed
+<li>Install Git and git-core unless they're  already installed.
 	<div class="hacker">sudo pacman -S git</div>
 </li>
-<li>Clone the theme from the GitHub project
+<li>Clone the N-Coded theme (as an example) from the GitHub project.
 	<div class="hacker">sudo git clone https://github.com/polygonix/N-Coded.git</div>
 </li>
-<li>Change the ownership of the ghost user
+<li>Change the ownership of the Ghost user.
 	<div class="hacker">sudo chown -R http:http N-Coded</div>
 
-<p>In case you get an invalid user error, then please create ghost user then retry.</p>
+<p>If you receive an invalid user error,  please create a Ghost user and then retry.</p>
 </li>
-<li>Start npm services
-<div class="hacker">sudo npm start --production</div>
+<li>Start npm services.
+  <div class="hacker">sudo npm start --production</div>
 </li>
 </ol>
 
-<h2>Change the Settings</h2>
+<h2>Change the settings</h2>
 <ol>
-<li>Open your browser and type <em>http://your_IP_address/ghost/settings/general</em> in the address bar
+<li>In a browser,  type <strong>http://your_IP_address/ghost/settings/general</strong> in the address bar.
+  <br />
+  You are redirected to the time setting page. </li>
+<li>Fill in the required information about your blog and credentials on the  setup form. <br /><img src="images/18344-1.png" alt="18344" />
 </li>
-<li>It will redirect you to the time setting page. Fill the required information about your blog and credentials here. You will see the first setup form as:
-<br /><img src="images/18344-1.png" alt="18344" />
- </li>
-<li>In the general setting page, scroll down to see theme label. Select the theme from the drop down and click Save
- <br /><img src="images/18344-2.png" alt="18344" />
+<li>Click <strong>OK, LET'S DO THIS</strong>.</li>
+<li>In the general settings page, select the theme from the <strong>Theme</strong> dropdown list, and click <strong>Save</strong>. <br />
+  <img src="images/18344-2.png" alt="18344" />
 </li>
-<li>Refresh your ghost public home page to see the blog with updated theme  
+<li>Refresh your Ghost public home page to see the blog with the updated theme  
 <br /><img src="images/18344-3.png" alt="18344" />
 </li>
 </ol>
-<h2>Next Steps</h2>
-<p>In this article, we reviewed the steps involved in configuring the themes and settings for Ghost on Arch Linux.</p>
+<h2>Conclusion</h2>
+<p>In this article, we reviewed the steps to configure  themes and settings for Ghost on Arch Linux.</p>
 
 </body>
 </html>
