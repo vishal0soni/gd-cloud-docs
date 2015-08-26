@@ -6,11 +6,8 @@
 
 <!--Article Number is 19003-->
 
-<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
-
-
 <title>Monitor OSSEC Agents using OSSEC Server - CentOS, Fedora</title>
-<style>
+<style type="text/css">
 div.hacker {
 background-color:#666;
 border:1px solid #ccc;
@@ -71,15 +68,13 @@ p.note {
 <body>
 <p>Setting up OSSEC to monitor Agents, Security and Monitoring</p>
 	<h1>Monitor OSSEC Agents using OSSEC Server - CentOS, Fedora</h1>
-	<p><strong>Difficulty: </strong> 4</p>
-	<p><strong>Time: </strong> 1 hour</p>
+	<p><strong>Difficulty: </strong> 4<br />
+	<strong>Time: </strong> 1 hour</p>
 	<p>
-		This article explains how to monitor OSSEC agents with OSSEC server on CentOS and Fedora.
+		This article explains how to monitor OSSEC agents with OSSEC server on CentOS and Fedora. <!--What does OSSEC stand for?-->
 	</p>
-	<p class="note">
-		Note: You will need access to sudo privileges to complete all the steps.
+	<p class="note">You will need access to sudo privileges to complete all the steps.
 	</p>
-	<!--prerequisites starts-->
 	<h2>Prerequisites</h2>
 	<ul>
 		<li>
@@ -89,54 +84,54 @@ p.note {
 			Iptable should be enabled on both the droplets.
 		</li>
 	</ul>
-	<!--prerequisites ends-->
-	
-	<!--step1 starts-->
-	<h2>Step 1 - Download OSSEC and verify on server and agent</h2>
+  
+	<h2>Download OSSEC and verify on server and agent</h2>
 	<ol>
 		<li>
-			<p>First of all update the package database</p>
+			<p>Update the package database.</p>
 			<div class="hacker">
 				sudo yum update
 			</div>
 		</li>
 		<li>
-			<p>Install the following on server </p>
+			<p>Install the following on server: </p>
 			<div class="hacker">
 				<p>sudo yum groupinstall 'Development Tools'</p>
 				<p>sudo yum install inotify-tools </p>
 			</div>
 		</li>
 		<li>
-			<p>On agent, install the following packages </p>
+			<p>On agent, install the following packages: </p>
 			<div class="hacker">
 				sudo yum groupinstall 'Development Tools'
 			</div>
 		</li>
 		<li>
-			<p>Install the following package on both the servers to save any change you make in iptables </p>
+			<p>Install the following package on both the servers to save any change you make in <code>iptables</code>. </p>
 			<div class="hacker">
 				<p>sudo yum install iptables-services</p>
 				<p>sudo systemctl enable iptables</p>
 			</div>
-			<p>To save iptables rule permanently, type:</p>
+			<p>To save <code>iptables rule</code> permanently, type:</p>
 			<div class="hacker">
 				sudo service iptables save
 			</div>
 		</li>
 		<li>
-			<p>On both the droplets download OSSEC and its checksum file </p>
+			<p>On both the droplets, download OSSEC and its checksum file. </p>
 			<div class="hacker">
 				
 				<p>wget -U ossec http://www.ossec.net/files/ossec-hids-2.8.1.tar.gz</p>
 				<p>wget -U ossec http://www.ossec.net/files/ossec-hids-2.8.1-checksum.txt</p>
 				
-			</div>
-			<p>After downloading both the files, type the following command to verify md5sum of the compressed tarball</p>
+			</div></li>
+  <!--Please continue formatting the rest of the produres as list items. Remember that the close </li> tag goes after the div. No close break is needed before a <div> tag.  Also, tag buttons as <strong>. -->    
+      
+			<p>After downloading both the files, type the following command to verify md5sum of the compressed tarball:</p>
 			<div class="hacker">
 				<p>md5sum -c ossec-hids-2.8.1-checksum.txt</p>
 			</div>
-			<p>It would display the following:</p>
+			<p>It <!--What is it?--> would display the following:</p>
 			<div class="hacker">
 				<p>ossec-hids-2.8.1.tar.gz: OK</p>
 				<p>md5sum: WARNING: 1 line is improperly formatted</p>
@@ -152,9 +147,9 @@ p.note {
 			</div>
 		</li>
 	</ol>
-	<!--step1 ends-->
-	<!--step2 starts-->
-	<h2>Step 2 - Install the OSSEC server</h2>
+
+
+	<h2>Install the OSSEC server</h2>
 	<ol>
 		<li>
 			<p>Type the following command to untar the file</p>
@@ -209,9 +204,8 @@ p.note {
 			</div>
 		</li>
 	</ol>
-	<!--step2 ends-->
-	<!--step3 starts-->
-	<h2>Step 3 - Configure OSSEC Server</h2>
+
+	<h2>Configure OSSEC Server</h2>
 	<ol>
 		<li>
 			<p>OSSEC agent is not yet installed, so we will configure it later. Here, let us configure the server.</p>
@@ -253,9 +247,8 @@ p.note {
 			</div>
 		</li>
 	</ol>
-	<!--step3 ends-->
-	<!--step4 ends-->
-	<h2>Step 4 - Install OSSEC Agent</h2>
+
+	<h2>Install OSSEC Agent</h2>
 	
 	<ol>
 		<li>
@@ -303,11 +296,10 @@ p.note {
 			Now server and agent both have been installed but they can't communicate.
 		</li>
 	</ol>
-	<!--step4 ends-->
-	<!--step5 starts-->
-	<h2>Step 5 - Add Agent to the Server</h2>
+
+	<h2>Add Agent to the Server</h2>
 	<p class="note">
-		You are already operating as a root from step 3 so you don't need to use sudo now.
+		You are already operating as a root from the previous step, so you don't need to use sudo now.
 	</p>
 	<ol>
 		<li>
@@ -317,7 +309,7 @@ p.note {
 			</div>
 		</li>
 		<li>
-			<p>You will see options as shown below, type "A" and press 'Enter'</p>
+			<p>You will see options as shown below, type "A" and press <strong>Enter</strong>.</p>
 			<div class="hacker">
 				<pre>
 				(A)dd an agent (A).
@@ -370,9 +362,8 @@ p.note {
 			<p>Press 'Enter' to return to main menu and "Q" to quit</p>
 		</li>
 	</ol>
-	<!--step5 ends-->
-	<!--step6 starts-->
-	<h2>Step 6 - Import key to Agent from Server</h2>
+
+	<h2>Import key to Agent from Server</h2>
 	<p>These actions are to be completed on Agent. Type "sudo su" to change to root to start.</p>
 	<ol>
 		<li>
@@ -395,7 +386,7 @@ p.note {
 			<p>After choosing "I" follow the direction to paste the key from server and confirm when it asks.</p>
 		</li>
 		<li>
-			<p>Press 'Enter' to return to the main menu and choose "Q" to quit</p>
+			<p>Press <strong>Enter</strong> to return to the main menu and choose "Q" to quit</p>
 			<div class="hacker">
 				<pre>
 					Confirm adding it?(y/n): <span class="red-text">y</span>
@@ -405,9 +396,8 @@ p.note {
 			</div>
 		</li>
 	</ol>
-	<!--step6 ends-->
-	<!--step7 starts-->
-	<h2>Step 7 - Allow UDP Port 1514 traffic through firewalls</h2>
+
+	<h2>Allow UDP Port 1514 traffic through firewalls</h2>
 	<p>Communication on both sides take place on UDP port 1514, so you will have to add a rule to iptables for both ends.</p>
 	<ol>
 		<li>
@@ -437,9 +427,8 @@ p.note {
 			</div>
 		</li>
 	</ol>
-	<!--step7 ends-->
-	<!--step8 starts-->
-	<h2>Step 8 - Restart OSSEC Agent and Server</h2>
+
+	<h2>Restart OSSEC Agent and Server</h2>
 	<ol>
 		<li>
 			<p>Restart both the servers</p>
@@ -458,7 +447,6 @@ p.note {
 			</div>
 		</li>
 	</ol>
-	<!--step8 ends-->
 	<h2>Next Step</h2>
 	<p>
 		After following all these steps, you should be reciveing alerts from both the ends. You may further customize settings 
