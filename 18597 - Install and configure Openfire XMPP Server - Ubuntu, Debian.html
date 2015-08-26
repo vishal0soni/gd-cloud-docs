@@ -75,67 +75,64 @@ p.note {
 <p><strong>Difficulty:</strong> <em>2</em></p>
 <p><strong>Time:</strong> <em>20 minutes</em></p>
 
-<p>In this article, we will assist you to understand the installation and configuration of Openfire XMPP Server on Ubuntu and Debian.</p>
+<p>This article will help you to understand the installation and configuration of Openfire XMPP Server on   Debian or Ubuntu.</p>
+<p>Extensible Messaging and Presence Protocol (XMPP) is an XML-based communication protocol for middleware. It enables the near-real-time exchange of structured yet extensible data between any two or more network entities.</p>
+<p>Openfire<!--What is the relationship between XMPP and Openfire? As is, these two paragraphs are disjointed pieces of information. cj --> enables collaboration in real time and provides a tightly secured and high performing server. You can use Open Source Apache License for Openfire and can easily set up and configure it using Java. </p>
 
-<h2>Understanding XMPP</h2>
-<p>Extensible Messaging and Presence Protocol (XMPP) is a XML-based communication protocol for middleware. It enables the near-real-time exchange of structured yet extensible data between any two or more network entities.</p>
+<p class="note">Openfire disallows  chat options. </p>
 
-<h2>Understanding Openfire</h2>
-<p>Openfire enables collaboration in real time and provides a tightly secured and high performing server. You can use Open Source Apache License for Openfire. You can easily set it up and configure using Java. </p>
-
-<p class="note">Note: Openfire doesn't allow any chat options. </p>
-
-<h2>Step 1: Installing Openfire</h2>
+<h2>Install Openfire</h2>
 <ol>
-<li>Update the operating system
+<li>Update the operating system.
 		<div class="hacker">sudo apt-get update</div>
 </li>        
-<li>If java is installed in your system then check the version of java using the following command
-		<div class="hacker">Java  -version</div>
+<li>If Java is installed, check the version:<!--What do they do with this version  information? cj -->
+	<div class="hacker">Java  -version</div>
 </li>        
-<li>If java is not installed in your system then run the following command.
-      	<div class="hacker">sudo apt-get install default-jre</div>
+<li>If Java is not installed, run the following command.<!--What does the command do? cj -->
+   	<div class="hacker">sudo apt-get install default-jre</div>
 </li>
-<li>Download the Openfire 
+<li>Download  Openfire. 
 
 	<div class="hacker">sudo 	wget -O openfire.deb http://www.igniterealtime.org/downloadServlet?filename=openfire/openfire_3.8.2_all.deb</div>
+This command initiates the download of the Openfire Debian package to <code>openfire.deb</code>. </li>
+<li>Install the package.
+  <div class="hacker">sudo dpkg --install openfire.deb</div>
 </li>
-<li>This will initiate the download of the Openfire Debian package to openfire.deb. Next, install the package:
-
-	<div class="hacker">sudo dpkg --install openfire.deb</div>
-	<p>Openfire has been successfully installed in your system.</p>
+<li>
+Visit <strong>http://<em><u>your_IP</u></em>/9090</strong> on any browser, then Openfire wizard
+<!--Words and details missing. cj -->
 </li>
-<li><p>Now visit http:// your_IP/9090 on any browser, then Openfire wizard</p>
-</li>
-<li>The first page will allow you to choose your language while the second page is server setting page where you can define your domain name or IP. See the below image:
+<li>The first page will allow you to choose your language while the second page is server setting page where you can define your domain name or IP. See the below image:<!--This step needs an imperative statement. What does the user DO? cj -->
 <br /><img src="images/18597-1.png" alt="18597" />
 </li>            
 
-<li>Once you are done with the setup, login as an Admin on Openfire login page
-<br /><img src="images/18597-2.png" alt="18597" />
+<li>After you finish the setup, log in as an administrator on the Openfire login page.<!--Details missing, How did they get to this page? cj --><br /><img src="images/18597-2.png" alt="18597" />
 </li>           
 
-<li>To see server information, click on the 'server manager' tab
-<br /> <img src="images/18597-3.png" alt="18597" /><br /><br />
+<li> Click  the <strong>Server manager</strong> tab to see server information.<!--Where is this tab? It doesn't seem to be in the above image. Details missing? --><br /> 
+  <img src="images/18597-3.png" alt="18597" /><br /><br />
 </li>           
 
-<li>If you want a secure connection to the server then go to Server Settings -> Registration first and then login and disable the required options. 
+<li>If you want a secure connection to the server, go to Server Settings -> Registration. Then log in and disable the required options. <!--How will they know what the required options are? cj -->
 <br /><img src="images/18597-4.png" alt="18597" />
 </li>
 </ol>
         
-<h2>Step 2: Execute and Stop Openfire</h2>
-<ol>
-<li>If you need to stop Openfire, then type the following command:
+<h2>Start and stop Openfire</h2>
+<ul>
+<li>Stop Openfire.
 	<div class="hacker">sudo /etc/init.d/openfire stop</div>
-</li>    
-<li>To start Openfire, type:
+</li>  </ul>
+
+<ul>  
+<li>Start Openfire.
 	<div class="hacker">sudo /etc/init.d/openfire start</div>
 </li>    
-</ol>
+</ul>
 
-<h2>Next Step</h2>
-<p>By using all the above steps you'll be able to install and configure Openfire XMPP server on Ubuntu and Debian.</p>
+<h2>Conclusion</h2>
+<p>You have installed and configured Openfire XMPP server.</p>
 
 </body>
 </html>
