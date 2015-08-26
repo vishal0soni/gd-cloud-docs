@@ -85,54 +85,56 @@ Moved to github</mso:ReviewComments>
 </head>
 
 <body>
-        <p>Describes how to install Apache, MySQL, PHP (LAMP) stack on Arch Linux</p>
+        <p>Describes how to install Apache, MySQL, PHP (LAMP) stack on Arch Linux.</p>
     <h1>Build a LAMP stack for Python -  Arch Linux</h1>
     
         <p><strong>Difficulty</strong>: <em><u>3</u></em><br/>
-        <strong>Time</strong>: <em><u>4.00</u></em></p>
-        <!--Conrad, is this minutes or hours?-->
+        <strong>Time</strong>: <em><u>4 minutes</u></em></p>
+     
 
-        <p>The LAMP stack is a group of open source software used to get web servers up and running. The acronym stands for Linux, Apache, MySQL, and PHP. Arch Linux uses the pacman installer which can update the system and install all of the required packages for each part of the LAMP stack. The steps in this article require the user to have root privileges.</p>
-        <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17324%20-%20Initial%20Server%20Setup%20-%20Arch%20Linux.html">How to install Arch Linux</a>        
+        <p>The LAMP stack is a group of open source software used to get web servers up and running. The acronym stands for Linux, Apache, MySQL, and PHP. Arch Linux uses the pacman installer, which can update the system and install all of the required packages for each part of the LAMP stack. The steps in this article require the user to have root privileges.</p>
+<p>If you have not installed Arch Linux, <a href="https://blueprintcs.sharepoint.com/sites/gdcmp/Articles/17324%20-%20Initial%20Server%20Setup%20-%20Arch%20Linux.html">install it</a> before starting. </p>       
         
     <h2>Install Apache</h2>
-        <p>Before installing any of the LAMP programs, we should update the package manager: </p>
+ <ol>
+        <li>Before installing any of the LAMP programs, update the package manager:
 
-        <div class="hacker">sudo pacman -Syu</div>
+        <div class="hacker">sudo pacman -Syu</div></li>
 
-        <p>Once the update is complete, you can install Apache.</p>
-        <div class="hacker">sudo pacman -S apache</div>
-
-        <p>After Apache is installed, we need to make a couple of changes in the configuration.
- <!--Conrad, make this a new procedure with an <h3> heading "Configure Apache"-->       
+        <li>Install Apache.
+        <div class="hacker">sudo pacman -S apache</div></li>
+     </ol>
+        <p>After Apache is installed, you need to make a couple of changes in the configuration.</p>       
      
      <h3>Configure Apache</h3>
-        <br> Open up the apache configuration file:</p>
-        <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div>
+<ol>
+<li> Open the Apache configuration file.
+        <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div></li>
 
-        <p>Comment out the<code> unique_id_module</code> (you can use CTRL-W to find it quickly), make sure there is a pound(#) at the beginning of the line:</p> 
-        <div class="hacker">#LoadModule unique_id_module<br> modules/mod_unique_id.so</div>
+        <li>Comment out the <code.unique_id_module</code> (Use CTRL-W to find it quickly). Make sure there is a pound(#) at the beginning of the line: 
+        <div class="hacker">#LoadModule unique_id_module<br> modules/mod_unique_id.so</div></li>
 
-        <p>Restart Apache:</p>
-        <div class="hacker">sudo systemctl restart httpd</div>
+<li>Restart Apache
+        <div class="hacker">sudo systemctl restart httpd</div></li>
     
-        <p>Next</p>
+        <p>Next</p> <!--What does this step do?-->
         <div class="hacker">sudo vim /etc/hosts</div>
 
         <p>Add your hostname to the end of the line beginning with <code>127.0.0.1</code>.</p>
         <div class="hacker">127.0.0.1 localhost.localdomain localhost <hostname></div>
 
-    <h2>Install MySQL</h2>
-    <!--Conrad - make this into a table-->
+    <h2>Install MySQL</h2>  
+    
         <p>To install MySQL, in the same terminal type in these commands:</p>
         <div class="hacker">sudo pacman -S mysql</div>
 
         <p>If it ask you anything like what is seen below:</p>
 	<div class="hacker">:: There are 2 providers available for mysql:<br/> :: Repository extra<br/> 1) mariadb<br/> :: Repository community<br/> 2) percona-server}</div>
 
-        <p class="note">Press Enter, unless you know you do not want the defaults.</p>
+        <p class="note">Press <strong>Enter</strong>, unless you know you do not want the defaults.</p>
  
-        <p>(MariaDB is now the default database solution for Arch Linux) MariaDB is an open source drop-in replacement for MySQL, and all system commands that reference MySql are compatible with it.</p>
+        <p>MariaDB is now the default database solution for Arch Linux.) MariaDB is an open source drop-in replacement for MySQL, and all system commands that reference MySql are compatible with it.</p>
+        
         <p>Install the MariaDB data directory.</p>
 
         <div class="hacker">sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql</div>
@@ -140,14 +142,14 @@ Moved to github</mso:ReviewComments>
         <p>After you have installed MySQL, start it up:</p>
         <div class="hacker">sudo systemctl start mysqld</div>
 
- <!--Conrad, Add a <h3> heading and then the rest steps -->
-        <h3>Finish up by running the MySQL set up script.</h3>
-
-        <div class="hacker">sudo mysql_secure_installation</div>
+<h3>Set up MySQL</h3>
+<!--You made the heading, but forgot to make the steps.  Here's a start.-->
+<ol>
+<li>Run the MySQL set up script.
+        <div class="hacker">sudo mysql_secure_installation</div></li>
 
         <p>During this process it will ask you for your current MySQL root password (not to be confused with your server password) and, since it has not yet been set, simply press enter.</p>
         <p>When prompted, “Set root password?” type Y, and afterwards enter in your new MySQL root password.<br> Once root password is set just say YES to the remaining options as seen below:</p>     
- <!--Conrad - this would be better as a table. Susan can help.-->
 <table style="width:100%;">
             <tr style ='font-weight: bold;'>
                 <td width='60%'>Prompt</td>
@@ -155,19 +157,20 @@ Moved to github</mso:ReviewComments>
                 <td>Success Message</td>
             </tr>
                 <tr>
-                    <td><div class='hacker'>By default, a MySQL installation has an anonymous user, allowing anyone to log into MySQL without having to have a user account created for them. This is intended only for testing, and to make the installation go a bit smoother. You should remove them before moving into a production environment. Remove anonymous users? [Y/n]</div></td>
+                    <td><div class='hacker'>You should remove them before moving into a production environment. Remove anonymous users?</div></td>
+                    <!--The reader can see the text. Just include the questions.-->
                 
-                    <td style="vertical-align: top; text-align:center;">y</td>
+                    <td style="vertical-align: top; text-align:center;"><strong>y</strong></td>
                     <td style="vertical-align: top;">Success!</td>
                 </tr>
 
                 <tr>
-                    <td><div class='hacker'>Normally, root should only be allowed to connect from 'localhost'. This ensures that someone cannot guess at the root password from the network. Disallow root login remotely? [Y/n]</div></td>
+                    <td><div class='hacker'> Disallow root login remotely?</div></td>
                 
                     <td style="vertical-align: top; text-align:center;">y</td>
                     <td style="vertical-align: top;">Success!</td>
                 </tr>
-
+<!--Continue the rest of the table.  Just leave the question.  Tag the anseer as <strong>.-->
                 <tr>
                     <td><div class='hacker'>By default, MySQL comes with a database named 'test' that anyone can access. This is also intended only for testing, and should be removed before moving into a production environment. Remove test database and access to it? [Y/n]</div></td>
                 
@@ -197,27 +200,27 @@ Moved to github</mso:ReviewComments>
         </table>
 
         <p>All done!  If you've completed all of the above steps, your MariaDB installation should now be secure.</p>
-        <p>Thanks for using MariaDB!</p>
 
-        <p>Once you're done installing MySQL, finish the LAMP stack by installing PHP.</p>
+        <p>After you're done installing MySQL <!--MariaDB?-->, finish the LAMP stack by installing PHP.</p>
+</ol>
 
-    <h2>Install PHP</h2>
+<h2>Install PHP</h2>
 
-    
+  
         <p>PHP is an open source web scripting language that is widely used to build dynamic webpages.</p>
-<!--Conrad, make these into steps with the <ol> and <li> tags.-->
       <ol>
-        <li><b>To install PHP, in the same terminal type in these commands:</b></li>
-        <div class="hacker">sudo pacman -S php php-apache</div>
-        <li><b>PHP should also be added to the apache configuration file:</b></li>
-        <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div>
-        <li><b>Paste in this text block within the config.</b></li>
-       </ol>
-
-        <div class="hacker"># Use for PHP 5.x:<br>
+        <li>To install PHP, in the same terminal, type in these commands:
+        <div class="hacker">sudo pacman -S php php-apache</div></li>
+        
+        <li>Add PHP to the Apache configuration file.
+        <div class="hacker">sudo vim /etc/httpd/conf/httpd.conf</div></li>
+        
+        <li>Paste in this text of block within the config file.
+         <div class="hacker"># Use for PHP 5.x:<br>
 LoadModule php5_module       modules/libphp5.so
 <br>AddHandler php5-script php<br>
-Include conf/extra/php5_module.conf</div>
+Include conf/extra/php5_module.conf</div></li>
+       </ol>
 
         <h2>Next steps</h2>
         <p>Congratulations! You now have a LAMP stack on your Arch Linux server, you can now set up phpMyAdmin, Install WordPress, go on to do more with MySQL (A Basic MySQL Tutorial), Create an SSL Certificate, or Install an FTP Server.</p>

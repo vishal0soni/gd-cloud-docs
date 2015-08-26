@@ -4,9 +4,10 @@
 
 <head>
 
-<!--Article Number is 18228 (fill in blank)-->
+<!--Article Number is 18228 
+Blocked for questions.
+-->
 
-<!--Use this template for articles that explain or describe something (such as an operating system). For articles that include steps for accomplishing a task (for example, installing), use the Informational template instead.  -->
 
 
 <title>Build a LAMP stack for Python - Debian, Ubuntu</title>
@@ -84,29 +85,26 @@ td:nth-child(1) {font-weight:bold;}
 
 <body>
         <p>Describes how to install Apache, MySQL, PHP (LAMP) stack on Debian and Ubuntu Linux</p>
-    <h1>Build a LAMP stack for Python -  Debian, Ubuntu Linux</h1>
-    <!--To Conrad.  Should this be Arch Linux, Debian, Unbuntu? or is Debian and Debian Linux the same thing? -->
+    <h1>Build a LAMP stack for Python -  Debian, Linux, Ubuntu</h1>
     
-        <p><strong>Difficulty</strong>: <em><u>3</u></em><br/>
-        <strong>Time</strong>: <em><u>4.00</u></em></p>
-        <!-- To Contrad, is this 4 hours or 4 minutes-->
+        <p><strong>Difficulty</strong>: <em><u>3</u></em><br />
+        <strong>Time</strong>: <em><u>4 minutes</u></em></p>
 
-        <p>The LAMP stack is a group of open source software used to get web servers up and running. The acronym stands for Linux, Apache, MySQL, and PHP. Debian, Ubuntu Linux <!-- To Conrad. So, is Debian Linux wrong above?  What about Ubuntu?--> uses the apt-get installer which can update the system and install all of the required packages for each part of the LAMP stack. The steps in this article require the user to have root privileges.</p>
-        <a href="https://www.debian.org/releases/wheezy/i386/">How to install Debian</a>
-        <a href="https://help.ubuntu.com/community/Installation">How to install Ubuntu</a>
-<!--To Conrad, we should include the links to install the OS.>
-        17325 - Initial Server Setup - Debian
-        17321 - Initial Server Setup - Ubuntu        
+        <p>The LAMP (Linux, Apache, MySQL, and PHP) stack is a group of open source software used to get web servers up and running. Debian, Linux, and Ubuntu use the apt-get installer, which can update the system and install all of the required packages for each part of the LAMP stack. The steps in this article require the user to have root privileges.</p>
+        If you have not installed Debian or Ubuntu, these articles explain how to do so:     <ul>
+        <li><a href="17325 - Initial Server Setup - Debian">How to install Debian</a></li>
+        <li><a href="17321 - Initial Server Setup - Ubuntu">How to install Ubuntu</a></li>
+        </ul>
+   
 
-    <h2>Step One - Install Apache</h2>
-<!-- Susan, can you make this section into a list? -->
-        <p>Before installing any of the LAMP programs, we should update the package manager: </p>
+<h2>Install Apache</h2>
+        <p>Before installing any of the LAMP programs, you should update the package manager: </p>
 
         <div class="hacker">
 sudo apt-get update
 </div>
 
-        <p>Once the update is complete, we can install Apache.</p>
+        <p>After the update is complete, we can install Apache.</p>
         <div class="hacker">
 sudo apt-get install apache2
 </div>         
@@ -129,7 +127,7 @@ sudo apt-get install apache2
 
         <div class="hacker">Enter current password for root (enter for none): <br/> <br/>  OK, successfully used password, moving on... </div>
 
-        <p>Then the prompt will ask you if you want to change the root password. Go ahead and choose "N" and just respond "YES" to the remaining options as seen below:
+        <p>Then the prompt will ask you if you want to change the root password. Go ahead and choose <strong>n</strong> and just respond <strong>yes</strong> to the remaining options, as seen below:
            Once root password is set</p> 
       
 
@@ -184,19 +182,21 @@ sudo apt-get install apache2
         <p>All done!  If you've completed all of the above steps, your MariaDB installation should now be secure.</p>
         <p>Thanks for using MariaDB!</p>
 
-        <p>Once you're done installing MySQL, finish the LAMP stack by installing PHP.</p>
+        <p>Once you've installed MySQL, finish the LAMP stack by installing PHP.</p>
 
     <h2>Install PHP</h2>
-    <!--To Susan, could you put this into a list? -->
+    
         <p>PHP is an open source web scripting language that is widely used to build dynamic webpages.</p>
-        <p>To install PHP, in the same terminal type in these commands:</p>
-        <div class="hacker">sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt</div>
-        <p>After you answer "yes" to the prompt twice, PHP will install itself. </p>
-        <p>It may also be useful to add PHP to the directory index, to serve the relevant php index files:</p>
-        <div class="hacker">sudo vim /etc/apache2/mods-enabled/dir.conf</div>
-        <p>Add <code>index.php</code> to the beginning of the <code>DirectoryIndex</code> file line. The page should now look like this:</p>
+        <ol>
+        <li>To install PHP, in the same terminal type in these commands:
+        <div class="hacker">sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt</div></li>
+        <li>After you answer <strong>yes</strong> to the prompt twice, PHP will install itself. </li>
+        <li>It may also be useful to add PHP to the directory index, to serve the relevant php index files:
+        <div class="hacker">sudo vim /etc/apache2/mods-enabled/dir.conf</div></li>
+        <li>Add <code>index.php</code> to the beginning of the <code>DirectoryIndex</code> file line. The page should now look like this:
         
-        <div class="hacker">IfModule mod_dir.c>"<br>&nbsp;&nbsp;&nbsp;&nbsp;DirectoryIndex index.php index.html index.cgi index.pl index.php index.xhtml index.htm<br>/IfModule</div>
+        <div class="hacker">IfModule mod_dir.c>"<br>&nbsp;&nbsp;&nbsp;&nbsp;DirectoryIndex index.php index.html index.cgi index.pl index.php index.xhtml index.htm<br>/IfModule</div> </li>
+        </ol>
         
         <h2>Next steps</h2>
         <p>Congratulations! You now have a LAMP stack on your Debian, Ubuntu Linux server, you can now set up phpMyAdmin, Install WordPress, go on to do more with MySQL (A Basic MySQL Tutorial), Create an SSL Certificate, or Install an FTP Server.</p>
