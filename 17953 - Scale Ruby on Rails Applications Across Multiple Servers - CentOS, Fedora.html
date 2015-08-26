@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <title>Scale Ruby on Rails Applications Across Multiple Servers - CentOS, Fedora</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <style type="text/css">
+    div.hacker {
+        background-color: #666;
+        border: 1px solid #ccc;
+        color: #fff;
+        font-family: "Lucida Console", "Courier New", Courier, fixed;
+        font-size: 95%;
+        line-height: 160%;
+        margin-bottom: 1.5em;
+        padding: 10px;
+    }
+    
+    p.note {
+        background-color: #ffffe6;
+        border: 1px solid #eee;
+        color: #666;
+        padding: .8em 1.6em;
+        margin: 15px 0;
+    }
+    
+    .warning {
+        border: 1px #d25100 solid;
+        padding: .5em 1em .5em 4em;
+        margin: 10px 20px 15px 20px;
+        background-image: url('@{help-img-path}/img_warning.gif');
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-color: #ededed;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        /* -moz-border-bottom-radius: 0;9 */
+        -webkit-border-bottom-radius: 0;
+        padding-top: 14px;
+        padding-bottom: 15px;
+    }
+    </style>
+
+    
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby on Rails, Scaling</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-scale-ruby-on-rails-applications-across-multiple-droplets-part-1, https://www.digitalocean.com/community/tutorials/how-to-scale-ruby-on-rails-applications-across-multiple-droplets-part-1</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">3</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Part of series, may need to include all together</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17953</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:ReviewComments msdt:dt="string">8/17 cj: Numerous problems. Please see comment within doc.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursDraftingEstimated msdt:dt="string">6.00000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<!--cj Please address the following problems:
+- The numbered outline in the introduction is not needed.
+Make sure that the text makes sense and that words are not left out.
+- Don't leave out articles (a, an, the).
+- Use code tags <code></code> for file names, directory names, and inline code snippets.
+- A numbered step should begin with a command statement, not with an introductory phrase. Similarly, the step should not be simply a noun phrase such as "Public IP" or "Installing Nginx." Use command statements.
+- Don't bury steps in the introduction to a procedure. For example, The "Preparing server build" section has two steps hidden in the introduction. They should be steps 1 and 2.
+- All steps should be numbered. For example, the first step in "Creating a Sample Rails Application" ("Create a sample application . . . ") should be number 1, not just a paragraph.
+- Headers should not include "Step #"
+- Headers for tasks should use a command statement. For example, "Prepare the server build," not "Preparing server build"
+- "Which" clauses should be surrounded by commas. Otherwise, use "that." -->
+
+
+<p>Scale Ruby on Rails Applications across Multiple Servers - CentOS, Fedora, Ruby on Rails, Scaling</p>
+<h1>Scale Ruby on Rails Applications across Multiple Servers - CentOS, Fedora </h1>
+
+<p><strong>Difficulty:</strong> <em>4</em></p>
+<p><strong>Time:</strong> <em>2 hr</em></p>
+
+<p>In this article, we will see ways to scale the Rails application which is configured with database servers like PostgreSQL and MySQL and then enable the app to distribute the load across multiple CentOS or Fedora servers using Unicorn to handle multiple incoming requests. It covers the following steps:</p>
+<ol>
+<li>Preparing server build </li>
+<li>Setup application servers
+	<ol>
+		<li>Setting up Ruby and Rails environment</li>
+		<li>Installing Unicorn</li>
+	</ol>
+</li>
+<li>Creating a sample Rails application</li>
+<li>Installing web applications
+	<ol>
+        <li>Configuring Unicorn</li>
+        <li>Running Unicorn</li>
+        <li>Finding server's IP address to configure Nginx</li>
+    </ol>
+</li>
+<li>Setting up Nginx as Reverse-Proxy And Load-Balancer
+	<ol>
+        <li>Setting up Nginx</li>
+        <li>Configuring Nginx</li>
+	</ol>
+</li>
+</ol>
+
+<h2>Scalable Application Server Overview</h2>
+<p>When it comes to building a scalable application server, two key elements are required:</p>
+<ul>
+    <li>Application servers – Unicorn or Rails</li>
+    <li>Webserver - Nginx</li>
+</ul>
+<p>Unicorn is often the preferred choice for the ease-of-debugging, process management and load balancing capabilities. Nginx is popular because of its light weight web server which will be used as a load-balancer with Unicorn based application for the following example.</p> 
+
+<h2>Step 1: Preparing Sever Build</h2>
+<p>First step would be to prepare the Ubuntu/Debian by installing the latest updates available. Login into the Ubuntu/Debian machine and perform these steps using the commands described here:</p>
+ 
+<ol>
+<li>Update the CentOS/Fedora server
+	<div class='hacker'>yum -y update --skip-broken</div>
+</li>
+<li>Install development tools
+	<div class='hacker'>yum groupinstall -y 'development tools'</div>
+</li>
+<li>Install the additional packages
+
+<div class='hacker'>
+<pre># Enable EPEL Repository
+sudo su -c 'rpm -Uvh http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm'
+sudo su -c 'rpm -Uvh http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm'</pre></div>
+
+      <div class='hacker'>yum install -y curl-devel nano sqlite-devel libyaml-devel</div>
+<div class='hacker'>
+<pre># Update all the additional packages downloaded
+yum -y update --skip-broken</pre></div>
+</li>
+</ol>
+
+<h2>Step 2: Setup Application Servers</h2>
+<p>To setup Ruby on Rails Environment, perform the following steps:</p>
+<ol>
+<li>To install Ruby on Rails using RVM, and to install Node.js, visit <a href="#"> Install Ruby on Rails using RVM – Fedora</a>
+</li>
+
+<li>Install the Unicorn web application
+<div class='hacker'>gem install unicorn</div>
+</li>
+</ol>
+
+<h2>Step 3: Creating a Sample Rails Application</h2>
+
+<p>Create a sample application in rails using the below commands:</p>
+
+<p class="note"> Note: Here we take the current directory of user as the web root. </p>
+
+<div class='hacker'>mkdir /tmp/rails_application</div>
+
+<div class='hacker'>cd /tmp/rails_application</div>
+
+<div class='hacker'>rails new HelloRails</div>
+
+<div class='hacker'>cd HelloRails</div>
+
+<div class='hacker'>
+<pre># Create a sample resource
+rails generate scaffold Task title:string note:text</pre></div>
+
+<div class='hacker'>
+<pre># Create a sample database
+RAILS_ENV=development rake db:migrate
+RAILS_ENV=production  rake db:migrate</pre></div>
+
+<div class='hacker'>
+<pre># Create a directory to hold the PID files
+mkdir pids    </pre></div>
+
+<ol>
+<li>Test the application
+<p>To access it from any public IP, we need to bind it to that public IP.</p>
+	<div class='hacker'>rails server --binding=192.169.171.138 </div>
+
+<p>This will boot up the default server on the machine. For this sample environment, WEBrick is the default server, which gets started as shown below:</p>
+<img src="images/17953-1.png" /> 
+</li>
+<li>It should now be accessible via the web browser. 
+	<div class='hacker'>http://192.169.171.138:3000/tasks</div>
+
+<p>To stop the server, press CTRL+C. Once the server is stopped, it would not be accessible via the web browser.</p>
+</li>
+</ol>
+
+<h2>Step 4: Install web-application (Unicorn) and Nginx </h2>
+
+<p>To start using Unicorn, it must be configured with our environment. There are multiple ways to configure the Unicorn servers. Below are some easy steps for configuring the unicorn server using the Vim editor:</p>
+<ol>
+<li>Create a new configuration file unicorn.rb for storing all configuration settings
+<div class='hacker'>vim config/unicorn.rb</div>
+
+<p>Place below code in file (just copy from here and paste into the file)</p>
+<div class='hacker'>
+<pre># Set the working application directory
+# working_directory "/tmp/rails_application/HelloRails"
+working_directory "/tmp/rails_application/HelloRails"
+
+# Unicorn PID file location
+# pid "/tmp/pids/unicorn.pid"
+pid "/tmp/rails_application/HelloRails/pids/unicorn.pid"
+
+# Path to logs
+# stderr_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+# stdout_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+stderr_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+stdout_path "/tmp/rails_application/HelloRails/log/unicorn.log"
+
+# Number of processes
+# Rule of thumb: 2x per CPU core available
+# worker_processes 4
+worker_processes 5
+
+# Time-out
+timeout 20</pre></div>
+
+<p>Save and Exit the Vim editor by pressing Esc and pressing “:wq”.</p>
+</li>
+<li>Run Unicorn - Run the following to start Unicorn in daemon mode using the configuration file
+
+<div class='hacker'>unicorn_rails -c /tmp/rails_application/HelloRails/config/unicorn.rb -D</div>
+</li>
+</ol>
+
+
+<h2>Step 5: Setting Up Nginx as Reverse-Proxy and Load-Balancer</h2>
+<ol>
+<li>Installing Nginx
+<div class='hacker'>yum install -y nginx</div>
+
+</li>
+<li>Public IP 
+<p>Before configuring nginx server, we need to keep a note of the public IP address of our droplet. For this, ifconfig command can be used.</p>
+<div class='hacker'>ifconfig</div>
+<img src="images/17953-2.png" /> 
+
+<p>The value provided under the head inet addr is the public IP address of our droplet.</p>
+</li>
+<li>Configuring Nginx 
+<p>After installation, open configuration file</p>
+
+<div class='hacker'>vim /etc/nginx/nginx.conf</div>
+
+<p>Find the line stating about inclusion of all .conf files (inside the block http {…}), and comment out that line. </p>
+<div class='hacker'>
+<pre># Before:
+include /etc/nginx/conf.d/*.conf;
+
+# After:
+# include /etc/nginx/conf.d/*.conf;</pre></div>
+
+
+<p>Also, in the same http { … } block, insert the following code:</p>
+<div class='hacker'>
+<pre># Set your server 
+# server_name www.example.com;
+
+upstream unicorn_servers {
+
+    # Add a list of your application servers
+    # Each server defined on its own line
+    # Example:
+    # server IP.ADDR:PORT fail_timeout=0;
+    server 10.192.28.60:8080 fail_timeout=0;
+
+}
+
+server {
+
+    # Port to listen on
+    listen 80;
+
+    location / {
+        # Set proxy headers        
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_pass http://unicorn_servers;
+    }
+
+}</pre></div>
+
+<p>Save and Exit the Vim editor by pressing Esc and pressing “:wq”.</p>
+</li>
+<li>To get started, run the Nginx daemon by typing the below command:
+<div class='hacker'>service nginx start</div>
+</li>
+</ol>
+ 
+ <p>To check the nginx server, we can type in the public IP address directly into the web browser:</p>
+<div class='hacker'>http://192.169.171. 138/</div>
+<p>The welcome message by Nginx should be visible:</p>
+<img src="images/17953-3.png" />
+ 
+<h2>Conclusion</h2>
+<p>Using the above procedure, we can build a scalable application server using Unicorn or Rails applications server and Nginx webserver. This would enable any critical app (like PostgreSQL and MySQL) to distribute the load across multiple servers to handle multiple incoming requests.</p>
+
+
+</body>
+</html>

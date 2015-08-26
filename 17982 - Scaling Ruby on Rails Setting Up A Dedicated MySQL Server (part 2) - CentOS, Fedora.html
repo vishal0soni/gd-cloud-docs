@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+<!--Article Number is 17982-->
+
+<title>Scaling Ruby on Rails: Setting Up A Dedicated MySQL Server (part 2) - CentOS, Fedora</title>
+<style type='text/css'>
+div.hacker {
+background-color:#666;
+border:1px solid #ccc;
+color:#fff;
+font-family:"Lucida Console","Courier New",Courier,fixed;  font-size:95%;  line-height:160%;  margin-bottom:1.5em;  padding:10px; }
+
+p.note {
+ background-color:#ffffe6;
+ border:1px solid #eee;
+ color:#666;
+ padding:.8em 1.6em;
+ margin:15px 0;
+}
+
+.warning {
+ border: 1px #d25100 solid;
+ padding: .5em 1em .5em 4em;
+ margin: 10px 20px 15px 20px;
+ background-image: url('@{help-img-path}/img_warning.gif');
+ background-repeat: no-repeat;
+ background-position: left top;
+ background-color: #ededed;-moz-border-radius:
+0.8em;-webkit-border-radius: 0.8em;
+ /* -moz-border-bottom-radius: 0;9 */
+ -webkit-border-bottom-radius: 0;
+ padding-top:14px;
+ padding-bottom:15px;
+}
+</style>
+
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Ruby, Rails, MariaDB, MySQL, NoSQL, Scaling</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/scaling-ruby-on-rails-setting-up-a-dedicated-mysql-server-part-2, https://www.digitalocean.com/community/tutorials/scaling-ruby-on-rails-setting-up-a-dedicated-mysql-server-part-2</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#CentOS;#Fedora;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">3</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">Part 2 of series regarding setup and configuration of dedicated PGSQL server. This will likely need to be built as a series, or if the content model allows - merging into one comprehensive end-to-end guide.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17982</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:PercentResearch msdt:dt="string">0.200000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.800000000000000</mso:PercentWriting>
+<mso:ReviewComments msdt:dt="string">8/12 - Edited.  Needs a corrected image link.  Break up the long procedure into sub procedures.
+8/22 - Previous edits lost. Please see the inline edits in 17981 and in Google doc.
+</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Crystal Smithwick</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">42</mso:ReviewedBy>
+<mso:HoursDraftingActual msdt:dt="string">2.50000000000000</mso:HoursDraftingActual>
+<mso:HoursEditingActual msdt:dt="string">0.500000000000000</mso:HoursEditingActual>
+<mso:HoursDraftingEstimated msdt:dt="string">6.00000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p>Setting up a dedicated MySQL server to host Ruby on Rails application servers, Ruby, Rails, MariaDB, MySQL, NoSQL, Scaling</p>
+<h1>Scaling Ruby on Rails: Setting Up A Dedicated MySQL Server (part 2) - CentOS, Fedora</h1>
+
+<p><strong>Difficulty: </strong><em> 4</em></p>
+<p><strong>Time: </strong> <em>1 hour</em></p>
+
+<p>In this article, we will be creating a database layer using MySQL to host the application servers running Ruby on Rails. This articles will assist you in setting up a dedicated MYSQL server and scaling Ruby on Rails applications between the servers in CentOS or Fedora Linux distributions.</p>
+<p class="note">Note: We assume that you are logged in as a sudo user and <a href="#">installed Ruby on Rails using RVM in CentOS</a></p>
+
+<h3>Step 1: Select the Database</h3>
+Based on the needs and application type, choose your database server to build a database layer for your application development. Following are some popular databases:
+<ul>
+<li>For Relational database server: Use MySQL and derivatives, PostgreSQL</li>
+<li>For Non-relational database servers: Use Column-based Cassandra and HBase, Document-based MongoDB and Couchbase and Graph-based OrientDB, Neo4J and related databases </li>
+</ul>
+<h3>Step 2: Understanding the Database Server Layer</h3>
+<p>To make our database server centrally accessible, we need a load-balancer, two application servers and one database server to set-up the database server layer. This is how the architecture will look like</p>
+
+<img src="images/17982.png" alt="17982" />
+     
+<h3>Step 3: Add the Database Server to the Deployment Set-Up</h3>
+<ol>
+<li>Let's create and configure MySQL database. To prepare the setup, type 
+  <div class="hacker"> sudo yum -y update </div>
+</li>
+<li>To install the development tools, run the following command
+      <div class="hacker"> sudo yum groupinstall -y 'development tools' </div>
+</li>
+<li>To use the YUM package, add the Extra Packages for Enterprise Linux (or EPEL) software repository 
+<div class="hacker"> sudo   wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm </div>
+<div class="hacker"> sudo rpm -ivh epel-release-7-5.noarch.rpm </div>
+</li>
+<li>Again update everything and install the required libraries 
+<div class="hacker"> sudo yum -y update </div>
+<div class="hacker"> sudo yum install -y curl-devel vim sqlite-devel libyaml-devel </div>
+</li>
+</ol>
+<h3>Step 4: MySQL Installation</h3>
+<ol>
+<li>Download and install the MySQL database server
+      <div class="hacker"> sudo  yum install  mysql-server mysql-devel </div>
+  If MySQL server doesn't work, then try MariaDB
+  <div class="hacker"> sudo yum install MariaDB-server MariaDB-client </div>
+</li>
+<li>Now initiate the MySQL server daemon by typing
+  <div class="hacker"> sudo  service mysqld start </div>
+<p> Or</p>
+<div class="hacker"> sudo /etc/init.d/mysql start </div>
+</li>
+<li>Run the MySQL installation process, by typing
+  <div class="hacker"> sudo/usr/bin/mysql_secure_installation </div>
+</li>
+<li>After you have finished the above command, a welcome screen displays the following
+  <div class="hacker">
+<pre>
+  NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
+          SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+
+  In order to log into MySQL to secure it, we'll need the current 
+      password for the root user.  If you've just installed MySQL, and 
+        you haven't set the root password yet, the password will be blank, 
+        so you should just press enter here.
+  
+  Enter current password for root (enter for none): 
+</pre>
+</div>
+<p>If you have created a password by using the following command, then hit Enter</p>
+<div class="hacker">
+<pre>
+   /usr/bin/mysqladmin -u root password 'new-password'
+   /usr/bin/mysqladmin -u root -h myt password 'new-password'
+</pre>
+</div>
+<p>Next, answer the following questions</p>
+<div class="hacker">
+<pre>
+    Set root password?                     --> Y
+    Remove anonymous users?                --> Y
+    Disallow root login remotely?          --> Y
+    Remove test database and access to it? --> Y
+    Reload privilege tables now?           --> Y
+</pre>
+</div>
+</li>
+
+<li>Establish database connection using MySQL client and enter the password for root that was previously step-up
+  <div class="hacker"> sudo mysql -u root -p </div>
+</li>
+<li>Make a new database
+<div class="hacker"> create database rails_myapp; </div>
+</li>
+<li>Create new users for your database and grant remote and local access to this user
+  <div class="hacker"> CREATE USER 'rails_myapp_user'@'localhost' IDENTIFIED BY 'pwd'; </div>
+<div class="hacker">  CREATE USER 'rails_myapp_user'@'%' IDENTIFIED BY 'pwd'; </div>
+<p>Type the following command to confirm that users are created</p>
+<div class="hacker"> SELECT User,host FROM mysql.user; </div>
+</li>
+<li>Grant access rights to any specific user by typing
+  <div class="hacker"> GRANT ALL ON rails_myapp.* TO 'rails_myapp_user'@'localhost'; </div>
+  <div class="hacker"> GRANT ALL ON rails_myapp.* TO 'rails_myapp_user'@'%'; </div>
+  <p>And then revoke the privileges</p>
+    <div class="hacker"> FLUSH PRIVILEGES; </div>
+  <p>Exit from Database</p>
+<div class="hacker"> Exit </div>
+</li>
+<li>To enable remote connections, open the MySQL configuration my.cnf and edit using the vim text editor
+<div class="hacker"> sudo vim  /etc/my.cnf </div>
+                <p>And type the below mentioned line in this file</p>
+<div class="hacker">
+<pre>
+[mysqld]
+..
+.
+bind-address   =  0.0.0.0
+</pre>
+</div>
+</li>
+</ol>
+<h3>Step 5: Setup your Rails application</h3>
+<ol>
+<li>Install gem for Mysql and update
+  <div class="hacker"> sudo gem install mysql2 </div>
+     <div class="hacker"> sudo gem update -system </div>
+</li>
+<li>Install Rails package with following command
+  <div class="hacker"> sudo gem install rails </div>
+</li>
+<li>Then create a Rails application and Use the -d mysql option to set MySQL as the database
+  <div class="hacker"> rails new Appname -d mysql </div>
+</li>
+<li>Next, move to the application directory
+  <div class="hacker"> cd Appname </div>
+</li>
+<li>
+<p>You'll find the database configuration settings for your Rails applications within the database.yml file in /config directory</p>
+</li>
+<li>Modify the database.yml file with the help vim text editor, by typing
+  <div class="hacker"> sudo vim config/database.yml </div>
+</li>
+<li>Swap the production: YML section with the below mentioned lines by editing the contents with the your own required configuration
+<div class="hacker">
+<pre>
+production:
+  adapter: mysql
+  encoding: utf8
+  database: rails_myapp
+  username: rails_myapp_user
+  password: pwd
+  host: 128.199.233.36
+  port: 3306
+  pool: 10
+</pre>
+</div>
+  <p>Save and close</p>
+</li>
+<li>Open the Gemfile 
+<div class="hacker"> sudo vim Gemfile </div>
+       <p>And append the below mentioned line</p>
+    <div class="hacker"> gem 'mysql' </div>
+<p>Save and close</p>
+</li>
+<li>Setup gem using bundle
+    <div class="hacker"> bundle install </div>
+</li>
+</ol>
+<h3>Next Step</h3>
+<p>By using all the above steps you'll be able to scale Ruby on Rails application and set up a dedicated MySQL Server on CentOS or Fedora.</p>
+
+
+</body>
+</html>

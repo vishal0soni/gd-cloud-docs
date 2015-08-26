@@ -1,0 +1,262 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <title>Scaling Ruby on Rails Setting Up A Dedicated PostgreSQL Server (Part 3) - Arch Linux</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <style type="text/css">
+    div.hacker {
+        background-color: #666;
+        border: 1px solid #ccc;
+        color: #fff;
+        font-family: "Lucida Console", "Courier New", Courier, fixed;
+        font-size: 95%;
+        line-height: 160%;
+        margin-bottom: 1.5em;
+        padding: 10px;
+    }
+    p.note {
+        background-color: #ffffe6;
+        border: 1px solid #eee;
+        color: #666;
+        padding: .8em 1.6em;
+        margin: 15px 0;
+    }
+    
+    .warning {
+        border: 1px #d25100 solid;
+        padding: .5em 1em .5em 4em;
+        margin: 10px 20px 15px 20px;
+        background-image: url('@{help-img-path}/img_warning.gif');
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-color: #ededed;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        /* -moz-border-bottom-radius: 0;9 */
+        -webkit-border-bottom-radius: 0;
+        padding-top: 14px;
+        padding-bottom: 15px;
+    }
+    </style>
+    
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ArticleKeywords msdt:dt="string">Scaling, PostgreSQL, Ruby on Rails</mso:ArticleKeywords>
+<mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/scaling-ruby-on-rails-setting-up-a-dedicated-postgresql-server-part-3, https://www.digitalocean.com/community/tutorials/scaling-ruby-on-rails-setting-up-a-dedicated-postgresql-server-part-3</mso:Reference>
+<mso:LinuxDistributions msdt:dt="string">;#Arch Linux;#</mso:LinuxDistributions>
+<mso:ArticlePriority msdt:dt="string">3</mso:ArticlePriority>
+<mso:RequestNotes msdt:dt="string">This is part of 3 part series about setting up dedicated PGSQL server for Rails. Likely will need to complete full series, or simply merge into one comprehensive doc depending on content model restrictions.</mso:RequestNotes>
+<mso:Difficulty msdt:dt="string">4</mso:Difficulty>
+<mso:ForkSplit msdt:dt="string"></mso:ForkSplit>
+<mso:ArticleID msdt:dt="string">17896</mso:ArticleID>
+<mso:UnsupportedFeatures msdt:dt="string"></mso:UnsupportedFeatures>
+<mso:Collapsed msdt:dt="string"></mso:Collapsed>
+<mso:Complexity msdt:dt="string"></mso:Complexity>
+<mso:ArticleStatus msdt:dt="string">Edited and needs revision</mso:ArticleStatus>
+
+
+<mso:Sample msdt:dt="string">z</mso:Sample>
+<mso:DeliveryTarget msdt:dt="string">Phase 2</mso:DeliveryTarget>
+<mso:EditScore msdt:dt="string"></mso:EditScore>
+<mso:PrereqOrdering msdt:dt="string">3</mso:PrereqOrdering>
+<mso:AssignedTo1 msdt:dt="string">12</mso:AssignedTo1>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1 msdt:dt="string">Tom Taylor</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_AssignedTo1>
+<mso:Week msdt:dt="string">8.00000000000000</mso:Week>
+<mso:PercentResearch msdt:dt="string">0.400000000000000</mso:PercentResearch>
+<mso:PercentWriting msdt:dt="string">0.600000000000000</mso:PercentWriting>
+<mso:HoursDraftingActual msdt:dt="string">7.00000000000000</mso:HoursDraftingActual>
+<mso:ReviewComments msdt:dt="string">8/20 cj: Sending back to Revise for now as (according to Request Notes) this doc may evolve once Parts 1 and 2 are written.</mso:ReviewComments>
+<mso:Dependencies msdt:dt="string"></mso:Dependencies>
+<mso:TestComments msdt:dt="string"></mso:TestComments>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy msdt:dt="string">Carla  Johnson</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_ReviewedBy>
+<mso:ReviewedBy msdt:dt="string">41</mso:ReviewedBy>
+<mso:HoursDraftingEstimated msdt:dt="string">6.00000000000000</mso:HoursDraftingEstimated>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p>Setting up a dedicated PostgreSQL server to host Ruby on Rails application servers, Scaling, PostgreSQL, Ruby on Rails</p>
+<h1>Scaling Ruby on Rails: Setting Up A Dedicated PostgreSQL Server (Part 3) - Arch Linux </h1>
+
+<p><strong>Difficulty: </strong> 4</p>
+<p><strong>Time: </strong> 30 minutes</p>
+
+<p>In this article, we are going to create a PostgreSQL server that will be used as a database layer for scaling Ruby on Rails (RoR) application. Here, we will describe how we can combine PostgreSQL database server with RoR web server to build robust and scalable application.</p>
+
+<p>Below are the key points which we will cover:</p>
+<ul>
+<li>Choosing Server</li>
+<li>PostgreSQL installation</li>
+<li>Database server layer</li>
+<li>Database server deployment with Rails</li>
+</ul>
+
+<h2>Step 1: Choosing Database Sever</h2>
+
+<p>Rails support various relational and non-relation database, such as PostgreSQL in relational databases, NoSQL in non-relational Database. When you begin with your app development with Rails, you can use SQLite as your database as this doesn’t require any constraints and has the ability to handle small volume of data. However, if you are planning to use large volume of data in your application and require foreign key and primary key constraint, then consider using RDMS.</p>
+
+<p>Choose database backend very carefully, as you cannot change it often. Here are some of the popular databases listed below for your reference which can handle large volumes of data:</p>
+<ul>
+<li>Oracle</li>
+<li>MSSQL</li>
+<li>MySQL</li>
+<li>PostgreSQL</li>
+</ul>
+<p>In this article, we will choose the most popular and light weight database <strong>PostgreSQL.</strong></p>
+
+<h2>Step 2: PostgreSQL Installation</h2>
+<ol>
+
+<li>
+To install, open terminal and type thebelow command :
+  <div class="hacker">sudo pacman –S postgresql  </div>
+</li>
+<li>
+Next install pgadmin3 for the administrator. This is an easy to access GUI for PostgresSQL, and is an optional installation but useful when using on a desktop.
+<div class="hacker"> sudo pacman -S pgadmin3 </div>
+</li>
+<li>Check if it's been installed
+  <div class="hacker"> sudo paceman –Si postgresql </div>
+</li>
+<li>It is recommended to initialize a database cluster on a disk before performing any further tasks to store all the data. /usr/local/pgsql/data or /var/lib/postgres/data locations can be used to store data.
+  <div class="hacker"> sudo mkdir -p /var/lib/postgres/data </div>
+</li>
+<li>Change the owner of the /var/lib/postgres directory and its contents to the postgres user (the default user set up by the install).
+ <div class="hacker"> sudo chown -c -R postgres:postgres /var/lib/postgres </div>
+</li>
+<li>To initialize a database cluster, use the command initdb, which is installed with PostgreSQL. This  must be done as the postgres user
+ <div class="hacker"> sudo -i -u postgres</div>
+
+Type the following command:
+ <div class="hacker">initdb -D '/var/lib/postgres/data'</div>
+
+Now you can logout from the postgres user and fire PostgreSQL:
+<div class="hacker"> logout</div>
+<div class="hacker">sudo systemctl start postgresql</div>
+If you want PostgreSQL to start automatically every time your VPS boots up, use this:
+<div class="hacker"> sudo systemctl enable postgresql</div>
+</li>
+</ol>
+<h2>Step 3: PostgreSQL Server Setup</h2>
+<ol>
+<li>
+To begin with, change the postgres user password and run the psql command by typing:
+<div class="hacker"> sudo -u postgres psql postgres </div>
+</li>
+<li>
+Set a desired password for the "postgres" database role by typing:
+<div class="hacker"> \password postgres </div>
+<p>When prompted, type your password again. </p>
+</li>
+<li>Exit from the PostgreSQL prompt</li>
+</ol>
+<h2>Step 4: Create a Database and Users </h2>
+<ol>
+<li>
+Run the following command:
+<div class="hacker">sudo -u postgres psql </div>
+</li>
+<li>To create a database, type:
+<div class="hacker">createdb myDatabaseName </div>
+<p>Congratulations! You have successfully installed PostgreSQL database. Next we will be use the database server to load balance multiple application.</p>
+</li>
+<li>To create  a user, type:
+<div class="hacker">createuser -s -U postgres –interactive </div>
+</li>
+<li>Use the psql command to access the PostgreSQL database shell, psql. (-d specifies the database to connect to.)
+<div class="hacker">psql -d myDatabaseName </div>
+</li>
+<li>Before you create any tables and input any data into this database, just pull out the database users and their privileges
+<div class="hacker">\du </div>
+
+ Close the PostgreSQL database shell back to your command line.
+ </li>
+</ol>
+<h2>Step 5: Architecting the Database Server Layer</h2>
+
+<p>To reduce server load and CPU usage and make our database server centrally accessible, we need a load-balancer, two application servers and one database server to set-up the database server layer. This is how the architecture will look like:</p>
+  <img src="17986.png" alt="17986" />
+<h2>Step 6: Establish Remote Connection</h2>
+Since we need PostgreSQL server to be accessible from remote computers running the Rails application, the configuration file must be modified.
+<ol>
+<li>
+Open file using your favorite editor:
+	<div class="hacker"> sudo vim /var/lib/postgres/data/postgresql.conf </div>
+
+</li>
+<li>We need to tell PostgreSQL to listen to connections from the IP address assigned to our droplet. To do this, find the below line: 
+<div class="hacker"> listen_addresses = 'localhost'  </div>
+<p>And replace with listen_addresses = '*' or listen_addresses = 'YourIP'</p>
+</li>
+<li>
+Next, we need to tell PostgreSQL the specific connections we would like it to accept, similar to how firewalls work.
+<p>Run the following command to edit the PostgreSQL file pg_hba.conf using the vim text editor:</p>	
+	<div class="hacker"> sudo vim /var/lib/postgres/data/pg_hba.conf </div>
+	<p>Scroll down the file and find the section:</p>
+	<div class="hacker">
+	<pre> # Put your actual configuration here
+ # ..
+</pre></div>
+<p>	After the comment block, append the following line:</p>
+<div class="hacker">
+<pre> # TYPE   DATABASE      USER        ADDRESS        METHOD
+	host        all        all        0.0.0.0/0        md5
+</pre></div>
+</li>
+<li>Save and close the file and restart server 
+<div class="hacker"> service postgresql restart </div> </li>
+</ol>
+<h2>Step 7: Configure  Database with Rails</h2>
+<ol>
+<li>
+Go to your application folder and open database.yml
+<div class="hacker"> cd /var/www/html/helloruby </div>
+
+
+</li>
+<li>Move to config application directory and open this file: 
+<div class="hacker">cd config</div>
+<div class="hacker">sudo vim database.yml</div>
+<p>Here, you will see the database settings separated by environment names. Since an application needs to run using the production environment, let's edit the configuration for that.</p>
+</li>
+<li>
+Copy environment variable at the end of the file and edit as per your requirement 
+<div class="hacker"> <pre>production:
+  adapter: postgresql # set you database adpteer
+  encoding: utf8 #encoding
+  database: rails_myapp #your database name
+  username: rails_user # database usernaem
+  password: StrongPass@word # replace it with your password
+  host: 192.168.13.130# host where postgresql is setup
+  port: 5432
+  pool: 10 
+</pre></div>
+<p>This will install the driver for PostgreSQL</p>
+</li>
+<li>Open the Gemfile
+<div class="hacker">nano Gemfile </div>
+<p>Or,</p>
+<div class="hacker">Vim Gemfile </div>
+</li> 
+<li>Add following line:
+<div class="hacker">gem 'pg' </div>
+</li>
+<li>Now save and exit from editor and run the below command:
+<div class="hacker">bundle install </div>
+</li>
+</ol>
+
+<p>Note: If you are running PostgreSQL different from Rails server and unable to connect, then please check the firewall and allow the port for PostgreSQL for both incoming and outgoing. Make sure that you allow ports for required IPs only for secure internet access.</p>
+
+<h2>Next Step</h2>
+
+<p>In this article, we reviewed the steps involved in setting up a scalable PostgreSQL database server and deployed it with our Rails application.</p>
+
+</body>
+</html>
