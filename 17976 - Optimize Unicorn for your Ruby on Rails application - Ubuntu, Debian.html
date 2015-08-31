@@ -42,7 +42,7 @@
     }
     </style>
     
-<!--[if gte mso 9]><xml>
+<[if gte mso 9]><xml>
 <mso:CustomDocumentProperties>
 <mso:ArticleKeywords msdt:dt="string">Ruby, Rails, Optimization</mso:ArticleKeywords>
 <mso:Reference msdt:dt="string">https://www.digitalocean.com/community/tutorials/how-to-optimize-unicorn-workers-in-a-ruby-on-rails-app, https://www.digitalocean.com/community/tutorials/how-to-optimize-unicorn-workers-in-a-ruby-on-rails-app</mso:Reference>
@@ -80,26 +80,36 @@
 </head>
 <body>
 <p>Optimizing unicorn for your Ruby on Rails application on Linux Ubuntu and Debian platform Ruby, Rails, Optimization</p>
-<h1>Optimize Unicorn for your Ruby on Rails application - Ubuntu, Debian</h1>
+<h1>Optimize Unicorn for your Ruby on Rails application - Debian, Ubuntu</h1>
 <!--List OSs in alphabetical order in title and h1. Rename file, if needed.-->
+<!--Re-ordered the OS names-->
 <p><strong>Difficulty: </strong> 3</p>
 <p><strong>Time: </strong> 3 hours</p>
 <p>Rails is a nice web framework, but over past few years, it has grown into a complex system. Particularly when using Unicorn, Rails apps tend to consume a lot of memory. Understanding its operational details and optimizing its performance can be a critical factor for success of any Rails developer. This article will assist you with few simple things that can be done to enhance the performance of Unicorn for your Rails applications. </p>
 
-<p>Note: It is assumed that you are logged in as a sudo user and <a href="#">installed Ruby on Rails using RVM in Arch Linux</a></p> <!--Include links to Install Ruby on Rails and OS.--> <!--Arch Linux...shouldn't this be Debian, Ubuntu?-->
+<h2>Prerequisites</h2>
+<p>To get started, you'll need to have Ruby on Rails installed on your machine using RVM. For detailed steps, see</p>
+<ul>
+<li><a href="#">17538 - Install Ruby on Rails using RVM in Debian</a></li>
+<li><a href="#">17534 - Install Ruby on Rails using RVM in Ubuntu</a></li>
+</ul>
+
+<p class="note">It is assumed that you are logged in as a sudo user.</p>
+<!--Include links to Install Ruby on Rails and OS.--> <!--Arch Linux...shouldn't this be Debian, Ubuntu?-->
+<!--Updated the reference articles, and also provided respective article numbers. Also changing the section, from note to Prerequisites-->
 <h2>Set Unicorn as a default option</h2>
 <p>By default, Rails uses the "Webrick" server to run applications. It is fast, but unfortunately, it can not handle concurrent connection requests. For optimized performance, Unicorn must be set as the default server for Rails. Unicorn is a multi-threaded web server, capable of handling multiple requests simultaneously, thus optimizing the performance considerably.</p>
 <!--What are the steps?-->
 
 <h2>Upgrade to 2.0</h2>
-<p>If you are using ruby 1.9 or earlier, it is recommended to upgrade to 2.0. Because ruby 1.9 and earlier versions do not support automated garbage collection, and thus are unable to take benefits of Copy-on-Write (CoW) feature. </p>
+<p>If you are using ruby 1.9 or earlier, it is recommended to upgrade to 2.0 or above. Because ruby 1.9 and earlier versions do not support automated garbage collection, and thus are unable to take benefits of Copy-on-Write (CoW) feature. </p>
 <!--The next few sentences should be steps and code examples.-->
                              
 <p>You can check your Ruby version using "ruby -v" command.
 If your version is >=2.0, you are on right track, but in case it is 1.9 or earlier, you should upgrade to >=2.0 <!--Repetitive content. Can you add this to the introdution to this section.--> <!--Include the procedure to upgrade.-->
 </p>
 <h2>Fine tuning the configuration settings</h2>
-<p>To boost the performance of Unicorn, some configuration settings can be checked. These are available in the Unicorn's default configuration file config/unicorn.rb.<!--tag filenames with <code>.-->
+<p>To boost the performance of Unicorn, some configuration settings can be checked. These are available in the Unicorn's default configuration file <code>config/unicorn.rb</code>.<!--tag filenames with <code>.-->
 Now open this file and check out the following configurations: <!--Can you include a file example? Then you could make these into a simple table with Settings | Description -->
 </p>
 <h3>worker_process</h3>
@@ -119,7 +129,8 @@ When workers are forked, any associated connection (like database connections or
 Although Unicorn may not be causing this problem, but can be resolved using Unicorn-worker-killer. 
 </p>
 
-<h2>Unicorn Worker Killer</h2><!--Make this a h3 and add a verb. "Install.."-->
+<h3>Install Unicorn Worker Killer</h3><!--Make this a h3 and add a verb. "Install.."-->
+<!-- Updated as suggested-->
 <p>Unicorn worker killer is a gem that provides automatic restart of worker without affecting any request. It is based on the maximum number of requests and the consumed memories, and helps avoid excess consumption of memory in an event of memory leakage.
 Here are the steps for using unicorn-worker-killer:
 </p>
